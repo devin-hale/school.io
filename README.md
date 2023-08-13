@@ -35,42 +35,42 @@ CURRENTLY: Building controller for users.
 
 
 [] **Login/User Authentication**
-    - [X] Organization/School Model
-    - [] Org Controller
-    - [X] User Model
-    - [] User Controller
-    - [] Login Page
-    - [] Basic Landing Page (Will become classroom page)
-    - [] User/Session Authentication
-    - [] Password Encryption
+- [X] Organization/School Model
+- [] Org Controller
+- [X] User Model
+- [] User Controller
+- [] Login Page
+- [] Basic Landing Page (Will become classroom page)
+- [] User/Session Authentication
+- [] Password Encryption
 
 [] **Classroom/Student**
-    - [] Classroom Model
-    - [] Classroom Controller
-    - [] Student Model
-    - [] Student Controller
-    - [] Basic Classroom Page
-        -- [] Update with relevant documentation info
-    - [] Basic Student Page
-        -- [] Update with relevant documentation info
+- [] Classroom Model
+- [] Classroom Controller
+- [] Student Model
+- [] Student Controller
+- [] Basic Classroom Page
+-- [] Update with relevant documentation info
+- [] Basic Student Page
+-- [] Update with relevant documentation info
 
 [] **Documentation**
-    - [] Define documentation types
-    - [] Decide on forms for each
-    - [] Models for each
-    - [] Controllers for each documentation type
-    - [] Class-wide documentation view page
-    - [] Documentation creation page
-    - [] Page for specific existing documentation instances
+- [] Define documentation types
+- [] Decide on forms for each
+- [] Models for each
+- [] Controllers for each documentation type
+- [] Class-wide documentation view page
+- [] Documentation creation page
+- [] Page for specific existing documentation instances
 
 [] **Utilities**
-    - [] User profile
-    - [] Teacher to Teacher messaging within the same Org
-    - [] Student transfer between classes
-    - [] Student transfer between orgs
+- [] User profile
+- [] Teacher to Teacher messaging within the same Org
+- [] Student transfer between classes
+- [] Student transfer between orgs
 
 [] **Long term**
-    -[] Create full view in react
-    -[] React Native port
-    -[] SSL Certificate
-    -[] Disclaimers, data privacy, etc.
+-[] Create full view in react
+-[] React Native port
+-[] SSL Certificate
+-[] Disclaimers, data privacy, etc.
