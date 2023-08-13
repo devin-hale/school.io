@@ -1,7 +1,7 @@
 # school.io
 
 ## Description
-### Version 0.0.0
+### Version 0.0.1
 This is the beginning of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,13 +29,20 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
+UPDATE: 8-13-2023:  Data models created for organizations, users, and email authentication.
+
+CURRENTLY: Building controller for users.
+
+
 [] **Login/User Authentication**
-    - [] Organization/School Model
+    - [X] Organization/School Model
     - [] Org Controller
-    - [] User Model
+    - [X] User Model
     - [] User Controller
     - [] Login Page
     - [] Basic Landing Page (Will become classroom page)
+    - [] User/Session Authentication
+    - [] Password Encryption
 
 [] **Classroom/Student**
     - [] Classroom Model
