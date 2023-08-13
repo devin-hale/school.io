@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 //Import env variables
 const PORT = process.env.PORT || 3000;
 const DBSTRING =
-	process.env.NODE_ENV === "PROD" ? process.env.PROD_DB : process.env.DEV_DB;
+	process.env.DBLINK === "PROD" ? process.env.PROD_DB : process.env.DEV_DB;
 
 //Express
 const app = express();
