@@ -50,9 +50,9 @@ CURRENTLY: Building controller for users.
 - [] Student Model
 - [] Student Controller
 - [] Basic Classroom Page
--- [] Update with relevant documentation info
+- - [] Update with relevant documentation info
 - [] Basic Student Page
--- [] Update with relevant documentation info
+- - [] Update with relevant documentation info
 
 [] **Documentation**
 - [] Define documentation types
@@ -70,7 +70,7 @@ CURRENTLY: Building controller for users.
 - [] Student transfer between orgs
 
 [] **Long term**
--[] Create full view in react
--[] React Native port
--[] SSL Certificate
--[] Disclaimers, data privacy, etc.
+- [] Create full view in react
+- [] React Native port
+- [] SSL Certificate
+- [] Disclaimers, data privacy, etc.
