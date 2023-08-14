@@ -1,7 +1,7 @@
 # school.io
 
 ## Description
-### Version 0.0.3
+### Version 0.0.4
 This is the beginning of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,12 +29,12 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
-UPDATE: 8-14-2023(1):  A super basic version of the entire login and account creation loop is complete.
+UPDATE: 8-14-2023(2):  Basic version of the entire login and account creation loop is complete.
 
-CURRENTLY: Cleaning up client side code for Login loop.
+CURRENTLY: Beginning classroom and student data models.
 
 
-[] **Login/User Authentication**
+[X] **Login/User Authentication**
 - [X] Organization/School Model
 - [X] Org Controller
 - [X] User Model
@@ -43,12 +43,12 @@ CURRENTLY: Cleaning up client side code for Login loop.
 - [X] Account Creation Page
 - - [X] Org verification before signup.
 - - [X] Make it look not bad.
-- [] Basic Landing Page (Will become classroom page)
+- [X] Basic Landing Page (Will become classroom page)
 - [X] Password Encryption
 - [X] Account Email Verification
 - [X] User/Session Authentication
-- [] Clean up form validation on client side
-- [] Clean up code
+- [X] Clean up form validation on client side
+- [X] Clean up code
 
 [] **Classroom/Student**
 - [] Classroom Model
