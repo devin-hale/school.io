@@ -16,7 +16,7 @@
         <form method="POST" action="/account/create">
             <div class="form-group">
                 <div class="form-floating">
-                    <input name="orgCode" type="text" class="form-control" id="orgCode" value="<%= orgCode %>" readonly>
+                    <input name="orgCode" type="text" class="form-control" id="orgCode" value="<%= orgCode %>" readonly required>
                     <label for="orgCode">Organization Code</label>
                 </div>
             </div>
@@ -24,32 +24,32 @@
                 
                 <div class="form-group col">
                     <div class="form-floating">
-                        <input name="first_name" type="text" class="form-control" id="first_name" placeholder="first_name">
+                        <input name="first_name" type="text" class="form-control" id="first_name" placeholder="first_name" minlength="1" maxlength="30" required>
                         <label for="first_name">First Name</label>
                     </div>
                 </div>
                 <div class="form-group col">
                     <div class="form-floating">
-                        <input name="last_name" type="text" class="form-control" id="last_name" placeholder="last_name">
+                        <input name="last_name" type="text" class="form-control" id="last_name" minlength="1" maxlength="30" placeholder="last_name" required>
                         <label for="last_name">Last Name</label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="form-floating">
-                    <input name="email" type="email" class="form-control" id="loginEmail" placeholder="email">
+                    <input name="email" type="email" class="form-control" id="loginEmail" placeholder="email" minlength="1" maxlength="30" required>
                     <label for="loginEmail">Email</label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="form-floating">
-                    <input name="password" type="password" class="form-control" id="loginPassword" placeholder="password">
+                    <input name="password" type="password" class="form-control" id="loginPassword" placeholder="password" minlength="6" maxlength="30" required>
                     <label for="loginPassword">Password</label>
                 </div>
             </div>
             <div class="form-group">
                 <label for="genderSelect">Gender:</label>
-                <select id="genderSelect" name="gender" class="form-select">
+                <select id="genderSelect" name="gender" class="form-select" required>
                     <option selected></option>
                     <option value="M">M</option>
                     <option value="F">F</option>

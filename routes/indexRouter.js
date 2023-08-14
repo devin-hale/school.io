@@ -8,14 +8,15 @@ const router = express.Router();
 
 //GET :: Login Page
 router.get("/", (req, res) => {
-	res.render("./../views/index.ejs", { user: req.user, message: "" });
+	if (req.user) res.redirect("/class");
+	else res.render("./../views/index.ejs", { user: req.user, message: "" });
 });
 
 //POST :: Attempt Login
 router.post(
 	"/login",
 	passport.authenticate("local", {
-		successRedirect: "/",
+		successRedirect: "/class",
 		failureRedirect: "/",
 	})
 );

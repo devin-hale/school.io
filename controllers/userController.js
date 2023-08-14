@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import emailAuth from "./../models/emailAuth.js";
-import { sendVerification } from "./utils/nodeMailer.js";
+import authController from "./emailAuthController.js";
 import util from "util";
 
 //Gets user information
@@ -74,15 +74,7 @@ const create_account_post = [
 
 				const savedUser = await newUser.save();
 
-				const newAuth = new emailAuth({
-					user: savedUser._id,
-				});
-				console.log(newAuth);
-
-				const savedAuth = await newAuth.save();
-				console.log(savedAuth);
-
-				sendVerification(req.body.email, savedAuth.code);
+				authController.createAuth(savedUser, req);
 
 				res.render("./../views/accountCreate/verify.ejs");
 			} else {

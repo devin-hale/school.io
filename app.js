@@ -7,6 +7,7 @@ import logger from "morgan";
 import createError from "http-errors";
 import { fileURLToPath } from "url";
 import indexRouter from "./routes/indexRouter.js";
+import classRouter from "./routes/classRouter.js";
 import passport from "passport";
 import session from "express-session";
 
@@ -54,6 +55,7 @@ app.use(function (req, res, next) {
 
 //Routes
 app.use("/", indexRouter);
+app.use("/class", classRouter);
 
 //error MW
 app.use((req, res, next) => {

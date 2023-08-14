@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import User from "./../models/userModel.js";
 import emailAuth from "./../models/emailAuth.js";
+import { sendVerification } from "./utils/nodeMailer.js";
 
 //POST :: Verify Code
 const verify_user = [
@@ -39,4 +40,14 @@ const verify_user = [
 	}),
 ];
 
-export default { verify_user };
+const createAuth = async (savedUser, req) => {
+	const newAuth = new emailAuth({
+		user: savedUser._id,
+	});
+
+	const savedAuth = await newAuth.save();
+
+	sendVerification(req.body.email, savedAuth.code);
+};
+
+export default { verify_user, createAuth };
