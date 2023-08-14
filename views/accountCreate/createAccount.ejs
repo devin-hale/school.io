@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <title>Account Creation</title>
+</head>
+<body>
+
+    <% if (message !== "") { %>
+        <p class="text-danger"><%= message %></p>
+    <% } %>
+    <form method="POST" action="/createAccount">
+        
+        <div class="row">
+            <div class="form-group col">
+                <div class="form-floating">
+                    <input name="first_name" type="first_name" class="form-control" id="first_name" placeholder="first_name">
+                    <label for="first_name">First Name</label>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="form-floating">
+                    <input name="last_name" type="last_name" class="form-control" id="last_name" placeholder="last_name">
+                    <label for="last_name">Last Name</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-floating">
+                <input name="email" type="email" class="form-control" id="loginEmail" placeholder="email">
+                <label for="loginEmail">Email</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-floating">
+                <input name="password" type="password" class="form-control" id="loginPassword" placeholder="password">
+                <label for="loginPassword">Password</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="genderSelect">Gender:</label>
+            <select id="genderSelect" name="gender" class="form-select">
+                <option selected></option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+    </form>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>    
+</body>
+</html>

@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
 	email: { type: String, required: true },
 	password: { type: String },
 	gender: { type: String, required: true, enum: ["M", "F", "Nonspecified"] },
-	dob: { type: Date },
 	verified: { type: Boolean, default: false },
+	accType: { type: String, default: "Basic" },
 });
 
 userSchema.virtual("url").get(function () {

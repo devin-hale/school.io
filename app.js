@@ -7,6 +7,8 @@ import logger from "morgan";
 import createError from "http-errors";
 import { fileURLToPath } from "url";
 import indexRouter from "./routes/indexRouter.js";
+import passport from "passport";
+import session from "express-session";
 
 //Workaround for __dirname with modules
 const __filename = fileURLToPath(import.meta.url);
@@ -50,7 +52,7 @@ app.use((err, req, res, next) => {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 	res.status(err.status || 500);
-	res.render("error");
+	res.render("error", { error: err });
 });
 
 //Start server

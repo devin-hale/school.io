@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
-    <title>School.io</title>
+    <title>school.io</title>
 </head>
 <body class="vh-100 row align-items-center">
     
-    <div class="">
+    <div class="" >
         <div class="container-fluid m-auto">
             <h1 class="container text-center display-1"><strong>school.io</strong></h1>
             <br>
-    
-        <form class="container border rounded shadow-sm p-3" style="max-width: 350px;">
+            <% if (message !== "") { %>
+                <p class="text-center text-danger"><%= message %></p>
+            <% } %>
+        <form method="POST" action="/login" class="container border rounded shadow-sm p-3" style="max-width: 350px;">
             <h5 class="mb-2">Please log in:</h5>
             <div class="form-group mb-4">
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="name@example.com">
+                    <input name="email" type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="name@example.com">
                     <label for="loginEmail">Email address</label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="loginPassword" placeholder="password">
+                    <input name="password" type="password" class="form-control" id="loginPassword" placeholder="password">
                     <label for="loginPassword">Password</label>
                 </div>
             </div>
@@ -33,10 +35,10 @@
         </div>
         
         
-        <div class="container border rounded shadow-sm p-1 m-auto mt-4 text-center" style="max-width: 200px;">
+        <form method="GET" action="/createAccount" class="container border rounded shadow-sm p-1 m-auto mt-4 text-center" style="max-width: 200px;">
             <h5 class="mb-2">Don't have an account?</h5>
             <button type="submit" class="btn btn-primary m-2">Sign Up</button>
-        </div>
+        </form>
     </div>
 
 
