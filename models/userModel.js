@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
 	first_name: { type: String, required: true },
@@ -8,6 +9,7 @@ const userSchema = new mongoose.Schema({
 	gender: { type: String, required: true, enum: ["M", "F", "Nonspecified"] },
 	verified: { type: Boolean, default: false },
 	accType: { type: String, default: "Basic" },
+	org: { type: Schema.Types.ObjectId, ref: "organizations" },
 });
 
 userSchema.virtual("url").get(function () {

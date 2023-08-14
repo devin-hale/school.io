@@ -1,4 +1,4 @@
-export const codeGen = () => {
+const codeGen = () => {
 	function randomString(length, chars) {
 		var result = "";
 		for (var i = length; i > 0; --i)
@@ -11,3 +11,5 @@ export const codeGen = () => {
 		"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	);
 };
+
+export default codeGen;

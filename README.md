@@ -36,12 +36,13 @@ CURRENTLY: Building organization controller.
 
 [] **Login/User Authentication**
 - [X] Organization/School Model
-- [] Org Controller
+- [X] Org Controller
 - [X] User Model
 - [X] User Controller
 - [X] Login Page
 - [X] Account Creation Page
-- - [] Make it look not bad.
+- - [X] Org verification before signup.
+- - [X] Make it look not bad.
 - [] Basic Landing Page (Will become classroom page)
 - [] Password Encryption
 - [] Account Email Verification

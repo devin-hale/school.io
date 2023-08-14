@@ -1,4 +1,5 @@
 import User from "./../models/userModel.js";
+import Org from "./../models/orgModel.js";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
@@ -19,8 +20,6 @@ const user_login = asyncHandler(async (req, res, next) => {
 		email: req.body.email,
 		password: req.body.password,
 	}).exec();
-
-	console.log(userExists);
 
 	if (!userExists) {
 		res.render("./../views/index.ejs", {
@@ -72,12 +71,16 @@ const create_account_post = [
 		} else {
 			const emailExists = await User.findOne({ email: req.body.email }).exec();
 			if (!emailExists) {
+				const organization = await Org.findOne({
+					orgCode: req.body.orgCode,
+				}).exec();
 				const newUser = new User({
 					first_name: req.body.first_name,
 					last_name: req.body.last_name,
 					email: req.body.email,
 					gender: req.body.gender,
 					password: req.body.password,
+					org: organization._id,
 				});
 
 				await newUser.save();
