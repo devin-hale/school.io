@@ -44,9 +44,11 @@ CURRENTLY: Building organization controller.
 - - [X] Org verification before signup.
 - - [X] Make it look not bad.
 - [] Basic Landing Page (Will become classroom page)
-- [] Password Encryption
+- [X] Password Encryption
 - [] Account Email Verification
-- [] User/Session Authentication
+- [X] User/Session Authentication
+- [] Clean up form validation on client side
+- [] Clean up code
 
 [] **Classroom/Student**
 - [] Classroom Model

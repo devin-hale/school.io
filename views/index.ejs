@@ -10,9 +10,16 @@
 <body class="vh-100 row align-items-center">
     
     <div class="" >
-        <div class="container-fluid m-auto">
-            <h1 class="container text-center display-1"><strong>school.io</strong></h1>
+        <div class="container-fluid m-auto row align-items-center " style="max-width: 350px;">
+            <h1 class=" text-center display-1"><strong>school.io</strong></h1>
             <br>
+            <% if (user) { %>
+                <h3 class="text-center">Welcome Back, <%= user.first_name %>!</h3>
+                <form method="GET" action="/logout" class="d-flex flex-row justify-content-center">
+                    <button type="submit" class="btn btn-primary">Log Out</button>
+                </form>
+            <% } else { %>
+
             <% if (message !== "") { %>
                 <p class="text-center text-danger"><%= message %></p>
             <% } %>
@@ -20,7 +27,7 @@
             <h5 class="mb-2">Please log in:</h5>
             <div class="form-group mb-4">
                 <div class="form-floating">
-                    <input name="email" type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="name@example.com">
+                    <input name="username" type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="name@example.com">
                     <label for="loginEmail">Email address</label>
                 </div>
             </div>
@@ -39,6 +46,8 @@
             <h5 class="mb-2">Don't have an account?</h5>
             <button type="submit" class="btn btn-primary m-2">Sign Up</button>
         </form>
+
+        <% } %>
     </div>
 
 
