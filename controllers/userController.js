@@ -3,6 +3,9 @@ import Org from "./../models/orgModel.js";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
+import emailAuth from "./../models/emailAuth.js";
+import { sendVerification } from "./utils/nodeMailer.js";
+import util from "util";
 
 //Gets user information
 const user_info = asyncHandler(async (req, res, next) => {
@@ -57,24 +60,36 @@ const create_account_post = [
 				const organization = await Org.findOne({
 					orgCode: req.body.orgCode,
 				}).exec();
+				const hashAsync = util.promisify(bcrypt.hash);
+				const hashedPass = await hashAsync(req.body.password, 10);
 
-				bcrypt.hash(req.body.password, 10, async (err, hashedPass) => {
-					const newUser = new User({
-						first_name: req.body.first_name,
-						last_name: req.body.last_name,
-						email: req.body.email,
-						gender: req.body.gender,
-						password: hashedPass,
-						org: organization._id,
-					});
-
-					await newUser.save();
+				const newUser = new User({
+					first_name: req.body.first_name,
+					last_name: req.body.last_name,
+					email: req.body.email,
+					gender: req.body.gender,
+					password: hashedPass,
+					org: organization._id,
 				});
-				res.render("./../views/accountCreate/success.ejs");
+
+				const savedUser = await newUser.save();
+
+				const newAuth = new emailAuth({
+					user: savedUser._id,
+				});
+				console.log(newAuth);
+
+				const savedAuth = await newAuth.save();
+				console.log(savedAuth);
+
+				sendVerification(req.body.email, savedAuth.code);
+
+				res.render("./../views/accountCreate/verify.ejs");
 			} else {
 				//If email does exist, re-render page with error message.
 				res.render("./../views/accountCreate/createAccount.ejs", {
 					message: "Email already in use.",
+					orgCode: req.body.orgCode,
 				});
 			}
 		}

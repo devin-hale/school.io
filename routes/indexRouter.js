@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "./../controllers/userController.js";
 import orgController from "./../controllers/orgController.js";
+import emailAuthController from "./../controllers/emailAuthController.js";
 import passport from "./passport-config.js";
 
 const router = express.Router();
@@ -47,5 +48,8 @@ router.get("/account/create", (req, res) => {
 
 //POST :: Create Account Attempt
 router.post("/account/create", userController.create_account_post);
+
+//POST :: Verify User
+router.post("/verify", emailAuthController.verify_user);
 
 export default router;

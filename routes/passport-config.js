@@ -10,9 +10,12 @@ passport.use(
 			if (!user) {
 				return done(null, false, { message: "Incorrect email" });
 			}
-			const match = await bcrypt.compare(password, user.password);
+			const match = bcrypt.compare(password, user.password);
 			if (!match) {
 				return done(null, false, { message: "Incorrect password" });
+			}
+			if (!user.verified) {
+				return done(null, false, { message: "User not verified!" });
 			}
 			return done(null, user);
 		} catch (err) {
