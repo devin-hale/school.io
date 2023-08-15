@@ -3,7 +3,6 @@ import Org from "./../models/orgModel.js";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
-import emailAuth from "./../models/emailAuth.js";
 import authController from "./emailAuthController.js";
 import util from "util";
 

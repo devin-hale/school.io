@@ -55,7 +55,7 @@ app.use(function (req, res, next) {
 
 //Routes
 app.use("/", indexRouter);
-app.use("/class", classRouter);
+app.use("/classes", classRouter);
 
 //error MW
 app.use((req, res, next) => {

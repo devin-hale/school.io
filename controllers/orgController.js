@@ -11,7 +11,11 @@ const org_info = asyncHandler(async (req, res, next) => {
 //POST :: Create Organization
 const org_create = [
 	//Sanitize
-	body("name", "Invalid name.").trim().isLength({ min: 3 }).escape(),
+	body("name", "Invalid name.")
+		.trim()
+		.toLowerCase()
+		.isLength({ min: 3 })
+		.escape(),
 
 	//Create Org
 	asyncHandler(async (req, res, next) => {
@@ -36,6 +40,7 @@ const org_code_verify = [
 	//Sanitize
 	body("orgCode", "Invalid organization code")
 		.trim()
+		.toLowerCase()
 		.isLength({ min: 6 })
 		.escape(),
 
