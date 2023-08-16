@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "./passport-config.js";
 import classController from "../controllers/classController.js";
+import checkUser from "./authentication/sessionAuth.js";
 
 const router = express.Router();
 

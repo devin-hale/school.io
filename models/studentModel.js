@@ -1,16 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
 const studentSchema = new mongoose.Schema({
-	first_name: String,
-	last_name: String,
-	grade: Number,
-	EL: Boolean,
-	sped: Boolean,
+	first_name: { type: String, required: true },
+	last_name: { type: String, required: true },
+	grade_level: { type: Number, required: true },
+	gifted: Boolean,
 	retained: Boolean,
-	class: { type: Schema.Types.ObjectId, ref: "classes" },
+	sped: Boolean,
+	english_language_leaner: Boolean,
+	classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
 });
 
-studentSchema.virtual("").get(function () {
+studentSchema.virtual("fullName").get(function () {
 	return this.first_name + " " + this.last_name;
 });
 

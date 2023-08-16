@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <title>Home</title>
+    <title>Document</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,33 +33,6 @@
         </div>
       </nav>
 
-      <h4>Your classes:</h4>
-
-    <ul>
-        <% for(let classEl of classes) { %>
-            <li class="list-unstyled">
-                 <div class="container border rounded shadow-sm p-3">
-                    <h5><%= classEl.name %></h5>
-                    <p><strong>Grade Level: </strong><%= classEl.grade_level %></p>
-                    <% if (classEl.subject) { %>
-                      <p><strong>Subject: </strong> <%= classEl.subject %></p>
-                      <% }%>
-                    <div class="row">
-                        <a href="/classes/<%= classEl._id %>" >View Class</a>
-                    </div>
-                    <div class="col">
-                      <strong>Teachers who can see this class:</strong>
-                      <p>
-                        <% classEl.teachers.forEach(teacher => { %>
-                          <%= teacher.first_name %> <%= teacher.last_name %>,
-                        <% }) %>
-                      </p>
-                    </div>
-                 </div> 
-            </li>
-        <% } %>
-    </ul>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

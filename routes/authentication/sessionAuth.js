@@ -1,10 +1,6 @@
 function checkUser(req, res, next) {
-	if (req.user) {
-		res.locals.currentUser = req.user;
-		next();
-	} else {
-		res.redirect("/");
-	}
+	res.locals.currentUser = req.user;
+	next();
 }
 
 export default { checkUser };

@@ -1,13 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config.js";
+
 import path from "path";
+import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import createError from "http-errors";
-import { fileURLToPath } from "url";
+
 import indexRouter from "./routes/indexRouter.js";
 import classRouter from "./routes/classRouter.js";
+import studentRouter from "./routes/studentRouter.js";
+
 import passport from "passport";
 import session from "express-session";
 import flash from "connect-flash";
@@ -47,7 +51,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(
+	session({
+		secret: "cats",
+		resave: false,
+		saveUninitialized: true,
+		expires: new Date(Date.now() + 60 * 60 * 1000),
+	})
+);
 app.use(flash());
 app.use((req, res, next) => {
 	res.locals.success = req.flash("success");
@@ -60,6 +71,7 @@ app.use(passport.session());
 //Routes
 app.use("/", indexRouter);
 app.use("/classes", checkUser.checkUser, classRouter);
+app.use("/students", checkUser.checkUser, studentRouter);
 
 //error MW
 app.use((req, res, next) => {

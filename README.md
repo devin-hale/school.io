@@ -1,8 +1,8 @@
 # school.io
 
 ## Description
-### Version 0.1.1
-This is the beginning of a project intended to act as a simple website for teachers to create, update, and store important documentation.
+### Version 0.1.2
+This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
 documentation comes in handy when little Billy's mom calls the principal to complain.  Keeping that documentation is a way for the classroom teacher
@@ -29,11 +29,28 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
-UPDATE: 8-14-2023(3):  Basic version of classes page now complete.
+**UPDATE: 8-16-2023(1):**
+### Data
+- Modified data models to support multiple class formats.
+    - Optional class subject field
+    - One class per teacher (Early Elementary)
+    - Multiple teachers can access a single class (Late Elementary-Early Middle)
+    - Multiple classes of different students for each teacher (Middle-HS)
+- Fleshed out student data model further
+    - Signifiers for important attributes related to documentation (English Language Learners, Retained(Held Back) Students, Special Ed, Gifted)
+- Significant Progress on Student and Class Controllers.  Will continue to expand as requirements arise.
+### View
+- Not spending a large amount of time on the view.  Just want it to be usable.  Plan is to convert it to react once it reaches MVP status.
+- Expanded class page to show more details.
+- Individual class pages created.  Shows students (sorted by last Name) in a table format.
+- Blank student instance pages working, just so server has somewhere to point.
 
-CURRENTLY: Progressing on class controller, class instance page.
+**CURRENTLY:**
+- Populating student instance page with relevant data.
+- Expanding student/class controllers as needed.
 
 
+## Features Roadmap
 [X] **Login/User Authentication**
 - [X] Organization/School Model
 - [X] Org Controller
@@ -52,11 +69,11 @@ CURRENTLY: Progressing on class controller, class instance page.
 
 [] **Classroom/Student**
 - [X] Classroom Model
-- [] Classroom Controller
-- [] Student Model
-- [] Student Controller
+- [X] Classroom Controller
+- [X] Student Model
+- [X] Student Controller
 - [X] Basic Classes Page
-- - [] Class Instance Page
+- - [X] Class Instance Page
 - - [] Update with relevant documentation info
 - [] Basic Student Instance Page
 - - [] Update with relevant documentation info
@@ -68,8 +85,8 @@ CURRENTLY: Progressing on class controller, class instance page.
 - [] Controllers for each documentation type
 - [] Class-wide documentation view page
 - [] Documentation creation page
-- - [] Figure out method for storing image files.
-- [] Page for specific existing documentation instances
+- - [] Figure out method for attaching/storing image files.
+- [] Page for existing documentation instances
 - - [] Download as PDF.
 
 [] **Utilities**
