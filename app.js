@@ -10,6 +10,8 @@ import indexRouter from "./routes/indexRouter.js";
 import classRouter from "./routes/classRouter.js";
 import passport from "passport";
 import session from "express-session";
+import flash from "connect-flash";
+import checkUser from "./routes/authentication/sessionAuth.js";
 
 //Workaround for __dirname with modules
 const __filename = fileURLToPath(import.meta.url);
@@ -46,16 +48,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(function (req, res, next) {
-	res.locals.currentUser = req.user;
+app.use(flash());
+app.use((req, res, next) => {
+	res.locals.success = req.flash("success");
+	res.locals.error = req.flash("error");
 	next();
 });
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Routes
 app.use("/", indexRouter);
-app.use("/classes", classRouter);
+app.use("/classes", checkUser.checkUser, classRouter);
 
 //error MW
 app.use((req, res, next) => {

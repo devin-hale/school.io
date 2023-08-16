@@ -20,7 +20,8 @@
                 </form>
             <% } else { %>
 
-            <% if (message) { %>
+            <% if (message || error != "") { %>
+                <p class="text-center text-danger"><%= error %></p>
                 <p class="text-center text-danger"><%= message %></p>
             <% } %>
         <form method="POST" action="/login" class="container border rounded shadow-sm p-3" style="max-width: 350px;">

@@ -8,14 +8,18 @@ passport.use(
 		try {
 			const user = await User.findOne({ email: username }).exec();
 			if (!user) {
-				return done(null, false, { message: "Incorrect email" });
+				return done(null, false, {
+					message: "Incorrect email/password combination.",
+				});
 			}
 			const match = bcrypt.compare(password, user.password);
 			if (!match) {
-				return done(null, false, { message: "Incorrect password" });
+				return done(null, false, {
+					message: "Incorrect email/password combination.",
+				});
 			}
 			if (!user.verified) {
-				return done(null, false, { message: "User not verified!" });
+				return done(null, false, { message: "Your account is not verified." });
 			}
 			return done(null, user);
 		} catch (err) {
