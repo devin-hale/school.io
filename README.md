@@ -40,7 +40,8 @@ Once the model and controller portion is complete, the plan is to fully create t
     - Signifiers for important attributes related to documentation (English Language Learners, Retained(Held Back) Students, Special Ed, Gifted)
 - Significant Progress on Student and Class Controllers.  Will continue to expand as requirements arise.
 ### View
-- Not spending a large amount of time on the view.  Just want it to be usable.  Plan is to convert it to react once it reaches MVP status.
+- Not spending a large amount of time on the view.  Just want it to be usable.  Plan is to convert it to react (and then R. Native) once it reaches MVP status.
+    - Why? Because I wanted to learn how to use the MVC model, but realize that React and React Native fit the requirements better than an MVC.
 - Expanded class page to show more details.
 - Individual class pages created.  Shows students (sorted by last Name) in a table format.
 - Blank student instance pages working, just so server has somewhere to point.
@@ -98,7 +99,7 @@ Once the model and controller portion is complete, the plan is to fully create t
 - [] Student transfer between orgs
 
 [] **Long term**
-- [] Create full view in react
+- [] Convert website to jamstack format using React as the front end.
 - [] React Native port
 - [] SSL Certificate
 - [] Disclaimers, data privacy, etc.
