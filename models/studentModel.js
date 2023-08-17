@@ -7,7 +7,7 @@ const studentSchema = new mongoose.Schema({
 	gifted: Boolean,
 	retained: Boolean,
 	sped: Boolean,
-	english_language_leaner: Boolean,
+	english_language_learner: Boolean,
 	classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
 });
 
