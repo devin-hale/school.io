@@ -80,11 +80,22 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 [] **Utilities**
 - [] Org Admin Page
+    - [] Create classes
+        - [] Assign a teacher or teachers to classes
+        - [] Assign students to class (easier for Elementary)
+    - [] Create students
+        - [] Assign a class to students (easier for Middle/HS)
+    - [] Transfer students between classes
+    - [] Cross Org Student Transfer Requests
 - [] Super Admin Page
+    - [] Create Orgs
+    - [] Create Org Admin Account
+    - [] "Promote" Users to Org Admin
+    - [] Data Utilities
 - [] User profile
+    - [] Profile Image
+    - [] Editing of basic information
 - [] Teacher to Teacher messaging within the same Org
-- [] Student transfer between classes
-- [] Student transfer between orgs
 
 [] **Long term**
 - [] Convert website to jamstack format using React as the front end.
