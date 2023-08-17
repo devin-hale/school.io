@@ -1,7 +1,7 @@
 # school.io
 
 ## Description
-### Version 0.2.0
+### Version 0.2.1
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,24 +29,13 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
-**UPDATE: 8-16-2023(2):**
-### Data
-- Modified data models to support multiple class formats.
-    - Optional class subject field
-    - One class per teacher (Early Elementary)
-    - Multiple teachers can access a single class (Late Elementary-Early Middle)
-    - Multiple classes of different students for each teacher (Middle-HS)
-- Fleshed out student data model further
-    - Signifiers for important attributes related to documentation (English Language Learners, Retained(Held Back) Students, Special Ed, Gifted)
-- Significant Progress on Student and Class Controllers.  Will continue to expand as requirements arise.
-### View
-- Not spending a large amount of time on the view.  Just want it to be usable.  Plan is to convert it to react (and then R. Native) once it reaches MVP status.
-    - Why? Because I wanted to learn how to use the MVC model, but realize that React and React Native fit the requirements better than an MVC.
-- Expanded class page to show more details.
-- Individual class pages created.  Shows students (sorted by last Name) in a table format.
-- Basic Student Instance Pages working.
+### **UPDATE: 8-17-2023(1):**
+#### Data
+- Data modeling for basic communication.
+    - Staff to staff, staff to student, staff to student, staff to other.
+    - References to give documentation view access to other staff.
 
-**CURRENTLY:**
+### **CURRENTLY:**
 - Modeling data and writing controllers for documentation and documentation types.
 
 
@@ -85,9 +74,9 @@ Once the model and controller portion is complete, the plan is to fully create t
 - [] Controllers for each documentation type
 - [] Class-wide documentation view page
 - [] Documentation creation page
-- - [] Figure out method for attaching/storing image files.
+    - [] Figure out method for attaching/storing image files.
 - [] Page for existing documentation instances
-- - [] Download as PDF.
+    - [] Download as PDF.
 
 [] **Utilities**
 - [] Org Admin Page

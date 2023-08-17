@@ -2,6 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 const comModel = mongoose.Schema(
 	{
+		owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
+		access: [{ type: Schema.Types.ObjectId, ref: "users" }],
 		communication_type: {
 			type: String,
 			enum: [
@@ -21,7 +23,6 @@ const comModel = mongoose.Schema(
 		notes: { type: String },
 		followUp: Boolean,
 		followUp_date: Date,
-		access: [{ type: Schema.Types.ObjectId, ref: "users" }],
 	},
 	{ collection: "communications" }
 );
