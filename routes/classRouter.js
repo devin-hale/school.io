@@ -9,7 +9,6 @@ const router = express.Router();
 router.get("/", classController.classes_page);
 
 //GET :: Specific Class Page
-//TODO - Make Page
 router.get("/:_id", classController.class_instance_page);
 
 export default router;

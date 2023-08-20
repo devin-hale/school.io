@@ -59,7 +59,15 @@
               </div>
             <% }) %>
         </div>
-        
+        <div>
+          <button class="btn btn-primary" type="submit">Create Communication Report</button>
+        </div>
+        <form method="POST" action="/docs/incident/form/<%= user._id  %>/<%= student._id %>">
+          <button class="btn btn-warning" type="submit">Create Incident Report</button>
+        </form>
+        <form>
+          <button class="btn btn-success" type="submit">Create PST Documentation</button>
+        </form>
         <div class="p-2 m-1" style="max-width: 800px;">
           <h4>Documentation:</h4>
           <table class="table">

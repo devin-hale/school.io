@@ -37,6 +37,8 @@ Once the model and controller portion is complete, the plan is to fully create t
 - Controllers
     - Communication
     - Incidents
+#### View
+- Basic incident creation page.
 
 ### **CURRENTLY:**
 - Modeling data and writing controllers for various documentation and documentation types.
@@ -82,8 +84,8 @@ Once the model and controller portion is complete, the plan is to fully create t
     - [X] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
-- [] Class-wide documentation view page
-- [] Documentation creation page
+- [X] Documentation creation page
+    - [] Basic working version.
     - [] Figure out method for attaching/storing image files.
     - [] Update models and controllers to support image associations.
 - [] Page for existing documentation instances
@@ -113,5 +115,6 @@ Once the model and controller portion is complete, the plan is to fully create t
 [] **Long term**
 - [] Convert website to jamstack format using React as the front end.
 - [] React Native port
+- [] Education standards pre-loaded and selected.
 - [] SSL Certificate
 - [] Disclaimers, data privacy, etc.

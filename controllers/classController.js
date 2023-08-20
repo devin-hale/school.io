@@ -1,6 +1,7 @@
 import Class from "./../models/classModel.js";
 import asyncHandler from "express-async-handler";
 import Student from "./../models/studentModel.js";
+import mongoose, { ObjectId } from "mongoose";
 import { body, validationResult } from "express-validator";
 
 //GET :: Class home page
@@ -22,10 +23,31 @@ const class_instance_page = asyncHandler(async (req, res, next) => {
 	const classInfo = await Class.findOne({ _id: classId })
 		.populate("teachers")
 		.exec();
-	const students = await Student.find({ classes: { $in: [classId] } })
-		.sort({ last_name: 1 })
-		.lean()
-		.exec();
+	const students = await Student.aggregate([
+		{
+			$match: { classes: { $in: [new mongoose.Types.ObjectId(`${classId}`)] } },
+		},
+		{
+			$lookup: {
+				from: "incidents",
+				localField: "_id",
+				foreignField: "students_involved",
+				as: "allIncidents",
+			},
+		},
+		{
+			$project: {
+				first_name: 1,
+				last_name: 1,
+				grade_level: 1,
+				retained: 1,
+				sped: 1,
+				english_language_learner: 1,
+				classes: 1,
+				incidents: { $size: "$allIncidents" },
+			},
+		},
+	]).exec();
 
 	res.render("./../views/class/classInstance.ejs", {
 		user: req.user,

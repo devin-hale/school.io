@@ -11,6 +11,7 @@ import createError from "http-errors";
 import indexRouter from "./routes/indexRouter.js";
 import classRouter from "./routes/classRouter.js";
 import studentRouter from "./routes/studentRouter.js";
+import docRouter from "./routes/docRouters/docRouter.js";
 
 import passport from "passport";
 import session from "express-session";
@@ -72,6 +73,7 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/classes", checkUser.checkUser, classRouter);
 app.use("/students", checkUser.checkUser, studentRouter);
+app.use("/docs", checkUser.checkUser, docRouter);
 
 //error MW
 app.use((req, res, next) => {

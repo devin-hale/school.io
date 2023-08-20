@@ -12,6 +12,12 @@ const incidentModel = mongoose.Schema(
 		subject: { type: String, required: true },
 		description: { type: String },
 		action_taken: String,
+		parentOrGuardian_notified: Boolean,
+		notification_type: {
+			Type: String,
+			enum: ["Email", "Phone Call", "Text", "Remind", "Social Media", "Other"],
+		},
+		escalated: Boolean,
 	},
 	{ collection: "incidents" }
 );
