@@ -1,7 +1,7 @@
 # school.io
 
 ## Description
-### Version 0.2.1
+### Version 0.2.2
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,15 +29,17 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
-### **UPDATE: 8-17-2023(1):**
+### **UPDATE: 8-20-2023(1):**
 #### Data
 - Data modeling for basic communication.
     - Staff to staff, staff to student, staff to student, staff to other.
     - References to give documentation view access to other staff.
+- Controllers
+    - Communication
+    - Incidents
 
 ### **CURRENTLY:**
-- Modeling data and writing controllers for documentation and documentation types.
-
+- Modeling data and writing controllers for various documentation and documentation types.
 
 ## Features Roadmap
 [X] **Login/User Authentication**
@@ -68,15 +70,26 @@ Once the model and controller portion is complete, the plan is to fully create t
     - [] Update with relevant documentation info
 
 [] **Documentation**
-- [] Define documentation types
+- [X] Define documentation types
 - [] Decide on forms for each
 - [] Models for each
+    - [X] Incident (fight, worrisome comments, etc)
+    - [X] Commmunication (student, staff, parent, other)
+    - [] PST
+    - [] More?
 - [] Controllers for each documentation type
+    - [X] Incident (fight, worrisome comments, etc)
+    - [X] Commmunication (student, staff, parent, other)
+    - [] PST
+    - [] More?
 - [] Class-wide documentation view page
 - [] Documentation creation page
     - [] Figure out method for attaching/storing image files.
+    - [] Update models and controllers to support image associations.
 - [] Page for existing documentation instances
     - [] Download as PDF.
+    - [] Possibly create unique HTML files for formatting.
+- [] Clean up serverside sanitization
 
 [] **Utilities**
 - [] Org Admin Page

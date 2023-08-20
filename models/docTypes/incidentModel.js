@@ -1,19 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-const comModel = mongoose.Schema(
+const incidentModel = mongoose.Schema(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
 		access: [{ type: Schema.Types.ObjectId, ref: "users" }],
-		communication_type: {
-			type: String,
-			enum: [
-				"Staff to Staff",
-				"Staff to Parent",
-				"Staff to Student",
-				"Staff to Other",
-			],
-			required: true,
-		},
 		date_of_occurence: Date,
 		staff_involved: [{ type: Schema.Types.ObjectId, ref: "users" }],
 		students_involved: [{ type: Schema.Types.ObjectId, ref: "students" }],
@@ -21,10 +11,9 @@ const comModel = mongoose.Schema(
 		others_involved: { type: String },
 		subject: { type: String, required: true },
 		description: { type: String },
-		followUp: Boolean,
-		followUp_date: Date,
+		action_taken: String,
 	},
-	{ collection: "communications" }
+	{ collection: "incidents" }
 );
 
-export default mongoose.model("communications", comModel);
+export default mongoose.model("incidents", incidentModel);
