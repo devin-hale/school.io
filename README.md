@@ -1,7 +1,7 @@
 # school.io
 
 ## Description
-### Version 0.2.2
+### Version 0.2.3
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,7 +29,7 @@ Once the model and controller portion is complete, the plan is to fully create t
 
 ## Status
 
-### **UPDATE: 8-20-2023(1):**
+### **UPDATE: 8-20-2023(2):**
 #### Data
 - Data modeling for basic communication.
     - Staff to staff, staff to student, staff to student, staff to other.
@@ -38,10 +38,15 @@ Once the model and controller portion is complete, the plan is to fully create t
     - Communication
     - Incidents
 #### View
-- Basic incident creation page.
-
+- Document/Form Creation
+    - Incident
+- Document Instance View
+    - Incident
+- Updates to class/student pages to display and provide access to documentation views.
 ### **CURRENTLY:**
 - Modeling data and writing controllers for various documentation and documentation types.
+- Creating basic forms for document type creation.
+- Updating class/student views as needed.
 
 ## Features Roadmap
 [X] **Login/User Authentication**
@@ -84,11 +89,18 @@ Once the model and controller portion is complete, the plan is to fully create t
     - [X] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
-- [X] Documentation creation page
-    - [] Basic working version.
+- [] Documentation creation page
+    - [] Basic working versions.
+        - [X] Incident
+        - [] Communication
+        - [] PST
     - [] Figure out method for attaching/storing image files.
     - [] Update models and controllers to support image associations.
 - [] Page for existing documentation instances
+    - [] Basic instance page.
+        - [X] Incident
+        - [] Communication
+        - [] PST
     - [] Download as PDF.
     - [] Possibly create unique HTML files for formatting.
 - [] Clean up serverside sanitization

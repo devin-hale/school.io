@@ -4,6 +4,27 @@ import Student from "./../../models/studentModel.js";
 import { body, validationResult } from "express-validator";
 import asyncHandler from "express-async-handler";
 
+// GET :: View Incident Record
+const get_incident_record = asyncHandler(async (req, res, next) => {
+	console.log(req.params.incidentId);
+	const incidentExists = await Incident.findOne({
+		_id: req.params.incidentId,
+	})
+		.populate("students_involved")
+		.populate("owner")
+		.populate("access")
+		.exec();
+
+	if (!incidentExists) {
+		next(createError(404));
+	}
+
+	res.render("./../views/docTypes/incident/viewIncident.ejs", {
+		user: req.user,
+		incident: incidentExists,
+	});
+});
+
 // POST :: Redirect to incident record creation form
 const populate_incident_creation_form = [
 	body("teacherId").escape(),
@@ -77,6 +98,8 @@ const create_incident_record = [
 				subject: req.body.subject,
 				description: req.body.description,
 				action_taken: req.body.action_taken,
+				parentOrGuardian_notified: req.body.parentOrGuardian_notified,
+				escalated: req.body.escalated,
 			});
 
 			await newRecord.save();
@@ -168,6 +191,7 @@ const delete_incident_record = [
 ];
 
 export default {
+	get_incident_record,
 	populate_incident_creation_form,
 	create_incident_record,
 	update_incident_record,

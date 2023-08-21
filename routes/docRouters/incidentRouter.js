@@ -3,6 +3,9 @@ import incidentController from "./../../controllers/docTypes/incidentController.
 
 const router = express.Router();
 
+// GET :: Incident Instance
+router.get("/:incidentId", incidentController.get_incident_record);
+
 // POST -> Render to Creation Form
 router.post(
 	"/form/:userId/:studentId",

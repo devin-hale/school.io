@@ -68,23 +68,26 @@
         <form>
           <button class="btn btn-success" type="submit">Create PST Documentation</button>
         </form>
-        <div class="p-2 m-1" style="max-width: 800px;">
-          <h4>Documentation:</h4>
+        <div class="p-2 m-1 container" style="max-width: 800px;">
+          <h4>Incidents:</h4>
+
           <table class="table">
             <thead>
-              <th scope="col">Date</th>
-              <th scope="type">Type</th>
               <th scope="col">Teacher</th>
+              <th scope="col">Subject</th>
+              <th scope="col">Date</th>
+              <th scope="col">Document</th>
             </thead>
-
-            <!-- Render Each Student Documentation
-              <% //student.forEach(student => { %>
-                <th scope="row"><%= //`${student.first_name}` %></th>
-                <td><%= //student.last_name %></td>
-                <td><%= //student.grade_level %></td>
-                <td><a href="/students/<%= //student._id %>">View Student</a></td>
-                <% //}) %>
-             -->
+            <tbody>
+              <% documentation.incidents.forEach(incident => { %>
+                <tr scope="row">
+                  <td><%= `${incident.owner.first_name + ' ' + incident.owner.last_name}` %></td>
+                  <td><%= incident.subject %></td>
+                  <td><%= `${incident.date_of_occurence.getMonth()+1}-${incident.date_of_occurence.getDate()}-${incident.date_of_occurence.getFullYear()}` %></td>
+                  <td><a href="/docs/incident/<%= incident._id %>">View Incident</a></td>
+                </tr>
+              <% }) %>
+            </tbody>
           </table>
         </div>
      

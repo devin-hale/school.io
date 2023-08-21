@@ -47,6 +47,11 @@ const class_instance_page = asyncHandler(async (req, res, next) => {
 				incidents: { $size: "$allIncidents" },
 			},
 		},
+		{
+			$sort: {
+				last_name: 1,
+			},
+		},
 	]).exec();
 
 	res.render("./../views/class/classInstance.ejs", {

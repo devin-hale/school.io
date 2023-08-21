@@ -69,18 +69,18 @@
               <label for="subject">Incident Subject:</label>
           </div>
           <div class="form-floating m-2">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px; resize: none;" required></textarea>
+            <textarea name="description" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px; resize: none;" required></textarea>
             <label for="floatingTextarea2">Description</label>
           </div>
           <div class="form-check">
-            <input name="parentOrGuardian_notified" class="form-check-input" type="checkbox" value="" id="parentNotifyCB">
+            <input name="parentOrGuardian_notified" value="true" class="form-check-input" type="checkbox" id="parentNotifyCB">
             <label class="form-check-label" for="parentNotifyCB">
               Parent/Guardian Notified
             </label>
           </div>
 
           <div class="form-check">
-            <input name="escalated" class="form-check-input" type="checkbox" value="" id="escalatedCB">
+            <input name="escalated" value="true" class="form-check-input" type="checkbox" id="escalatedCB">
             <label class="form-check-label" for="escalatedCB">
               Escalated to Administration
             </label>

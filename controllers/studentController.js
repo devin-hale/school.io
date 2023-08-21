@@ -1,5 +1,7 @@
 import Student from "./../models/studentModel.js";
+import Incident from "./../models/docTypes/incidentModel.js";
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 import { body, validationResult } from "express-validator";
 
 const student_details_page = asyncHandler(async (req, res, next) => {
@@ -7,13 +9,24 @@ const student_details_page = asyncHandler(async (req, res, next) => {
 	const student = await Student.findOne({ _id: studentID })
 		.populate("classes")
 		.exec();
-	console.log(studentID);
-	console.log(student);
-	//TODO (later) Grab all incidents with this studentID as a ref, pass it into render.
+	const incidents = await Incident.find({
+		students_involved: {
+			$in: [new mongoose.Types.ObjectId(`${studentID}`)],
+		},
+	})
+		.sort({
+			date_of_occurence: -1,
+		})
+		.populate("owner")
+		.lean()
+		.exec();
 
 	res.render("./../views/student/studentDetails.ejs", {
 		user: req.user,
 		student: student,
+		documentation: {
+			incidents: incidents,
+		},
 	});
 });
 
