@@ -1,4 +1,4 @@
-# school.io
+# school.io (API REFACTOR)
 
 ## Description
 ### Version 0.2.4
@@ -17,96 +17,68 @@ It takes up valuable time from the teacher, and often cuts into their own person
 Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Tech
-The current iteration of this model is mostly to build a usable proof of concept using a standard MVC pattern.
-Tech used:
-- Javascript
+- Javascript/Typescript
 - nodeJS/Express
 - MongoDB with Mongoose
-- EJS for the view template
-- Bootstrap for styling
 
-Once the model and controller portion is complete, the plan is to fully create the view within React/NextJS, and then in React Native.
 
 ## Status
 
-### **UPDATE: 8-20-2023(2):**
-#### Data
-- Data modeling for basic communication.
-    - Staff to staff, staff to student, staff to student, staff to other.
-    - References to give documentation view access to other staff.
-- Controllers
-    - Communication
-    - Incidents
-#### View
-- Document/Form Creation
-    - Incident
-- Document Instance View
-    - Incident
-- Updates to class/student pages to display and provide access to documentation views.
-### **CURRENTLY:**
-- Modeling data and writing controllers for various documentation and documentation types.
-- Creating basic forms for document type creation.
-- Updating class/student views as needed.
+### **UPDATE: 8-23-2023(1):**
+- Refactoring into jamstack.
 
-## Features Roadmap
-[X] **Login/User Authentication**
-- [X] Organization/School Model
-- [X] Org Controller
-- [X] User Model
-- [X] User Controller
-- [X] Login Page
-- [X] Account Creation Page
-- - [X] Org verification before signup.
-- - [X] Make it look not bad.
-- [X] Basic Landing Page (Will become classroom page)
-- [X] Password Encryption
-- [X] Account Email Verification
-- [X] User/Session Authentication
-- [X] Clean up form validation on client side
-- [X] Clean up code
 
-[X] **Classroom/Student**
-- [X] Classroom Model
-- [X] Classroom Controller
-- [X] Student Model
-- [X] Student Controller
-- [X] Basic Classes Page
-- [X] Class Instance Page
-    - [] Update with relevant documentation info
-- [X] Basic Student Instance Page
-    - [] Update with relevant documentation info
+## Development Roadmap
 
-[] **Documentation**
-- [X] Define documentation types
+[]**Refactor Phase**(Write test, To Typescript, then to API)
+- [] Routes
+- [] Authentication
+    - [] Refactor everything except for sessions.
+    - [] Move to dedicated folder.
+    - [] Write JWT session auth.
+- [] Models
+- [] Controllers
+- [] Utilities
+- [] App.js
+
+
+[] **Organizational**
+- [] Write unit tests for refactors, and write tests going forward.
+- [] Remove unecessary comments, try to have more useful comments.
+
+[] **Login/User Authentication**(REFACTOR+TS)
+- [] Organization/School Model
+- [] Org Controller
+- [] User Model
+- [] User Controller
+- [] Password Encryption
+- [] Account Email Verification
+- [] User/Session Authentication
+
+[] **Classroom/Student**(REFACTOR+TS)
+- [] Classroom Model
+- [] Classroom Controller
+- [] Student Model
+- [] Student Controller
+
+[] **Documentation**(PARTIAL REFACTOR + TS)
 - [] Decide on forms for each
 - [] Models for each
-    - [X] Incident (fight, worrisome comments, etc)
-    - [X] Commmunication (student, staff, parent, other)
+    - [] Incident (fight, worrisome comments, etc)
+    - [] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
 - [] Controllers for each documentation type
-    - [X] Incident (fight, worrisome comments, etc)
-    - [X] Commmunication (student, staff, parent, other)
+    - [] Incident (fight, worrisome comments, etc)
+    - [] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
-- [] Documentation creation page
-    - [] Basic working versions.
-        - [X] Incident
-        - [] Communication
-        - [] PST
-    - [] Figure out method for attaching/storing image files.
-    - [] Update models and controllers to support image associations.
-- [] Page for existing documentation instances
-    - [] Basic instance page.
-        - [X] Incident
-        - [] Communication
-        - [] PST
-    - [] Download as PDF.
-    - [] Possibly create unique HTML files for formatting.
+- [] Serverside image storage.
+- [] Download as PDF
 - [] Clean up serverside sanitization
 
 [] **Utilities**
-- [] Org Admin Page
+- [] Verify Org Admin Methods
     - [] Create classes
         - [] Assign a teacher or teachers to classes
         - [] Assign students to class (easier for Elementary)
@@ -114,19 +86,9 @@ Once the model and controller portion is complete, the plan is to fully create t
         - [] Assign a class to students (easier for Middle/HS)
     - [] Transfer students between classes
     - [] Cross Org Student Transfer Requests
-- [] Super Admin Page
+- [] Verify Super Admin Methods
     - [] Create Orgs
     - [] Create Org Admin Account
     - [] "Promote" Users to Org Admin
     - [] Data Utilities
-- [] User profile
-    - [] Profile Image
-    - [] Editing of basic information
 - [] Teacher to Teacher messaging within the same Org
-
-[] **Long term**
-- [] Convert website to jamstack format using React as the front end.
-- [] React Native port
-- [] Education standards pre-loaded and selected.
-- [] SSL Certificate
-- [] Disclaimers, data privacy, etc.
