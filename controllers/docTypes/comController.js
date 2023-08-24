@@ -1,8 +1,34 @@
-import Student from "./../../models/studentModel.js";
-import User from "./../../models/userModel.js";
 import Communication from "./../../models/docTypes/comModel.js";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
+
+
+
+const get_communication_page = asyncHandler(async(req, res ) => {
+ 	const commExists = await Communication.findOne({ _id: req.params.comId,
+	})
+		.populate("students_involved")
+        .populate("parents_involved")
+        .populate("staff_involved")
+		.populate("owner")
+		.populate("access")
+		.exec();
+
+	if (!commExists) {
+		next(createError(404));
+	}
+
+	res.render("./../views/docTypes/incident/viewComm.ejs", {
+		user: req.user,
+		incident: commExists,
+	});
+   
+
+}); 
+
+
+
+
 
 // POST :: Create communication record
 const create_communication_record = [
@@ -136,6 +162,7 @@ const delete_communication_record = [
 ];
 
 export default {
+    get_communication_page,
 	create_communication_record,
 	edit_communication_record,
 	delete_communication_record,
