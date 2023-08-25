@@ -30,7 +30,8 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Added chalk as a way to color code console logs.
 
 ### **NEXT:**
-- Write tests for controllers.
+- Set up test DB operations.
+- Write tests for routes/controllers.
 - Convert controllers to TS + Pure API. 
 
 ## Development Roadmap

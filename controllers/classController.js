@@ -1,7 +1,7 @@
 import Class from "./../models/classModel.js";
 import asyncHandler from "express-async-handler";
 import Student from "./../models/studentModel.js";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { body, validationResult } from "express-validator";
 
 //GET :: Class home page
