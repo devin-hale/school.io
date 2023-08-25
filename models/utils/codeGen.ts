@@ -1,7 +1,7 @@
-const codeGen = () => {
-	function randomString(length, chars) {
-		var result = "";
-		for (var i = length; i > 0; --i)
+const codeGen : (() => void) = () => {
+	function randomString(length : number, chars : string) {
+		let result : string = "";
+		for (let i : number = length; i > 0; --i)
 			result += chars[Math.round(Math.random() * (chars.length - 1))];
 		return result;
 	}

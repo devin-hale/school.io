@@ -1,6 +1,21 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 
-const comModel = mongoose.Schema(
+interface ICom {
+    owner: ObjectId,
+    access?: ObjectId[],
+    communication_type: "Staff to Staff" | "Staff to Parent" | "Staff to Student" | "Staff to Other",
+    date_of_occurence: Date,
+    staff_involved?: ObjectId[],
+    students_involved?: ObjectId[],
+    parents_involved?: ObjectId[],
+    others_involved?: ObjectId[],
+    subject: string,
+    description?: string,
+    followUp: boolean,
+    followUp_date?: Date
+}
+
+const comModel = new mongoose.Schema<ICom>(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
 		access: [{ type: Schema.Types.ObjectId, ref: "users" }],
@@ -21,10 +36,12 @@ const comModel = mongoose.Schema(
 		others_involved: { type: String },
 		subject: { type: String, required: true },
 		description: { type: String },
-		followUp: Boolean,
+		followUp: {type: Boolean, required: true},
 		followUp_date: Date,
 	},
 	{ collection: "communications" }
 );
 
-export default mongoose.model("communications", comModel);
+export default mongoose.model<ICom>("communications", comModel);
+
+

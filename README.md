@@ -1,7 +1,7 @@
 # school.io (API REFACTOR)
 
 ## Description
-### Version 0.2.4
+### Version 0.2.5
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -24,21 +24,25 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 8-23-2023(1):**
-- Refactoring into jamstack.
+### **UPDATE: 8-24-2023(1):**
+- Updated existing model files to Typescript.
+- Re-Ordered refactor prioritization.  Will be easier to go from model up when converting to TS.
 
+### **NEXT:**
+- Write tests for controllers.
+- Convert controllers to TS + Pure API. 
 
 ## Development Roadmap
 
 []**Refactor Phase**(Write test, To Typescript, then to API)
+- [x] Models
+- [] Controllers
 - [] Routes
+- [] Utilities
 - [] Authentication
     - [] Refactor everything except for sessions.
     - [] Move to dedicated folder.
     - [] Write JWT session auth.
-- [] Models
-- [] Controllers
-- [] Utilities
 - [] App.js
 
 
@@ -47,25 +51,25 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [] Remove unecessary comments, try to have more useful comments.
 
 [] **Login/User Authentication**(REFACTOR+TS)
-- [] Organization/School Model
+- [x] Organization/School Model
 - [] Org Controller
-- [] User Model
+- [x] User Model
 - [] User Controller
 - [] Password Encryption
 - [] Account Email Verification
 - [] User/Session Authentication
 
 [] **Classroom/Student**(REFACTOR+TS)
-- [] Classroom Model
+- [x] Classroom Model
 - [] Classroom Controller
-- [] Student Model
+- [x] Student Model
 - [] Student Controller
 
 [] **Documentation**(PARTIAL REFACTOR + TS)
 - [] Decide on forms for each
 - [] Models for each
-    - [] Incident (fight, worrisome comments, etc)
-    - [] Commmunication (student, staff, parent, other)
+    - [x] Incident (fight, worrisome comments, etc)
+    - [x] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
 - [] Controllers for each documentation type
