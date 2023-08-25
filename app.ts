@@ -1,12 +1,12 @@
-import express from "express";
-import mongoose from "mongoose";
+import express, { NextFunction, Request, Response, Errback } from "express";
+import initializeMongoServer from "./config/mongoConfig.js";
 import "dotenv/config.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import createError from "http-errors";
+import createError, { HttpError } from "http-errors";
 
 import indexRouter from "./routes/indexRouter.js";
 import classRouter from "./routes/classRouter.js";
@@ -18,28 +18,16 @@ import session from "express-session";
 import flash from "connect-flash";
 import checkUser from "./routes/authentication/sessionAuth.js";
 
+import logTypes from "./config/chalkConfig.js";
+
 //Workaround for __dirname with modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//Import env variables
-const PORT = parseInt(process.env.PORT) || 3000;
-const DBSTRING =
-	process.env.NODE_ENV === "dev"
-		? `${process.env.DBLINK + process.env.DBDEV}`
-		: `${process.env.DBLINK + process.env.DB}`;
+const PORT = parseInt(process.env.PORT!) || 3000;
 
-//DB Connection
-mongo().catch((err) => console.log(err));
-async function mongo() {
-	await mongoose.connect(DBSTRING);
-}
-mongoose.connection.on(
-	"error",
-	console.error.bind(console, "MongoDB connection error")
-);
+initializeMongoServer();
 
-//Server
 const app = express();
 
 //Middleware
@@ -53,7 +41,6 @@ app.use(
 		secret: "cats",
 		resave: false,
 		saveUninitialized: true,
-		expires: new Date(Date.now() + 60 * 60 * 1000),
 	})
 );
 app.use(flash());
@@ -75,14 +62,13 @@ app.use("/docs", checkUser.checkUser, docRouter);
 app.use((req, res, next) => {
 	next(createError(404));
 });
-app.use((err, req, res, next) => {
+app.use((err : HttpError, req : Request, res: Response, next : NextFunction) : void => {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 	res.status(err.status || 500);
 	res.render("error", { error: err });
 });
 
-//Start server
 app.listen(PORT, () => {
-	console.log(`Server started on PORT: ${PORT}`);
+	console.log(logTypes.success(`school.io server started on `) + logTypes.alert(`PORT: ${PORT}`));
 });

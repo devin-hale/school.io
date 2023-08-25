@@ -4,7 +4,7 @@ import codeGen from "./utils/codeGen.js";
 interface IOrg {
     name: string,
     color?: string,
-    orgCode?: string
+    orgCode?: () => string
 }
 
 const orgSchema = new mongoose.Schema<IOrg>({

@@ -43,7 +43,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - [] Refactor everything except for sessions.
     - [] Move to dedicated folder.
     - [] Write JWT session auth.
-- [] App.js
+- [X] App.js
 
 
 [] **Organizational**

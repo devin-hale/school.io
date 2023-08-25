@@ -3,7 +3,7 @@ import codeGen from "./utils/codeGen.js";
 
 interface IEmailAuth {
     user: ObjectId,
-    code: string;
+    code: () => string;
 }
 
 
