@@ -54,9 +54,9 @@ app.use(passport.session());
 
 //Routes
 app.use("/", indexRouter);
-app.use("/classes", checkUser.checkUser, classRouter);
-app.use("/students", checkUser.checkUser, studentRouter);
-app.use("/docs", checkUser.checkUser, docRouter);
+app.use("/classes", classRouter);
+app.use("/students",  studentRouter);
+app.use("/docs",  docRouter);
 
 //error MW
 app.use((req, res, next) => {
@@ -66,7 +66,7 @@ app.use((err : HttpError, req : Request, res: Response, next : NextFunction) : v
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 	res.status(err.status || 500);
-	res.render("error", { error: err });
+	res.send({ error: err });
 });
 
 app.listen(PORT, () => {

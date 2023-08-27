@@ -6,7 +6,7 @@ import express, { Express } from 'express';
 import initializeMongoServer from '../../config/mongoConfigTesting.js';
 
 
-initializeMongoServer();
+//initializeMongoServer();
 
 const app : Express = express();
 
@@ -18,11 +18,11 @@ app.use("/classes", classRouter);
 
 test("Class Route", done => {
     supertest(app)
-        .get("/")
+        .get("/classes")
         .expect("Content-Type", /json/)
-        .expect("stuff")
-        .expect({classes: 'stuff goes here'})
-})
+        .expect({class: "pee"})
+        .expect(200, done)
+        })
 
 
 
