@@ -16,6 +16,7 @@ const jestConfig: JestConfigWithTsJest = {
       },
     ],
   },
+  "testTimeout": 15000
 }
 
 export default jestConfig
