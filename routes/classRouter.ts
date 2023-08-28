@@ -11,4 +11,6 @@ router.get("/org/:orgId", classController.get_org_classes);
 
 router.post("/create", classController.create_class)
 
+router.put("/edit/:classId", classController.edit_class)
+
 export default router;

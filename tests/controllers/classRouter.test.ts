@@ -6,14 +6,12 @@ import Org from '../../models/orgModel.js';
 import request from 'supertest';
 import express, { Express, response } from 'express';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose  from 'mongoose';
+import mongoose, { FlattenMaps, ObjectId }  from 'mongoose';
 import initializeTestDB from '../DB/testingSetup.js';
 
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
-import logger from "morgan";
-import createError  from "http-errors";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,13 +27,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/classes", classRouter);
 
-app.use((req:any, res:any, next:any, err:any)=> {
-    next(createError(404))
-})
 app.use((req:any, res: any, next:any, err: any) : void => {
-	res.locals.message = err.message;
-	res.status(err.status);
-	res.send({ error: err });
+    console.log(err)
+	res.status(500).send({ error: err });
 });
 
 beforeAll(async()=> {
@@ -55,22 +49,22 @@ afterAll(async()=> {
 
 describe("Class GET ", () => {
 
-    it("Returns a specific Class", async () => {
+    it("Returns a specific Class", async () : Promise<void> => {
         const classInstance = await ClassModel.findOne({});
         const response = await request(app)
             .get(`/classes/${classInstance?._id}`)
-            .expect("Content-Type", /json/)
+            .expect("Content-Type", 'application/json; charset=utf-8')
             .expect(200)
         expect(response.body.classInstance._id).toBe(`${classInstance?._id}`)
     })
 
-    it("404 when class not found", async () => {
+    it("404 when class not found", async () : Promise<void> => {
          await request(app)
             .get(`/classes/64ebe2c3ad586fd7e48f93b5`)
             .expect(404)
     })
 
-    it("Returns all Classes of a given Org", async()=> {
+    it("Returns all Classes of a given Org", async() : Promise<void> => {
         const org = await Org.findOne({});
         const reqTest = await request(app)
             .get(`/classes/org/${org?._id}`)
@@ -79,7 +73,7 @@ describe("Class GET ", () => {
         expect(reqTest.body.classes[0].org).toBe(`${org?._id}`);
     })
 
-    it("Returns all Classes of a given User",async () => {
+    it("Returns all Classes of a given User", async () : Promise<void> => {
         const user = await User.findOne({});
         const reqTest = await request(app)
             .get(`/classes/user/${user?._id}`)
@@ -92,7 +86,7 @@ describe("Class GET ", () => {
 })
 
 describe("Class POST",() => {
-    it("Creates class", async () => {
+    it("Creates class", async () : Promise<void> => {
         const org = await Org.findOne({});
         const user = await User.findOne({});
         const newClass = 
@@ -114,9 +108,68 @@ describe("Class POST",() => {
     })
 
 
+    it("Return 400 when creating class with invalid params", async () : Promise<void> => {
+        const newClass = {};
+        const testReq = await request(app)
+        .post(`/classes/create`)
+        .set('Content-Type','application/json' )
+        .send(newClass)
+        .expect(400)
+        expect(testReq.body.message).toBe("Invalid parameters.")
 
+    })
 })
 
+describe("Class PUT", ()=> {
+    it("Edit class name/grade_level/subject", async () : Promise<void> => {
+        const targetClass = await ClassModel.findOne({}).exec();
+        const editContent = {
+            name: "Edited Name",
+            grade_level: "5",
+            subject: "Math"
+        }
+        
+        const editReq = await request(app)
+            .put(`/classes/edit/${targetClass?._id}`)
+            .set('Content-Type','application/json; charset=utf-8')
+            .send(editContent)
+            .expect(200)
 
+        expect(editReq.body.message).toBe("Class information edited.");
+        expect(editReq.body.content.name).toBe("Edited Name");
+        expect(editReq.body.content.grade_level).toBe("5");
+        expect(editReq.body.content.subject).toBe("Math");
+    })
+
+    it("Add teacher to class", async () : Promise<void> => {
+        const org = await Org.findOne({});
+        const newTeacher = new User({
+            first_name: "Carl",
+            last_name: "Walker",
+            email: "carlwalker@gmail.com",
+            password: "1234",
+            gender: "M",
+            verifed: true, 
+            org: org?._id
+        });
+        const savedTeacher = await newTeacher.save();
+
+        const targetClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+
+        const editReq = await request(app)
+            .put(`/classes/${targetClass?._id}/teachers/add`)
+            .set('Content-Type','application/json; charset=utf-8')
+            .send(savedTeacher)
+            .expect(200)
+        expect(editReq.body.message).toBe("Teacher added to class.") 
+        
+        const editedClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+
+        const newTeachArr = editedClass?.teachers
+        console.log(newTeachArr);
+        console.log(savedTeacher._id)
+        expect(newTeachArr?.some(t => t.toString() === savedTeacher._id.toString())).toBeTruthy
+    })
+})
 
 
