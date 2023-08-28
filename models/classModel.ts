@@ -5,6 +5,7 @@ interface IClass {
     grade_level: string,
     subject?: string,
     teachers?: ObjectId[]
+    org: ObjectId
 }
 
 
@@ -14,6 +15,7 @@ const classSchema = new mongoose.Schema<IClass>(
 		grade_level: { type: String, required: true },
 		subject: String,
 		teachers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+        org: {type: Schema.Types.ObjectId, ref: "organizations"}
 	},
 	{ collection: "classes" }
 );

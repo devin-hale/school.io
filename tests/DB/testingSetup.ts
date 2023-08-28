@@ -1,7 +1,6 @@
 import ClassModel from '../../models/classModel';
 import UserModel from '../../models/userModel';
 import OrgModel from '../../models/orgModel';
-import mongoose from 'mongoose';
 
 async function initializeTestDB () : Promise<void> {
     const testOrg = new OrgModel({
@@ -25,7 +24,8 @@ async function initializeTestDB () : Promise<void> {
       name: "Test Class",
       grade_level: "1",
       subject: "Test",
-      teachers: [testUser._id]
+      teachers: [testUser._id],
+      org: saveTestOrg._id
    })
    const saveTestClass = await testClass.save();
 };
