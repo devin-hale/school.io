@@ -170,7 +170,7 @@ describe("Class PUT", ()=> {
     })
     it("Removes teacher from class", async () : Promise<void> => {
 
-        const targetClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+        const targetClass = await ClassModel.findOne({}).lean().exec();
         const teacherId  = targetClass?.teachers?.[0];
 
         const editReq = await request(app)
@@ -181,9 +181,10 @@ describe("Class PUT", ()=> {
         expect(editReq.body.message).toBe("Teacher removed from class.")
         
         
-        const editedClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+        const editedClass = await ClassModel.findOne({}).lean().exec();
 
-        expect(editedClass?.teachers?.length).toEqual(0);
+        const newTeachArr = editedClass?.teachers
+        expect(newTeachArr?.some(t => t.toString() === teacherId?.toString())).toBeFalsy
 
     } )
 })

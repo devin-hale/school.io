@@ -15,4 +15,6 @@ router.put("/edit/:classId", classController.edit_class)
 
 router.put("/:classId/teachers/add", classController.add_teacher)
 
+router.put("/:classId/teachers/remove", classController.remove_teacher)
+
 export default router;
