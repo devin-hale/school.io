@@ -13,4 +13,6 @@ router.post("/create", classController.create_class)
 
 router.put("/edit/:classId", classController.edit_class)
 
+router.put("/:classId/teachers/add", classController.add_teacher)
+
 export default router;

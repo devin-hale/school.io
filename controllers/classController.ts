@@ -73,7 +73,13 @@ const edit_class = asyncHandler(async (req, res, next) => {
 })
 
 const add_teacher : RequestHandler = asyncHandler(async (req, res, next) : Promise<void> => {
+    try {
+        const editedClass = await ClassModel.findOneAndUpdate({_id: req.params.classId},{$push: {teachers: req.body._id}})  
+        res.status(200).json({message: "Teacher added to class.", content: editedClass})
+    } catch (error) {
+        next(error)
+    }
 
 })
 
-export default {get_class_instance, get_user_classes, get_org_classes, create_class, edit_class};
+export default {get_class_instance, get_user_classes, get_org_classes, create_class, edit_class, add_teacher};

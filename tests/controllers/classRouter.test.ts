@@ -159,17 +159,33 @@ describe("Class PUT", ()=> {
         const editReq = await request(app)
             .put(`/classes/${targetClass?._id}/teachers/add`)
             .set('Content-Type','application/json; charset=utf-8')
-            .send(savedTeacher)
+            .send({_id: savedTeacher?._id})
             .expect(200)
         expect(editReq.body.message).toBe("Teacher added to class.") 
         
         const editedClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
 
         const newTeachArr = editedClass?.teachers
-        console.log(newTeachArr);
-        console.log(savedTeacher._id)
         expect(newTeachArr?.some(t => t.toString() === savedTeacher._id.toString())).toBeTruthy
     })
+    it("Removes teacher from class", async () : Promise<void> => {
+
+        const targetClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+        const teacherId  = targetClass?.teachers?.[0];
+
+        const editReq = await request(app)
+            .put(`/classes/${targetClass?._id}/teachers/remove`)
+            .set('Content-Type','application/json; charset=utf-8')
+            .send({_id: teacherId})
+            .expect(200);
+        expect(editReq.body.message).toBe("Teacher removed from class.")
+        
+        
+        const editedClass = await ClassModel.findOne({}).lean().populate("teachers").exec();
+
+        expect(editedClass?.teachers?.length).toEqual(0);
+
+    } )
 })
 
 
