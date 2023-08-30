@@ -1,43 +1,22 @@
-import classRouter from '../../routes/classRouter.js'
 import ClassModel from '../../models/classModel.js';
 import User from '../../models/userModel.js';
 import Org from '../../models/orgModel.js';
 
+import app from '../setup/appSetup.js'
+
 import request from 'supertest';
-import express, { Express, response } from 'express';
+
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose, { FlattenMaps, ObjectId }  from 'mongoose';
-import initializeTestDB from '../DB/testingSetup.js';
-
-import path from "path";
-import { fileURLToPath } from "url";
-import cookieParser from "cookie-parser";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-
+import mongoose from 'mongoose';
+import initializeTestDB from '../setup/dbSetup.js';
 
 let mongod: MongoMemoryServer
-
-const app : Express = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
-app.use("/classes", classRouter);
-
-app.use((req:any, res: any, next:any, err: any) : void => {
-    console.log(err)
-	res.status(500).send({ error: err });
-});
 
 beforeAll(async()=> {
     mongod = await MongoMemoryServer.create();
     await mongoose.connect(mongod.getUri());
     await initializeTestDB();
 
-app.use(express.json());
 
 })
 afterAll(async()=> {
@@ -189,4 +168,16 @@ describe("Class PUT", ()=> {
     } )
 })
 
+describe("Class DELETE", () => {
+    it("Deletes class.", async () : Promise<void> => {
+        const targetClass = await ClassModel.findOne({}).lean().exec();
+        const targetId = targetClass?._id;
+        console.log(targetId)
 
+        const editReq = await request(app)
+            .delete(`/classes/${targetClass?._id}/delete`)
+            .set('Content-Type','application/json; charset=utf-8')
+            .send({_id: targetId})
+            .expect(200);
+    })
+})

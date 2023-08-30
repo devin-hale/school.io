@@ -85,14 +85,30 @@ const add_teacher: RequestHandler = asyncHandler(async (req, res, next): Promise
 
 const remove_teacher: RequestHandler = asyncHandler(async (req, res, next): Promise<void> => {
     const targetId = new mongoose.Types.ObjectId(`${req.body._id}`)
-    console.log(targetId)
     try {
-        const editedClass = await ClassModel.findOneAndUpdate({ _id: req.params.classId }, { $pull: { teachers:  targetId  } }, {safe: true,  new: true })
-        console.log(editedClass)
+        const editedClass = await ClassModel.findOneAndUpdate({ _id: req.params.classId }, { $pull: { teachers: targetId } }, { safe: true, new: true })
         res.status(200).json({ message: "Teacher removed from class.", content: editedClass })
     } catch (error) {
         next(error)
     }
 })
 
-export default { get_class_instance, get_user_classes, get_org_classes, create_class, edit_class, add_teacher, remove_teacher };
+const delete_class: RequestHandler = asyncHandler(async (req, res, next): Promise<void> => {
+    const targetId = req.params.classId;
+
+    try {
+        const classExists = await ClassModel.findById({ _id: targetId });
+
+        if (classExists) {
+            const deletedClass = await ClassModel.findOneAndDelete({ _id: targetId });
+            console.log(deletedClass);
+            res.status(200).json({ message: "Class deleted from database.", content: deletedClass });
+        } else {
+            res.status(404).json({ message: "Class not found." })
+        }
+    } catch (error) {
+        next(error)
+    }
+})
+
+export default { get_class_instance, get_user_classes, get_org_classes, create_class, edit_class, add_teacher, remove_teacher, delete_class };
