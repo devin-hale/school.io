@@ -101,7 +101,6 @@ const delete_class: RequestHandler = asyncHandler(async (req, res, next): Promis
 
         if (classExists) {
             const deletedClass = await ClassModel.findOneAndDelete({ _id: targetId });
-            console.log(deletedClass);
             res.status(200).json({ message: "Class deleted from database.", content: deletedClass });
         } else {
             res.status(404).json({ message: "Class not found." })

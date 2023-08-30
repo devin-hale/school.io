@@ -1,6 +1,7 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
-interface IClass {
+export interface ClassInterface {
+    _id: ObjectId
     name: string,
     grade_level: string,
     subject?: string,
@@ -9,7 +10,7 @@ interface IClass {
 }
 
 
-const classSchema : Schema = new mongoose.Schema<IClass>(
+const classSchema : Schema = new mongoose.Schema<ClassInterface>(
 	{
 		name: { type: String, required: true },
 		grade_level: { type: String, required: true },
@@ -20,4 +21,4 @@ const classSchema : Schema = new mongoose.Schema<IClass>(
 	{ collection: "classes" }
 );
 
-export default mongoose.model<IClass>("classes", classSchema);
+export default mongoose.model<ClassInterface>("classes", classSchema);
