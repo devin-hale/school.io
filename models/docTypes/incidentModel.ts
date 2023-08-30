@@ -17,7 +17,7 @@ interface IIncident {
 
 }
 
-const incidentModel = new mongoose.Schema<IIncident>(
+const incidentModel : Schema = new mongoose.Schema<IIncident>(
     {
         owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
         access: [{ type: Schema.Types.ObjectId, ref: "users" }],

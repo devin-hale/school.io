@@ -15,7 +15,7 @@ interface ICom {
     followUp_date?: Date
 }
 
-const comModel = new mongoose.Schema<ICom>(
+const comModel : Schema = new mongoose.Schema<ICom>(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
 		access: [{ type: Schema.Types.ObjectId, ref: "users" }],

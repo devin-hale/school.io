@@ -24,22 +24,26 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 8-25-2023(1):**
+### **UPDATE: 8-30-2023(1):**
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
+- Testing Server/DB setup/teardown created.
+- Tests/API completed for:
+    - Class Route
 
 ### **NEXT:**
-- Set up test DB operations.
-- Write tests for routes/controllers.
-- Convert controllers to TS + Pure API. 
+- Complete typing for class routes/controllers.
 
 ## Development Roadmap
 
 []**Refactor Phase**(Write test, To Typescript, then to API)
 - [x] Models
-- [] Controllers
-- [] Routes
+- [] Routes/Controllers
+    - [] Class
+    - [] User
+    - [] Org
+    - [] Incident
 - [] Utilities
 - [] Authentication
     - [] Refactor everything except for sessions.

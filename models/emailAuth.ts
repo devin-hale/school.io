@@ -7,7 +7,7 @@ interface IEmailAuth {
 }
 
 
-const emailAuthSchema = new mongoose.Schema<IEmailAuth>(
+const emailAuthSchema : Schema = new mongoose.Schema<IEmailAuth>(
 	{
 		user: { type: Schema.Types.ObjectId, ref: "users" },
 		code: { type: String, default: codeGen },

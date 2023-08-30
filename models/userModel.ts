@@ -12,7 +12,7 @@ interface IUser {
     org: ObjectId
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema : Schema = new mongoose.Schema<IUser>({
 	first_name: { type: String, required: true },
 	last_name: { type: String, required: true },
 	email: { type: String, required: true },

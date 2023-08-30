@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import codeGen from "./utils/codeGen.js";
 
 interface IOrg {
@@ -7,13 +7,13 @@ interface IOrg {
     orgCode?: () => string
 }
 
-const orgSchema = new mongoose.Schema<IOrg>({
+const orgSchema : Schema = new mongoose.Schema<IOrg>({
 	name: { type: String, required: true },
 	color: { type: String, default: "blue" },
 	orgCode: { type: String, default: codeGen },
 });
 
-orgSchema.virtual("url").get(function () {
+orgSchema.virtual("url").get(function () : string {
 	return `/organization/${this._id}`;
 });
 

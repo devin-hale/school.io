@@ -1,4 +1,4 @@
-const codeGen : (() => void) = () => {
+const codeGen : (() => string) = () => {
 	function randomString(length : number, chars : string) {
 		let result : string = "";
 		for (let i : number = length; i > 0; --i)

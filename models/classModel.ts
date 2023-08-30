@@ -9,7 +9,7 @@ interface IClass {
 }
 
 
-const classSchema = new mongoose.Schema<IClass>(
+const classSchema : Schema = new mongoose.Schema<IClass>(
 	{
 		name: { type: String, required: true },
 		grade_level: { type: String, required: true },
