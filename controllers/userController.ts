@@ -1,23 +1,29 @@
-import User from "./../models/userModel.js";
+import User, { UserInterface } from "./../models/userModel.js";
 import Org from "./../models/orgModel.js";
 import asyncHandler from "express-async-handler";
+import { Request, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import authController from "./emailAuthController.js";
 import util from "util";
+import { SanitizersImpl } from "express-validator/src/chain/sanitizers-impl.js";
 
-//Gets user information
-const user_info = asyncHandler(async (req, res, next) => {
-	const singleUser = await User.findOne({
-		email: req.body.email,
-		password: req.body.password,
-	}).exec();
+const get_user: RequestHandler = asyncHandler(async (req, res, next): Promise<void> => {
+	try {
+		const singleUser: UserInterface | null = await User.findById({ _id: req.params.userId }, { password: 0 }).lean().exec()
 
-	res.json({ message: singleUser });
+		if (singleUser) {
+			res.json(singleUser);
+		} else {
+			res.status(404).json({ message: "User could not be found." })
+		}
+	} catch (error) {
+		next(error)
+	}
 });
 
 //Creates account.
-const create_account_post = [
+const create_account_post : Array<SanitizersImpl<Request> | RequestHandler> = [
 	//Sanitize
 	body("first_name", "First name bust contain at least 1 character.")
 		.trim()
@@ -68,7 +74,7 @@ const create_account_post = [
 					email: req.body.email,
 					gender: req.body.gender,
 					password: hashedPass,
-					org: organization._id,
+					org: organization?._id,
 				});
 
 				const savedUser = await newUser.save();
@@ -87,4 +93,4 @@ const create_account_post = [
 	}),
 ];
 
-export default { user_info, create_account_post };
+export default { get_user, create_account_post };

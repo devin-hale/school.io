@@ -9,6 +9,7 @@ import request, { Response } from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
+import { response } from 'express';
 
 let mongod: MongoMemoryServer
 
@@ -39,9 +40,11 @@ describe("Class GET ", (): void => {
 	})
 
 	it("404 when class not found", async (): Promise<void> => {
-		await request(app)
+		const getReq : Response = await request(app)
 			.get(`/classes/64ebe2c3ad586fd7e48f93b5`)
 			.expect(404)
+
+		expect(getReq.body.message).toBe("Class not found.") 
 	})
 
 	it("Returns all Classes of a given Org", async (): Promise<void> => {

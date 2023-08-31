@@ -29,16 +29,14 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
 - Testing Server/DB setup/teardown created.
-- Tests/API completed for:
-    - Class Route
 
 ### **NEXT:**
 - Complete typing for class routes/controllers.
 
 ## Development Roadmap
 
-[]**Refactor Phase**(Write test, To Typescript, then to API)
-- [x] Models
+[X]**Refactor Phase**(Write test, To Typescript, then to API)
+- [X] Models
 - [] Routes/Controllers
     - [] Class
     - [] User
@@ -57,25 +55,25 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [] Remove unecessary comments, try to have more useful comments.
 
 [] **Login/User Authentication**(REFACTOR+TS)
-- [x] Organization/School Model
+- [X] Organization/School Model
 - [] Org Controller
-- [x] User Model
+- [X] User Model
 - [] User Controller
 - [] Password Encryption
 - [] Account Email Verification
 - [] User/Session Authentication
 
 [] **Classroom/Student**(REFACTOR+TS)
-- [x] Classroom Model
+- [X] Classroom Model
 - [] Classroom Controller
-- [x] Student Model
+- [X] Student Model
 - [] Student Controller
 
 [] **Documentation**(PARTIAL REFACTOR + TS)
 - [] Decide on forms for each
 - [] Models for each
-    - [x] Incident (fight, worrisome comments, etc)
-    - [x] Commmunication (student, staff, parent, other)
+    - [X] Incident (fight, worrisome comments, etc)
+    - [X] Commmunication (student, staff, parent, other)
     - [] PST
     - [] More?
 - [] Controllers for each documentation type
