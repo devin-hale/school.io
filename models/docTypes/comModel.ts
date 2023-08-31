@@ -1,6 +1,7 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
-interface ICom {
+export interface CommInterface {
+	_id: ObjectId,
     owner: ObjectId,
     access?: ObjectId[],
     communication_type: "Staff to Staff" | "Staff to Parent" | "Staff to Student" | "Staff to Other",
@@ -15,7 +16,7 @@ interface ICom {
     followUp_date?: Date
 }
 
-const comModel : Schema = new mongoose.Schema<ICom>(
+const comModel : Schema = new mongoose.Schema<CommInterface>(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
 		access: [{ type: Schema.Types.ObjectId, ref: "users" }],
@@ -42,6 +43,6 @@ const comModel : Schema = new mongoose.Schema<ICom>(
 	{ collection: "communications" }
 );
 
-export default mongoose.model<ICom>("communications", comModel);
+export default mongoose.model<CommInterface>("communications", comModel);
 
 

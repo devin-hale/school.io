@@ -1,7 +1,8 @@
 import mongoose, { ObjectId } from "mongoose";
 import { Schema } from "mongoose";
 
-interface IUser {
+export interface UserInterface {
+	_id: ObjectId,
     first_name: string,
     last_name: string,
     email: string,
@@ -12,7 +13,7 @@ interface IUser {
     org: ObjectId
 }
 
-const userSchema : Schema = new mongoose.Schema<IUser>({
+const userSchema : Schema = new mongoose.Schema<UserInterface>({
 	first_name: { type: String, required: true },
 	last_name: { type: String, required: true },
 	email: { type: String, required: true },
@@ -31,4 +32,4 @@ userSchema.virtual("fullName").get(function () : string {
 	return `${this.first_name} ${this.last_name}`;
 });
 
-export default mongoose.model<IUser>("users", userSchema);
+export default mongoose.model<UserInterface>("users", userSchema);

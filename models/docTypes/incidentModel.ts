@@ -1,6 +1,7 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
-interface IIncident {
+export interface IncidentInterface {
+	_id: ObjectId,
     owner: ObjectId,
     access?: ObjectId[],
     date_of_occurence: Date,
@@ -17,7 +18,7 @@ interface IIncident {
 
 }
 
-const incidentModel : Schema = new mongoose.Schema<IIncident>(
+const incidentModel : Schema = new mongoose.Schema<IncidentInterface>(
     {
         owner: { type: Schema.Types.ObjectId, ref: "users", required: true },
         access: [{ type: Schema.Types.ObjectId, ref: "users" }],
@@ -39,4 +40,4 @@ const incidentModel : Schema = new mongoose.Schema<IIncident>(
     { collection: "incidents" }
 );
 
-export default mongoose.model<IIncident>("incidents", incidentModel);
+export default mongoose.model<IncidentInterface>("incidents", incidentModel);

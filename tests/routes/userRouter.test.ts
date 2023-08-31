@@ -1,6 +1,6 @@
-import ClassModel from '../../models/classModel.js';
-import User from '../../models/userModel.js';
-import Org from '../../models/orgModel.js';
+import ClassModel, {ClassInterface} from '../../models/classModel.js';
+import User , {UserInterface} from '../../models/userModel.js';
+import Org, {OrgInterface} from '../../models/orgModel.js';
 
 import app from '../setup/appSetup.js'
 

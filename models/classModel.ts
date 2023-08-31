@@ -1,7 +1,7 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
 export interface ClassInterface {
-    _id: ObjectId
+    _id: ObjectId,
     name: string,
     grade_level: string,
     subject?: string,
