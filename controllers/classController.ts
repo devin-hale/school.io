@@ -1,50 +1,92 @@
-import { RequestHandler } from "express";
+import { Request, RequestHandler } from "express";
 import mongoose, { Document } from "mongoose";
 import ClassModel, { ClassInterface } from "./../models/classModel.js";
+import { Result, body, param, validationResult } from "express-validator";
+import { SanitizersImpl } from "express-validator/src/chain/sanitizers-impl.js";
 import asyncHandler from "express-async-handler";
-import createError from 'http-errors';
 
-const get_class_instance: RequestHandler = asyncHandler(async (req, res, next): Promise<void> => {
-	try {
-		const classInstance: ClassInterface | null = await ClassModel.findOne({ _id: req.params.classId })
-			.populate("teachers")
-			.lean()
-			.exec()
-		if (classInstance) {
-			res.json({ classInstance: classInstance })
+const get_class_instance: Array<SanitizersImpl<Request> | RequestHandler> = [
+	param("classId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req)
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
 		} else {
-			res.status(404).json({ message: "Class not found." })
+			try {
+				const classInstance: ClassInterface | null = await ClassModel.findOne({ _id: req.params.classId })
+					.populate("teachers")
+					.lean()
+					.exec()
+				if (classInstance) {
+					res.json({ classInstance: classInstance })
+				} else {
+					res.status(404).json({ message: "Class not found." })
+				}
+			} catch (err) {
+				next(err);
+			}
+
 		}
-	} catch (err) {
-		next(err);
-	}
-})
 
-const get_user_classes: RequestHandler = asyncHandler(async (req, res, next) => {
-	try {
-		const classes: ClassInterface[] | undefined[] = await ClassModel.find({ teachers: req.params.userId })
-			.lean()
-			.populate("teachers")
-			.exec();
+	})
 
-		res.json({ classes: classes });
+]
+const get_user_classes: Array<SanitizersImpl<Request> | RequestHandler> = [
+	param("userId")
+		.trim()
+		.escape(),
 
-	} catch (err) {
-		next(err);
-	}
-});
+	asyncHandler(async (req, res, next) => {
+		const errors: Result = validationResult(req)
 
-const get_org_classes: RequestHandler = asyncHandler(async (req, res, next): Promise<void> => {
-	try {
-		const classes: ClassInterface[] | undefined[] = await ClassModel.find({ org: req.params.orgId })
-			.lean()
-			.exec();
-		res.json({ classes: classes });
-	} catch (err) {
-		next(err)
-	}
-})
+		if (!errors.isEmpty) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const classes: ClassInterface[] | undefined[] = await ClassModel.find({ teachers: req.params.userId })
+					.lean()
+					.populate("teachers")
+					.exec();
 
+				res.json({ classes: classes });
+
+			} catch (err) {
+				next(err);
+			}
+		}
+
+	})
+
+]
+const get_org_classes: Array<SanitizersImpl<Request> | RequestHandler> = [
+	param("orgId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const classes: ClassInterface[] | undefined[] = await ClassModel.find({ org: req.params.orgId })
+					.lean()
+					.exec();
+
+				res.json({ classes: classes });
+			} catch (err) {
+				next(err)
+			}
+		}
+
+	})
+
+]
 const create_class: RequestHandler = asyncHandler(async (req, res): Promise<void> => {
 	try {
 		const newClass: Document = new ClassModel({
@@ -100,7 +142,7 @@ const delete_class: RequestHandler = asyncHandler(async (req, res, next): Promis
 		const classExists: ClassInterface | null = await ClassModel.findById({ _id: targetId });
 
 		if (classExists) {
-			const deletedClass : Document | null = await ClassModel.findOneAndDelete({ _id: targetId });
+			const deletedClass: Document | null = await ClassModel.findOneAndDelete({ _id: targetId });
 			res.status(200).json({ message: "Class deleted from database.", content: deletedClass });
 		} else {
 			res.status(404).json({ message: "Class not found." })

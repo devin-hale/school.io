@@ -23,7 +23,7 @@ const get_user: RequestHandler = asyncHandler(async (req, res, next): Promise<vo
 });
 
 //Creates account.
-const create_account_post : Array<SanitizersImpl<Request> | RequestHandler> = [
+const create_account_post: Array<SanitizersImpl<Request> | RequestHandler> = [
 	//Sanitize
 	body("first_name", "First name bust contain at least 1 character.")
 		.trim()
