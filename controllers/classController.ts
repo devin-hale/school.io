@@ -1,11 +1,9 @@
-import { Request, RequestHandler } from "express";
+import { RequestHandler } from "express";
 import mongoose, { Document } from "mongoose";
 import ClassModel, { ClassInterface } from "./../models/classModel.js";
 import { Result, body, param, validationResult } from "express-validator";
-import { SanitizersImpl } from "express-validator/src/chain/sanitizers-impl.js";
 import asyncHandler from "express-async-handler";
 
-type CombinedMiddleware = SanitizersImpl<Request> | RequestHandler;
 
 const get_class_instance: RequestHandler[] = [
     param("classId")
