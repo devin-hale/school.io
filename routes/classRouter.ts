@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import classController from "../controllers/classController.js";
 
-const router : Router = express.Router();
+const router: Router = express.Router();
 
 router.get("/:classId", classController.get_class_instance);
 

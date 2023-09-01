@@ -9,7 +9,6 @@ import request, { Response } from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
-import { response } from 'express';
 
 let mongod: MongoMemoryServer
 
@@ -182,7 +181,6 @@ describe("Class DELETE", (): void => {
 		await request(app)
 			.delete(`/classes/${targetClass?._id}/delete`)
 			.set('Content-Type', 'application/json; charset=utf-8')
-			.send({ _id: targetId })
 			.expect(200);
 
 		const deletedClass: ClassInterface | null = await ClassModel.findOne({ _id: targetId }).lean().exec();
