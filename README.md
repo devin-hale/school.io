@@ -38,7 +38,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 [X]**Refactor Phase**(Write test, To Typescript, then to API)
 - [X] Models
 - [] Routes/Controllers
-    - [] Class
+    - [X] Class
     - [] User
     - [] Org
     - [] Incident

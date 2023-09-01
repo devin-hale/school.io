@@ -21,8 +21,8 @@ const verifyOptions = (userEmail, authCode) => {
 	};
 };
 
-const sendVerification = (userEmail, authCode) => {
-	transporter.sendMail(
+const sendVerification = async (userEmail, authCode) => {
+	await transporter.sendMail(
 		verifyOptions(userEmail, authCode),
 		function (error, info) {
 			if (error) {
