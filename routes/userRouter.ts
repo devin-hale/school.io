@@ -5,7 +5,7 @@ const router : Router = express.Router();
 
 // TODO: GET route for searching all users with varying terms
 
-// TODO: GET route for pull all users by orgId
+router.get('/organization/:orgId', userController.find_all_by_org)
 
 router.get('/:userId', userController.get_user);
 
@@ -19,6 +19,6 @@ router.put(`/:userId/email/edit`, userController.edit_email);
 
 router.put(`/:userId/password/edit`, userController.edit_password);
 
-// TODO: Delete route. Needs to remove all refs from all instances of classModel.teachers[]
+router.delete(`/:userId/delete`, userController.delete_user);
 
 export default router

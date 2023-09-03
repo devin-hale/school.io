@@ -10,6 +10,7 @@ import bcrypt from 'bcryptjs'
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
+import classModel, { ClassInterface } from '../../models/classModel.js';
 
 let mongod: MongoMemoryServer
 
@@ -215,4 +216,28 @@ describe("User PUT", (): void => {
 
 
 	})
+})
+
+describe("User DELETE", (): void => {
+    it("Deletes user (200)", async () : Promise<void> => {
+		const targetUser: UserInterface | null = await User.findOne({}).exec();
+
+        
+        await request(app)
+            .delete(`/users/${targetUser?._id}/delete`)
+            .set("Content-Type", 'application/json; charset=utf-8')
+            .send({password: '965432'})
+            .expect(200)
+
+        const targetExists: UserInterface | null = await User.findOne({_id: targetUser?._id}).lean().exec();
+        const targetExistsInClasses: ClassInterface[] | null = await classModel.find({teachers: targetUser?._id}).lean().exec();
+
+
+        expect(targetExists).toBeNull;
+        expect(targetExistsInClasses).toBeNull;
+
+
+
+    });
+    
 })
