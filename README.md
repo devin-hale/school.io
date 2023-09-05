@@ -1,7 +1,7 @@
 # school.io (API REFACTOR)
 
 ## Description
-### Version 0.2.6
+### Version 0.2.7
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -29,9 +29,10 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
 - Testing Server/DB setup/teardown created.
+- User/Class Controllers and Routes refactored and completed
 
 ### **NEXT:**
-- Complete typing for class routes/controllers.
+Org Routes/Controller Refactor
 
 ## Development Roadmap
 
@@ -39,7 +40,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [X] Models
 - [] Routes/Controllers
     - [X] Class
-    - [] User
+    - [X] User
     - [] Org
     - [] Incident
 - [] Utilities
