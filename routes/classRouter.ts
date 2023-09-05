@@ -7,9 +7,6 @@ const router: Router = express.Router();
 
 router.get("/:classId", classController.get_class_instance);
 
-//TODO : Swap this to make it a user route.
-router.get("/user/:userId", classController.get_user_classes);
-
 //TODO : Swap this to make it an org route.
 router.get("/org/:orgId", classController.get_org_classes);
 
