@@ -3,7 +3,7 @@ import Org, { OrgInterface } from "./../models/orgModel.js";
 import ClassModel, { ClassInterface } from "./../models/classModel.js";
 import asyncHandler from "express-async-handler";
 import { RequestHandler } from "express";
-import { param, body, validationResult, Result, ValidationError } from "express-validator";
+import { param, body, validationResult, Result, ValidationError, query } from "express-validator";
 
 import bcrypt from "bcryptjs";
 import util from "util";
@@ -14,11 +14,45 @@ import { Document } from "mongoose";
 
 const hashAsync: (arg1: string, arg2: string | number) => Promise<string> = util.promisify(bcrypt.hash);
 
+const search_user: RequestHandler[] = [
+    query("search")
+        .trim()
+        .escape(),
+    asyncHandler(async (req, res, next): Promise<void> => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.status(400).json({ message: "Invalid request." })
+        } else {
+            try {
+                if (!req.query.search) {
+                    res.status(200).json({ searchResults: [] })
+                } else {
+                    const searchQuery = new RegExp(`${req.query.search}`, 'i')
+                    const searchResults: UserInterface[] = await User.find({
+                        $or: [
+                            { first_name: searchQuery },
+                            { last_name: searchQuery },
+                        ]
+                    }).populate("org").lean().exec()
+
+                    res.status(200).json({ searchResults: searchResults });
+
+                }
+            } catch (error) {
+                next(error)
+            }
+        }
+    })
+
+]
 
 const get_user: RequestHandler[] = [
     param("userId")
         .trim()
-        .isLength({ min: 1 })
+        .escape(),
+    param("email")
+        .trim()
         .escape(),
 
     asyncHandler(async (req, res, next): Promise<void> => {
@@ -42,6 +76,35 @@ const get_user: RequestHandler[] = [
     })
 
 ]
+
+const get_user_classes: RequestHandler[] = [
+    param("userId")
+        .trim()
+        .escape(),
+
+    asyncHandler(async (req, res, next) => {
+        const errors: Result = validationResult(req)
+
+        if (!errors.isEmpty) {
+            res.status(400).json({ message: "Invalid request." })
+        } else {
+            try {
+                const classes: ClassInterface[] | undefined[] = await ClassModel.find({ teachers: req.params.userId })
+                    .lean()
+                    .populate("teachers")
+                    .exec();
+
+                res.json({ classes: classes });
+
+            } catch (err) {
+                next(err);
+            }
+        }
+
+    })
+
+]
+
 const create_account: RequestHandler[] = [
     body("first_name", "First name must contain at least 1 character.")
         .trim()
@@ -314,6 +377,36 @@ const find_all_by_org: RequestHandler[] = [
             }
         }
     })
+];
+
+const verify_user: RequestHandler[] = [
+    param("userId")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+
+    asyncHandler(async (req, res, next): Promise<void> => {
+        const errors: Result = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.status(400).json({ message: "Invalid request.", errors: errors.array().map((e: ValidationError) => e.msg) })
+        } else {
+            try {
+                const userExists: UserInterface | null = await User.findOne({ _id: req.params.userId }).lean().exec();
+
+                if (!userExists) {
+                    res.status(400).json({ message: "User not found." })
+                } else {
+                    const verifiedUser: Document | null = await User.findOneAndUpdate({ _id: req.params.userId }, { verified: true }).exec()
+
+                    res.status(200).json({ message: "User verified." })
+                }
+
+            } catch (error) {
+                next(error)
+            }
+        }
+    })
 ]
 
-export default { get_user, create_account, edit_user_info, edit_email, edit_password, delete_user, find_all_by_org};
+export default { get_user, create_account, edit_user_info, edit_email, edit_password, delete_user, find_all_by_org, verify_user, search_user, get_user_classes };

@@ -35,33 +35,7 @@ const get_class_instance: RequestHandler[] = [
     })
 
 ]
-const get_user_classes: RequestHandler[] = [
-    param("userId")
-        .trim()
-        .escape(),
 
-    asyncHandler(async (req, res, next) => {
-        const errors: Result = validationResult(req)
-
-        if (!errors.isEmpty) {
-            res.status(400).json({ message: "Invalid request." })
-        } else {
-            try {
-                const classes: ClassInterface[] | undefined[] = await ClassModel.find({ teachers: req.params.userId })
-                    .lean()
-                    .populate("teachers")
-                    .exec();
-
-                res.json({ classes: classes });
-
-            } catch (err) {
-                next(err);
-            }
-        }
-
-    })
-
-]
 
 const get_org_classes: RequestHandler[] = [
     param("orgId")
@@ -274,4 +248,4 @@ const delete_class: RequestHandler[] = [
 
 
 ]
-export default { get_class_instance, get_user_classes, get_org_classes, create_class, edit_class, add_teacher, remove_teacher, delete_class };
+export default { get_class_instance, get_org_classes, create_class, edit_class, add_teacher, remove_teacher, delete_class };
