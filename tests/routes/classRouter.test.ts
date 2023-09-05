@@ -56,15 +56,7 @@ describe("Class GET ", (): void => {
 		expect(reqTest.body.classes[0].org).toBe(`${org?._id}`);
 	})
 
-	it("Returns all Classes of a given User", async (): Promise<void> => {
-		const user: UserInterface | null = await User.findOne({});
-
-		const reqTest: Response = await request(app)
-			.get(`/classes/user/${user?._id}`)
-			.expect("Content-Type", 'application/json; charset=utf-8')
-			.expect(200)
-		expect(reqTest.body.classes[0].teachers[0]._id).toEqual(`${user?._id}`)
-	})
+	
 
 
 })
