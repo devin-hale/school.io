@@ -4,14 +4,14 @@ import "dotenv/config.js";
 const transporter = nodemailer.createTransport({
 	service: "gmail",
 	auth: {
-		user: "verifyschoolio@gmail.com",
+		user: process.env.MAIL,
 		pass: process.env.MAILPASS,
 	},
 });
 
 const verifyOptions = (userEmail, authCode) => {
 	return {
-		from: "verifyschoolio@gmail.com",
+		from: process.env.MAIL,
 		to: userEmail,
 		subject: "Verify Your school.io Email!",
 		text: `Welcome to school.io! \n

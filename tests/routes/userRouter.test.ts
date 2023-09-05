@@ -61,7 +61,7 @@ describe("User GET", (): void => {
         const user: UserInterface | null = await User.findOne({});
 
         const reqTest: Response = await request(app)
-            .get(`/classes/user/${user?._id}`)
+            .get(`/users/${user?._id}/classes`)
             .expect("Content-Type", 'application/json; charset=utf-8')
             .expect(200)
         expect(reqTest.body.classes[0].teachers[0]._id).toEqual(`${user?._id}`)

@@ -3,7 +3,8 @@ import classController from "../controllers/classController.js";
 
 const router: Router = express.Router();
 
-// TODO: GET route that searches all classes with query terms.
+// Query params: ?teacher=value, name=value, subject=value
+router.get('/search', classController.search_class);
 
 router.get("/:classId", classController.get_class_instance);
 
@@ -18,7 +19,6 @@ router.put("/:classId/teachers/add", classController.add_teacher);
 
 router.put("/:classId/teachers/remove", classController.remove_teacher);
 
-//TODO : Controller needs to find all students with the deleted classID and remove the ref.
 router.delete("/:classId/delete", classController.delete_class);
 
 export default router;

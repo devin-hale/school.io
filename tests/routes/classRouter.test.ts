@@ -9,6 +9,7 @@ import request, { Response } from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
+import studentModel, { StudentInterface } from '../../models/studentModel.js';
 
 let mongod: MongoMemoryServer
 
@@ -27,7 +28,18 @@ afterAll(async (): Promise<void> => {
 })
 
 describe("Class GET ", (): void => {
+	it("Queries all classes (200)", async (): Promise<void> => {
+		const searchName: string = "Test+Class";
+		const searchTeacher: string = 'Billy';
+		const searchSubject: string = 'Test'
 
+		const searchReq: Response = await request(app)
+			.get(`/classes/search?name=${searchName}&subject=${searchSubject}&teacher=${searchTeacher}`)
+			.set('Content-Type', 'application/json; charset=utf-8')
+			.expect(200)
+
+		expect(searchReq.body.searchResults.length).toBe(1)
+	})
 	it("Returns a specific Class", async (): Promise<void> => {
 		const classInstance: ClassInterface | null = await ClassModel.findOne({});
 
@@ -39,11 +51,11 @@ describe("Class GET ", (): void => {
 	})
 
 	it("404 when class not found", async (): Promise<void> => {
-		const getReq : Response = await request(app)
+		const getReq: Response = await request(app)
 			.get(`/classes/64ebe2c3ad586fd7e48f93b5`)
 			.expect(404)
 
-		expect(getReq.body.message).toBe("Class not found.") 
+		expect(getReq.body.message).toBe("Class not found.")
 	})
 
 	it("Returns all Classes of a given Org", async (): Promise<void> => {
@@ -56,7 +68,7 @@ describe("Class GET ", (): void => {
 		expect(reqTest.body.classes[0].org).toBe(`${org?._id}`);
 	})
 
-	
+
 
 
 })
@@ -176,7 +188,9 @@ describe("Class DELETE", (): void => {
 			.expect(200);
 
 		const deletedClass: ClassInterface | null = await ClassModel.findOne({ _id: targetId }).lean().exec();
+		const searchStudents : StudentInterface[] | null = await studentModel.find({classes: targetId}).lean().exec();
 
 		expect(deletedClass).toBeNull
+		expect(searchStudents).toBeNull
 	})
 })
