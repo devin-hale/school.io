@@ -1,7 +1,7 @@
 # school.io (API REFACTOR)
 
 ## Description
-### Version 0.2.7
+### Version 0.2.8
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -24,7 +24,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 8-30-2023(1):**
+### **UPDATE: 9-5-2023(1):**
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
