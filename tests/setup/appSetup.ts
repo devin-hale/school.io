@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/classes", classRouter);
 app.use("/users", userRouter)
-app.use("/orgs", orgRouter)
+app.use("/organizations", orgRouter)
 
 app.use((req:any, res: any, next:any, err: any) : void => {
 	res.status(500).send({ error: err });
