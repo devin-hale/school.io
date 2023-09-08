@@ -119,4 +119,20 @@ describe("Org PUT", (): void => {
 
         expect(editedOrg?.color).toBe("red")
     });
+});
+describe("Org DELETE", (): void => {
+	it("Deletes org (200)", async (): Promise<void> => {
+
+        const targetOrg: OrgInterface | null = await Org.findOne({ name: "Edited School" }).lean().exec();
+
+		await request(app)
+			.delete(`/organizations/instance/${targetOrg?._id}`)
+			.expect(200)
+
+        const editedOrg: OrgInterface | null = await Org.findOne({ name: "Edited School" }).lean().exec();
+		
+		expect(editedOrg).toBeNull
+
+	})
 })
+

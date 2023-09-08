@@ -16,6 +16,6 @@ router.put("/instance/:orgId/editinfo", orgController.edit_org_info);
 
 router.put("/instance/:orgId/editcolor", orgController.edit_org_color);
 
-//Delete, 
+router.delete("/instance/:orgId", orgController.delete_org)
 
 export default router

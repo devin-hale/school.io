@@ -161,4 +161,26 @@ const edit_org_color: RequestHandler[] = [
     })
 ];
 
-export default { search_orgs, get_org_instance, create_org, org_code_verify, edit_org_info, edit_org_color };
+const delete_org: RequestHandler[] = [
+	param("orgId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async(req, res, next): Promise<void> => {
+		const errors : Result = validationResult(req);
+
+		if(!errors.isEmpty()) {
+            res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				await Org.findOneAndDelete({_id: req.params.orgId}).exec();
+
+				res.json({message: "Organization deleted successfully."})
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+]
+
+export default { search_orgs, get_org_instance, create_org, org_code_verify, edit_org_info, edit_org_color, delete_org };

@@ -9,6 +9,7 @@ import logger from "morgan";
 import createError, { HttpError } from "http-errors";
 
 import indexRouter from "./routes/indexRouter.js";
+import orgRouter from './routes/orgRouter.js';
 import userRouter from "./routes/userRouter.js"
 import classRouter from "./routes/classRouter.js";
 import studentRouter from "./routes/studentRouter.js";
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Routes
 app.use("/", indexRouter);
+app.use("/organizations", orgRouter);
 app.use("/users", userRouter)
 app.use("/classes", classRouter);
 app.use("/students", studentRouter);

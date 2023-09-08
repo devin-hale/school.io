@@ -29,49 +29,46 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
 - Testing Server/DB setup/teardown created.
-- User/Class Controllers and Routes refactored and completed
+- The following routes and corresponding data types have been refactored as a REST API in TS, with test files
+    - Orgs
+    - Classes
+    - Users/Teachers
 
 ### **NEXT:**
-Org Routes/Controller Refactor
+Implement user/session authentication using JSON web tokens.
 
 ## Development Roadmap
 
 [X]**Refactor Phase**(Write test, To Typescript, then to API)
+- [X] App.js
 - [X] Models
 - [] Routes/Controllers
     - [X] Class
     - [X] User
-    - [] Org
+    - [X] Org
     - [] Incident
-- [] Utilities
+- [] Misc Utility Files
 - [] Authentication
     - [] Refactor everything except for sessions.
     - [] Move to dedicated folder.
     - [] Write JWT session auth.
-- [X] App.js
-
-
-[] **Organizational**
-- [] Write unit tests for refactors, and write tests going forward.
-- [] Remove unecessary comments, try to have more useful comments.
 
 [] **Login/User Authentication**(REFACTOR+TS)
 - [X] Organization/School Model
-- [] Org Controller
+- [X] Org Controller
 - [X] User Model
-- [] User Controller
-- [] Password Encryption
-- [] Account Email Verification
+- [X] User Controller
+- [X] Password Encryption
+- [X] Account Email Verification
 - [] User/Session Authentication
 
-[] **Classroom/Student**(REFACTOR+TS)
+[X] **Classroom/Student**(REFACTOR+TS)
 - [X] Classroom Model
-- [] Classroom Controller
+- [X] Classroom Controller
 - [X] Student Model
-- [] Student Controller
+- [X] Student Controller
 
 [] **Documentation**(PARTIAL REFACTOR + TS)
-- [] Decide on forms for each
 - [] Models for each
     - [X] Incident (fight, worrisome comments, etc)
     - [X] Commmunication (student, staff, parent, other)
