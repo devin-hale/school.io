@@ -4,7 +4,6 @@ import User from "./../models/userModel.js";
 import emailAuth from "./../models/emailAuth.js";
 import { sendVerification } from "./utils/nodeMailer.js";
 
-//POST :: Verify Code
 const verify_user = [
 	body("code", "Invalid verification code.").trim().escape(),
 
