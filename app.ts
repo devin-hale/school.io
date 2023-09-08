@@ -1,4 +1,5 @@
 import express, { Request, Response, Express } from "express";
+import cors from 'cors';
 import initializeMongoServer from "./config/mongoConfig.js";
 import "dotenv/config.js";
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 //Routes
+app.options("*", cors());
 app.use("/", indexRouter);
 app.use("/organizations", orgRouter);
 app.use("/users", userRouter)

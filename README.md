@@ -24,7 +24,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-5-2023(1):**
+### **UPDATE: 9-8-2023:**
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
 - Added chalk as a way to color code console logs.
@@ -33,6 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - Orgs
     - Classes
     - Users/Teachers
+- CORS implemented. Won't know if it works properly until I start diving into the front end.
 
 ### **NEXT:**
 Implement user/session authentication using JSON web tokens.
