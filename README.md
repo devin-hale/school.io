@@ -1,7 +1,7 @@
 # school.io (API REFACTOR)
 
 ## Description
-### Version 0.2.8
+### Version 0.2.9
 This is the beginning stages of a project intended to act as a simple website for teachers to create, update, and store important documentation.
 The idea came from listening to my wife, who is a 3rd grade teacher.  According to her, the biggest annoyance is a teacher is keeping track of
 documentation.  This can be as simple as writing down "I spoke with little Billy's parents at X time on Y date.  We spoke about this...".  This
@@ -34,25 +34,24 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - Classes
     - Users/Teachers
 - CORS implemented. Won't know if it works properly until I start diving into the front end.
+- Refactored index route for user login and authentication.
+- User authentication implemented via JSON web tokens.
 
 ### **NEXT:**
-Implement user/session authentication using JSON web tokens.
+Refactor Incident report and finish tests.
 
 ## Development Roadmap
 
 [X]**Refactor Phase**(Write test, To Typescript, then to API)
 - [X] App.js
 - [X] Models
+- [X] Authentication
 - [] Routes/Controllers
     - [X] Class
     - [X] User
     - [X] Org
     - [] Incident
 - [] Misc Utility Files
-- [] Authentication
-    - [] Refactor everything except for sessions.
-    - [] Move to dedicated folder.
-    - [] Write JWT session auth.
 
 [] **Login/User Authentication**(REFACTOR+TS)
 - [X] Organization/School Model
@@ -61,7 +60,7 @@ Implement user/session authentication using JSON web tokens.
 - [X] User Controller
 - [X] Password Encryption
 - [X] Account Email Verification
-- [] User/Session Authentication
+- [X] User Authentication
 
 [X] **Classroom/Student**(REFACTOR+TS)
 - [X] Classroom Model

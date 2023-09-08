@@ -1,3 +1,4 @@
+import indexRouter from '../../routes/indexRouter.js';
 import classRouter from '../../routes/classRouter.js';
 import userRouter from '../../routes/userRouter.js';
 import orgRouter from '../../routes/orgRouter.js';
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use('/', indexRouter)
 app.use("/classes", classRouter);
 app.use("/users", userRouter)
 app.use("/organizations", orgRouter)

@@ -4,6 +4,7 @@ import Org, { OrgInterface } from '../../models/orgModel.js';
 import app from '../setup/appSetup.js'
 
 import request, { Response } from 'supertest';
+import testJWT from '../setup/testJWT.js';
 
 import bcrypt from 'bcryptjs'
 
@@ -31,38 +32,46 @@ afterAll(async (): Promise<void> => {
 
 describe("User GET", (): void => {
     it("Queries all users (200)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const searchTerm: string = "Billy";
 
         const searchReq: Response = await request(app)
             .get(`/users/search?search=${searchTerm}`)
             .set('Content-Type', 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .expect(200)
 
         expect(searchReq.body.searchResults.length).toBe(1)
     })
     it("Gets user info by ID (200)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({}).exec();
         const getReq: Response = await request(app)
             .get(`/users/${targetUser?._id}`)
             .set('Content-Type', 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .expect(200)
 
         expect(getReq.body._id.toString()).toBe(targetUser?._id.toString())
     })
     it("User not found (404)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const getReq: Response = await request(app)
             .get(`/users/64ebe2c3ad586fd7e48f93b5`)
             .set(`Content-type`, `application/json; charset=utf-8`)
+			.set({'Authorization': testToken})
             .expect(404)
 
         expect(getReq.body.message).toBe("User could not be found.")
     })
     it("Returns all Classes of a given User", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const user: UserInterface | null = await User.findOne({});
 
         const reqTest: Response = await request(app)
             .get(`/users/${user?._id}/classes`)
             .expect("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .expect(200)
         expect(reqTest.body.classes[0].teachers[0]._id).toEqual(`${user?._id}`)
     })
@@ -124,6 +133,7 @@ describe("User POST", (): void => {
 
 describe("User PUT", (): void => {
     it("Edits basic user info (200)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({}).exec();
 
         const editedUser: Object = {
@@ -135,6 +145,7 @@ describe("User PUT", (): void => {
         const postReq: Response = await request(app)
             .put(`/users/edit/${targetUser?._id}`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send(editedUser)
             .expect(200)
 
@@ -146,6 +157,7 @@ describe("User PUT", (): void => {
     })
 
     it("User info edit fails (400)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({}).exec();
 
         const editedUser: Object = {
@@ -157,11 +169,13 @@ describe("User PUT", (): void => {
         request(app)
             .put(`/users/edit/${targetUser?._id}`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send(editedUser)
             .expect(400)
     })
 
     it("Edits user email (200)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({}).exec();
 
         const newEmail: string = "charlieboy@joe.net"
@@ -169,6 +183,7 @@ describe("User PUT", (): void => {
         await request(app)
             .put(`/users/${targetUser?._id}/email/edit`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send({ email: newEmail })
             .expect(200)
 
@@ -178,6 +193,7 @@ describe("User PUT", (): void => {
     })
 
     it("Email edit fails (400)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({}).exec();
 
         const newEmail: string = "charlie"
@@ -185,6 +201,7 @@ describe("User PUT", (): void => {
         const putReq: Response = await request(app)
             .put(`/users/${targetUser?._id}/email/edit`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send({ email: newEmail })
             .expect(400);
 
@@ -194,14 +211,16 @@ describe("User PUT", (): void => {
 
     })
     it("Edits user password (200)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({ first_name: 'Zane', last_name: 'Zaneson' }).exec();
 
         const currentPass: string = "123456"
         const newPassword: string = "965432"
 
-        await request(app)
+        const putReq : Response = await request(app)
             .put(`/users/${targetUser?._id}/password/edit`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send({ currentPass: currentPass, newPass: newPassword })
             .expect(200)
 
@@ -216,6 +235,7 @@ describe("User PUT", (): void => {
 
     })
     it("Password edit fails (400)", async (): Promise<void> => {
+		const testToken : string = await testJWT(app);
         const targetUser: UserInterface | null = await User.findOne({ first_name: 'Zane', last_name: 'Zaneson' }).exec();
 
         const currentPass: string = "777777"
@@ -224,6 +244,7 @@ describe("User PUT", (): void => {
         await request(app)
             .put(`/users/${targetUser?._id}/password/edit`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send({ currentPass: currentPass, newPass: newPassword })
             .expect(400);
 
@@ -254,10 +275,12 @@ describe("User DELETE", (): void => {
     it("Deletes user (200)", async (): Promise<void> => {
         const targetUser: UserInterface | null = await User.findOne({}).exec();
 
+		const testToken : string = await testJWT(app);
 
         await request(app)
             .delete(`/users/${targetUser?._id}/delete`)
             .set("Content-Type", 'application/json; charset=utf-8')
+			.set({'Authorization': testToken})
             .send({ password: '965432' })
             .expect(200)
 
