@@ -38,7 +38,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - User authentication implemented via JSON web tokens.
 
 ### **NEXT:**
-Refactor Incident report and finish tests.
+Refactor student route, controller, and create tests.
 
 ## Development Roadmap
 
@@ -50,6 +50,7 @@ Refactor Incident report and finish tests.
     - [X] Class
     - [X] User
     - [X] Org
+    - [] Student
     - [] Incident
 - [] Misc Utility Files
 
@@ -65,8 +66,8 @@ Refactor Incident report and finish tests.
 [X] **Classroom/Student**(REFACTOR+TS)
 - [X] Classroom Model
 - [X] Classroom Controller
-- [X] Student Model
-- [X] Student Controller
+- [] Student Model
+- [] Student Controller
 
 [] **Documentation**(PARTIAL REFACTOR + TS)
 - [] Models for each
