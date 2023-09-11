@@ -1,9 +1,11 @@
 import ClassModel from '../../models/classModel';
 import UserModel from '../../models/userModel';
+import StudentModel from '../../models/studentModel';
 import OrgModel from '../../models/orgModel';
 
 import util from 'util';
 import bcrypt from 'bcryptjs';
+import studentModel from '../../models/studentModel';
 
 const asyncHash: (arg1: string, arg2: string | number) => Promise<string> = util.promisify(bcrypt.hash);
 
@@ -45,6 +47,19 @@ async function initializeTestDB(): Promise<void> {
 		org: saveTestOrg._id
 	})
 	await testClass.save();
+
+	const testStudent = new StudentModel({
+		first_name: "Joe",
+		last_name: "Jack",
+		grade_level: 4,
+		gifted: false,
+		retained: false,
+		sped: false,
+		english_language_learner: false,
+		org: saveTestOrg._id
+	})
+
+	await testStudent.save();
 };
 
 

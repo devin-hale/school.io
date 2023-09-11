@@ -1,11 +1,11 @@
 import { Request, NextFunction, Response, RequestHandler } from "express";
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import 'dotenv/config.js'
 
 const secretKey: string = process.env.SECRET_KEY!;
 
 interface TokenRequest extends Request {
-	token: string;
+	token: string | JwtPayload | undefined;
 }
 
 const  verifyToken:any = (req: TokenRequest, res:Response, next:NextFunction) =>  {
@@ -18,6 +18,7 @@ const  verifyToken:any = (req: TokenRequest, res:Response, next:NextFunction) =>
 			if(err) {
 				res.sendStatus(403);
 			} else {
+				req.body.token = authData;
 				next();	
 			}
 		} )

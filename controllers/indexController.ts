@@ -41,7 +41,7 @@ const user_login: RequestHandler[] = [
 					res.status(400).json({ message: "Username or password incorrect." })
 				} else {
 
-					jwt.sign({ user: req.body.email }, secretKey, { expiresIn: req.query.stayLogged ? "9999 years" : "30 min" }, (err, token) => {
+					jwt.sign({ user: req.body.email, org: userExists.org }, secretKey, { expiresIn: req.query.stayLogged ? "9999 years" : "30 min" }, (err, token) => {
 						res.json({ token: token })
 					})
 				}
