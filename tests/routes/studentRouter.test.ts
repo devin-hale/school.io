@@ -29,8 +29,17 @@ afterAll(async (): Promise<void> => {
 })
 
 describe("Student GET", (): void => {
-	it("Searches for student (200)", async(): Promise<void> => {
+	it("Searches for student by name (200)", async(): Promise<void> => {
 		const testToken = await testJWT(app);
+		const searchTerm = "Sally+Joe"
+
+		const getReq : Response = await request(app)
+			.get(`/students/search?name=${searchTerm}`)
+			.set('Content-Type', 'application/json; charset=utf-8')
+			.set({'authorization': testToken})
+			.expect(200)
+
+		expect(getReq.body.length).toBe(1);
 		
 	})
 	it("Gets unique student info (200)", async (): Promise<void> => {
@@ -43,6 +52,9 @@ describe("Student GET", (): void => {
 			.set({'authorization': testToken})
 			.expect(200);
 
+
 		expect(getReq.body.student._id).toBe(targetStudent?._id.toString());
 	});
+	it("Gets all students by org (200)")
+	it("Gets all students by class (200)")
 });

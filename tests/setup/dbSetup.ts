@@ -46,7 +46,7 @@ async function initializeTestDB(): Promise<void> {
 		teachers: [testUser._id],
 		org: saveTestOrg._id
 	})
-	await testClass.save();
+	const saveTestClass = await testClass.save();
 
 	const testStudent = new StudentModel({
 		first_name: "Joe",
@@ -59,7 +59,31 @@ async function initializeTestDB(): Promise<void> {
 		org: saveTestOrg._id
 	})
 
+	const student2 = new StudentModel({
+		first_name: "Sally",
+		last_name: "Joe",
+		grade_level: 2,
+		gifted: false,
+		retained: true,
+		sped: false,
+		english_language_learner: false,
+		org: saveTestOrg._id
+	})
+	const student3 = new StudentModel({
+		first_name: "Kyle",
+		last_name: "Wilson",
+		grade_level: 1,
+		gifted: true,
+		retained: false,
+		sped: false,
+		english_language_learner: false,
+		classes: [saveTestClass._id],
+		org: saveTestOrg._id
+	})
+
 	await testStudent.save();
+	await student2.save();
+	await student3.save();
 };
 
 
