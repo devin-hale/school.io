@@ -1,4 +1,4 @@
-import Student, {StudentInterface} from './../../models/studentModel.js';
+import Student, { StudentInterface } from './../../models/studentModel.js';
 import ClassModel, { ClassInterface } from '../../models/classModel.js';
 import User, { UserInterface } from '../../models/userModel.js';
 import Org, { OrgInterface } from '../../models/orgModel.js';
@@ -29,44 +29,56 @@ afterAll(async (): Promise<void> => {
 })
 
 describe("Student GET", (): void => {
-	it("Searches for student by name (200)", async(): Promise<void> => {
+	it("Searches for student by name (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
 		const searchTerm = "Sally+Joe"
 
-		const getReq : Response = await request(app)
+		const getReq: Response = await request(app)
 			.get(`/students/search?name=${searchTerm}`)
 			.set('Content-Type', 'application/json; charset=utf-8')
-			.set({'authorization': testToken})
+			.set({ 'authorization': testToken })
 			.expect(200)
 
 		expect(getReq.body.length).toBe(1);
-		
+
 	})
 	it("Gets unique student info (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetStudent : StudentInterface | null = await Student.findOne({}).populate("classes").lean().exec();
+		const targetStudent: StudentInterface | null = await Student.findOne({}).populate("classes").lean().exec();
 
-		const getReq : Response = await request(app)
+		const getReq: Response = await request(app)
 			.get(`/students/${targetStudent?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
-			.set({'authorization': testToken})
+			.set({ 'authorization': testToken })
 			.expect(200);
 
 
 		expect(getReq.body.student._id).toBe(targetStudent?._id.toString());
 	});
-	it("Gets all students by org (200)", async(): Promise<void> => {
-        const testToken = await testJWT(app);
-        const targetOrg : OrgInterface | null = await Org.findOne({}).exec();
+	it("Gets all students by org (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetOrg: OrgInterface | null = await Org.findOne({}).exec();
 
-        const getReq : Response = await request(app)
-            .get(`/students/org/${targetOrg?._id}`)
-            .set('Content-Type','application/json;charset=utf-8')
-            .set({'authorization': testToken})
-            .expect(200)
+		const getReq: Response = await request(app)
+			.get(`/students/org/${targetOrg?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200)
 
-        expect(getReq.body.length).toBe(3)
-    })
+		expect(getReq.body.length).toBe(3)
+	})
 
-	//it("Gets all students by class (200)")
+	it("Gets all students by class (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetClass: ClassInterface | null = await ClassModel.findOne({}).exec();
+
+		const getReq: Response = await request(app)
+			.get(`/students/class/${targetClass?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({'authorization': testToken})
+			.expect(200)
+
+		expect(getReq.body.length).toBe(1);
+
+	})
 });

@@ -11,9 +11,11 @@ router.get("/:studentId", verifyToken, studentController.get_student_info);
 
 router.get("/org/:orgId", verifyToken, studentController.get_org_students);
 
+router.get(`/class/:classId`, verifyToken, studentController.get_class_students);
+
+
+
 //TODO:
-//GET All students by org
-//GET All students by class
 //POST create student
 //PUT Add student to class
 //PUT Remove student from class

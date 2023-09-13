@@ -9,7 +9,7 @@ export interface UserInterface {
     password: string,
     gender: "M" | "F" | "Nonspecified",
     verified: Boolean,
-    accType?: string,
+    accType?: "Basic" | "Admin" | "sioStaff",
     org: ObjectId
 }
 
@@ -20,7 +20,7 @@ const userSchema : Schema = new mongoose.Schema<UserInterface>({
 	password: { type: String, required: true },
 	gender: { type: String, required: true, enum: ["M", "F", "Nonspecified"] },
 	verified: { type: Boolean, default: false },
-	accType: { type: String, default: "Basic" },
+	accType: { type: String, enum: ["Basic", "Admin", "sioStaff"], default: "Basic" },
 	org: { type: Schema.Types.ObjectId, ref: "organizations" },
 });
 
