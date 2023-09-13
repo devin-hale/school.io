@@ -38,8 +38,11 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - User authentication implemented via JSON web tokens.
 
 ### **NEXT:**
-Refactor student route, controller, and create tests.
-Add optional org limiter to DB routes.
+- Refactor student route, controller, and create tests.
+- Go back and add check at each endpoint that limits results based on orgtype.
+    - Add a few tests for this for peace of mind.
+    - Don't any School1 data to even get sent to School2 front end.
+    - Still want superadmin account (me) to be able to view and access data from a staff tool.
 
 ## Development Roadmap
 
