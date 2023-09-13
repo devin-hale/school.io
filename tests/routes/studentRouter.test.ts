@@ -11,8 +11,9 @@ import testJWT from './../setup/testJWT.js';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
+import orgModel from '../../models/orgModel.js';
 
-let mongod: MongoMemoryServer
+let mongod: MongoMemoryServer;
 
 beforeAll(async (): Promise<void> => {
 	mongod = await MongoMemoryServer.create();
@@ -20,13 +21,13 @@ beforeAll(async (): Promise<void> => {
 	await initializeTestDB();
 
 
-})
+});
 afterAll(async (): Promise<void> => {
 	await mongoose.connection.dropDatabase();
 	await mongod.stop();
 	await mongoose.disconnect();
 
-})
+});
 
 describe("Student GET", (): void => {
 	it("Searches for student by name (200)", async (): Promise<void> => {
@@ -41,7 +42,7 @@ describe("Student GET", (): void => {
 
 		expect(getReq.body.length).toBe(1);
 
-	})
+	});
 	it("Gets unique student info (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
 		const targetStudent: StudentInterface | null = await Student.findOne({}).populate("classes").lean().exec();
@@ -66,7 +67,7 @@ describe("Student GET", (): void => {
 			.expect(200)
 
 		expect(getReq.body.length).toBe(3)
-	})
+	});
 
 	it("Gets all students by class (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -75,10 +76,41 @@ describe("Student GET", (): void => {
 		const getReq: Response = await request(app)
 			.get(`/students/class/${targetClass?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
-			.set({'authorization': testToken})
+			.set({ 'authorization': testToken })
 			.expect(200)
 
 		expect(getReq.body.length).toBe(1);
 
-	})
+	});
 });
+
+describe("Student PUT", (): void => {
+	it("Creates Student (201)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetOrg : OrgInterface | null = await orgModel.findOne({}).exec();
+		const targetClass : ClassInterface | null = await ClassModel.findOne({}).exec();
+		const studentInfo: object = {
+			first_name: "Leeroy",
+			last_name: "Jenkins",
+			grade_level: 5,
+			gifted: false,
+			retained: true,
+			sped: true,
+			english_language_learner: false,
+			classes: [targetClass?._id],
+			org:targetOrg?._id 
+
+		}
+
+		const getReq: Response = await request(app)
+			.put(`/students/create`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.send(studentInfo)
+			.expect(201)
+
+		const addedStudent : StudentInterface | null = await Student.findOne({first_name: "Leeroy", last_name: "Jenkins"}).lean().exec();
+
+		expect(addedStudent).toBeTruthy;
+	})
+})

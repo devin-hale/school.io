@@ -100,10 +100,10 @@ const get_class_students: RequestHandler[] = [
 		.escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
-		const errors : Result = validationResult(req);
+		const errors: Result = validationResult(req);
 
-		if(!errors.isEmpty()) {
-			res.status(400).json({message: "Invalid rquest."})
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid rquest." })
 		} else {
 			try {
 				let studentArr: StudentInterface[] = await Student.find({ classes: req.params.classId }).populate("classes").lean().exec();
@@ -113,13 +113,79 @@ const get_class_students: RequestHandler[] = [
 
 				res.json(studentArr);
 
-			} catch(error) {
+			} catch (error) {
 				next(error)
 			}
 		}
 	})
+];
+
+const create_student: RequestHandlerp[] = [
+	body("first_name")
+		.isString()
+		.trim()
+		.escape(),
+	body("last_name")
+		.isString()
+		.trim()
+		.escape(),
+	body("grade_level")
+		.isNumeric()
+		.escape(),
+	body("gifted")
+		.isBoolean()
+		.escape(),
+	body("retained")
+		.isBoolean()
+		.escape(),
+	body("sped")
+		.isBoolean()
+		.escape(),
+	body("english_language_learner")
+		.isBoolean()
+		.escape(),
+	body("classes")
+		.isArray()
+		.escape(),
+	body("org")
+		.trim()
+		.escape(),
+
+	asyncHandler(async(req, res, next): Promise<void> => {
+		const errors : Result = validationResult(req);
+
+		if(!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid rquest." })
+		} else {
+			try {
+				const newStudent = new Student({
+					first_name: req.body.first_name,
+					last_name: req.body.last_name,
+					grade_level: req.body.grade_level,
+					gifted: req.body.gifted,
+					retained: req.body.retained,
+					sped: req.body.sped,
+					english_language_learner: req.body.english_language_learner,
+					classes: req.body.classes,
+					org: req.body.org
+				})	
+
+				const savedStudent = await newStudent.save();
+
+				res.status(201).json(savedStudent);
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+
+
+
+
+
+
 ]
 
 
-export default { search_student, get_student_info, get_org_students, get_class_students };
+export default { search_student, get_student_info, get_org_students, get_class_students, create_student };
 
