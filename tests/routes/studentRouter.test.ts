@@ -55,6 +55,18 @@ describe("Student GET", (): void => {
 
 		expect(getReq.body.student._id).toBe(targetStudent?._id.toString());
 	});
-	it("Gets all students by org (200)")
-	it("Gets all students by class (200)")
+	it("Gets all students by org (200)", async(): Promise<void> => {
+        const testToken = await testJWT(app);
+        const targetOrg : OrgInterface | null = await Org.findOne({}).exec();
+
+        const getReq : Response = await request(app)
+            .get(`/students/org/${targetOrg?._id}`)
+            .set('Content-Type','application/json;charset=utf-8')
+            .set({'authorization': testToken})
+            .expect(200)
+
+        expect(getReq.body.length).toBe(3)
+    })
+
+	//it("Gets all students by class (200)")
 });

@@ -9,6 +9,8 @@ router.get("/search", verifyToken, studentController.search_student);
 
 router.get("/:studentId", verifyToken, studentController.get_student_info);
 
+router.get("/org/:orgId", verifyToken, studentController.get_org_students);
+
 //TODO:
 //GET All students by org
 //GET All students by class
