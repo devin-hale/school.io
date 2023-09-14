@@ -170,7 +170,7 @@ describe("Student PUT", (): void => {
 		expect(editedStudent).toBeFalsy;
 
 	})
-	it("Toggles student as active/inactive", async (): Promise<void> => {
+	it("Toggles student as active/inactive (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
 		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
 
@@ -185,4 +185,24 @@ describe("Student PUT", (): void => {
 		expect(editedStudent?.active).toBeFalsy;
 
 	})
+});
+
+describe("Student DELETE", (): void => { 
+	it("Deletes student (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
+
+		await request(app)
+			.delete(`/students/${targetStudent?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200)
+
+		const editedStudent : StudentInterface | null = await Student.findOne({ _id: targetStudent?._id}).lean().exec();
+
+		expect(editedStudent).toBeNull;
+
+	})
+
 })
+

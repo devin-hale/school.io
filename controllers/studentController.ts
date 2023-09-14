@@ -345,8 +345,39 @@ const toggle_active: RequestHandler[] = [
 	})
 ];
 
+const delete_student: RequestHandler[] = [
+	param("studentId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId }).exec();
+
+
+				if (!studentExists) {
+					res.status(404).json({ message: "Student not found." })
+				} else {
+					await Student.findOneAndDelete({ _id: req.params.sudentId }).exec();
+
+					res.json({ message: "Success." })
+				}
+
+
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+];
+
 export default {
 	search_student, get_student_info, get_org_students, get_class_students, create_student, edit_student_info, student_add_class,
-	student_remove_class, toggle_active
+	student_remove_class, toggle_active, delete_student
 };
 

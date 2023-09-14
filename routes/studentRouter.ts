@@ -23,15 +23,6 @@ router.put('/:studentId/classRemove/:classId', verifyToken, studentController.st
 
 router.put('/:studentId/toggleActive', verifyToken, studentController.toggle_active);
 
-//router.delete('/:studentId', verifyToken, studentController.delete_student);
-
-
-//TODO:
-//PUT Add student to class
-//PUT Remove student from class
-//PUT Toggle Active
-//DELETE Delete Student
-
-
+router.delete('/:studentId', verifyToken, studentController.delete_student);
 
 export default router;
