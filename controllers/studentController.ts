@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import { RequestHandler } from "express";
 import { Result, body, param, query, validationResult } from "express-validator";
+import ClassModel, { ClassInterface } from "../models/classModel.js";
 
 const search_student: RequestHandler[] = [
 	query("name")
@@ -144,9 +145,6 @@ const create_student: RequestHandler[] = [
 	body("english_language_learner")
 		.isBoolean()
 		.escape(),
-	body("classes")
-		.isArray()
-		.escape(),
 	body("org")
 		.trim()
 		.escape(),
@@ -222,7 +220,7 @@ const edit_student_info: RequestHandler[] = [
 				const studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId }).lean().exec();
 
 				if (!studentExists) {
-					res.status(404).json({message: "ERROR: Student not found."})
+					res.status(404).json({ message: "ERROR: Student not found." })
 				} else {
 					const editInfo: object = {
 						first_name: req.body.first_name || studentExists.first_name,
@@ -234,7 +232,8 @@ const edit_student_info: RequestHandler[] = [
 						english_language_learner: req.body.english_language_learner || studentExists.english_language_learner
 					}
 
-					const updatedStudent : StudentInterface | null = await Student.findOneAndUpdate({_id: req.params.studentId}, editInfo, {new: true})
+					const updatedStudent: StudentInterface | null = await Student.findOneAndUpdate({ _id: req.params.studentId }, editInfo, { new: true })
+
 
 					res.json(updatedStudent)
 				}
@@ -245,6 +244,78 @@ const edit_student_info: RequestHandler[] = [
 	})
 ];
 
+const student_add_class: RequestHandler[] = [
+	param("studentId")
+		.trim()
+		.escape(),
+	param("classId")
+		.trim()
+		.escape(),
 
-export default { search_student, get_student_info, get_org_students, get_class_students, create_student, edit_student_info };
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId }).exec();
+				const classExists: ClassInterface | null = await ClassModel.findOne({ _id: req.params.classId }).lean().exec();
+
+				if (!studentExists || !classExists) {
+					res.status(404).json({ message: "Cannot find information." })
+				} else {
+					const updatedStudent: StudentInterface | null = await Student.findOneAndUpdate({ _id: req.params.studentId }, { $push: { classes: req.params.classId } }, {new: true});
+
+
+					console.log(updatedStudent)
+					res.json({ message: "Success." })
+				}
+
+
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+];
+const student_remove_class: RequestHandler[] = [
+	param("studentId")
+		.trim()
+		.escape(),
+	param("classId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const classExists: ClassInterface | null = await ClassModel.findOne({ _id: req.params.classId }).lean().exec();
+				const studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId, classes: classExists?._id}).exec();
+
+
+				if (!studentExists || !classExists) {
+					res.status(404).json({ message: "Cannot student in specificed class." })
+				} else {
+					await Student.findOneAndUpdate({ _id: req.params.sudentId }, { $pull: { classes: req.params.classId } })
+
+					res.json({ message: "Success." })
+				}
+
+
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+];
+
+export default {
+	search_student, get_student_info, get_org_students, get_class_students, create_student, edit_student_info, student_add_class,
+	student_remove_class
+};
 

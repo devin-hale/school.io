@@ -17,6 +17,14 @@ router.post(`/create`, verifyToken, studentController.create_student);
 
 router.put('/:studentId/edit', verifyToken, studentController.edit_student_info);
 
+router.put('/:studentId/classAdd/:classId', verifyToken, studentController.student_add_class);
+
+router.put('/:studentId/classRemove/:classId', verifyToken, studentController.student_remove_class);
+
+//router.put('/:studentId/toggleActive', verifyToken, studentController.toggle_active);
+
+//router.delete('/:studentId', verifyToken, studentController.delete_student);
+
 
 //TODO:
 //PUT Add student to class

@@ -88,7 +88,6 @@ describe("Student POST", (): void => {
 	it("Creates Student (201)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
 		const targetOrg: OrgInterface | null = await orgModel.findOne({}).exec();
-		const targetClass: ClassInterface | null = await ClassModel.findOne({}).exec();
 		const studentInfo: object = {
 			first_name: "Leeroy",
 			last_name: "Jenkins",
@@ -97,7 +96,6 @@ describe("Student POST", (): void => {
 			retained: true,
 			sped: true,
 			english_language_learner: false,
-			classes: [targetClass?._id],
 			org: targetOrg?._id
 
 		}
@@ -116,10 +114,9 @@ describe("Student POST", (): void => {
 })
 
 describe("Student PUT", (): void => {
-	it("Edits student info.", async (): Promise<void> => {
+	it("Edits student info (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetOrg: OrgInterface | null = await orgModel.findOne({}).exec();
-		const targetStudent: StudentInterface | null = await Student.findOne({first_name: "Leeroy", last_name: "Jenkins"}).exec()
+		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Leeroy", last_name: "Jenkins" }).exec()
 		const studentInfo: object = {
 			first_name: "Weeroy",
 			last_name: "Wenkins",
@@ -138,8 +135,40 @@ describe("Student PUT", (): void => {
 			.send(studentInfo)
 			.expect(200)
 
-		const editedStudent: StudentInterface | null = await Student.findOne({first_name: "Weeroy", last_name: "Wenkins"}).exec();
+		const editedStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
+
+		console.log(editedStudent)
+		expect(editedStudent).toBeTruthy;
+	})
+	it("Adds student to class (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
+		const targetClass: ClassInterface | null = await ClassModel.findOne({}).lean().exec();
+
+		await request(app)
+			.put(`/students/${targetStudent?._id}/classAdd/${targetClass?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200)
+
+		const editedStudent = await Student.findOne({ _id: targetStudent?._id, classes: targetClass?._id }).lean().exec();
 
 		expect(editedStudent).toBeTruthy;
+	})
+	it("Removes student from class (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
+		const targetClass: ClassInterface | null = await ClassModel.findOne({}).lean().exec();
+
+		await request(app)
+			.put(`/students/${targetStudent?._id}/classRemove/${targetClass?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200)
+
+		const editedStudent = await Student.findOne({ _id: targetStudent?._id, classes: targetClass?._id }).lean().exec();
+
+		expect(editedStudent).toBeFalsy;
+
 	})
 })
