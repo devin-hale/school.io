@@ -5,7 +5,7 @@ import comRouter from "./comRouter.js"
 const router: IRouter = express.Router();
 
 //incidents
-router.use("/incident", incidentRouter);
+router.use("/incidents", incidentRouter);
 
 //communications
 router.use("/communication", comRouter);

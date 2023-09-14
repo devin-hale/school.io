@@ -6,8 +6,6 @@ const router: IRouter = express.Router();
 
 router.get("/:incidentId", verifyToken, incidentController.get_incident);
 
-//router.get("/:studentId", verifyToken, incidentController.get_student_incidents);
-
-router.post("/create", incidentController.create_incident_record);
+router.get("/student/:studentId", verifyToken, incidentController.get_student_incidents);
 
 export default router;

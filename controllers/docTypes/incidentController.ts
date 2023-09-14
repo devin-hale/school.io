@@ -30,9 +30,31 @@ const get_incident: RequestHandler[] = [
 		}
 
 	})
-]
+];
 
-// POST :: Create incident record
+const get_student_incidents: RequestHandler[] = [
+	param("studentId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const studentIncidents: IncidentInterface[] = await Incident.find({ students_involved: req.params.studentId }).lean().exec();
+
+				res.json(studentIncidents);
+			} catch (error) {
+				next(error)
+			}
+		}
+
+	})
+];
+
 
 const create_incident_record = [
 	//Sanitize
@@ -134,6 +156,7 @@ const update_incident_record = [
 
 export default {
 	get_incident,
+	get_student_incidents,
 	create_incident_record,
 	update_incident_record,
 };
