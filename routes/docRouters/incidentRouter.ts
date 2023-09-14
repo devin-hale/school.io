@@ -8,4 +8,7 @@ router.get("/:incidentId", verifyToken, incidentController.get_incident);
 
 router.get("/student/:studentId", verifyToken, incidentController.get_student_incidents);
 
+router.get("/organization/:orgId", verifyToken, incidentController.get_org_incidents);
+
+
 export default router;

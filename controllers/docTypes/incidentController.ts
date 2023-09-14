@@ -55,6 +55,29 @@ const get_student_incidents: RequestHandler[] = [
 	})
 ];
 
+const get_org_incidents: RequestHandler[] = [
+	param("orgId")
+		.trim()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid request." })
+		} else {
+			try {
+				const orgIncidents: IncidentInterface[] = await Incident.find({ org: req.params.orgId }).lean().exec();
+
+				res.json(orgIncidents);
+			} catch (error) {
+				next(error)
+			}
+		}
+
+	})
+];
+
 
 const create_incident_record = [
 	//Sanitize
@@ -157,6 +180,7 @@ const update_incident_record = [
 export default {
 	get_incident,
 	get_student_incidents,
+	get_org_incidents,
 	create_incident_record,
 	update_incident_record,
 };

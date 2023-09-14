@@ -44,10 +44,23 @@ describe("Docs/Incident GET", (): void => {
 	});
 	it("Gets all incidents by student (200)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetStudent = await studentModel.findOne({first_name: "Joe", last_name: "Jack"}).exec();
+		const targetStudent = await studentModel.findOne({ first_name: "Joe", last_name: "Jack" }).exec();
 
 		const getReq: Response = await request(app)
 			.get(`/docs/incidents/student/${targetStudent?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200);
+
+		expect(getReq.body.length).toBe(1);
+
+	});
+	it("Gets all incidents by Org (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetOrg : OrgInterface | null = await Org.findOne({name: "Test Org"}).exec();
+
+		const getReq: Response = await request(app)
+			.get(`/docs/incidents/organization/${targetOrg?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ 'authorization': testToken })
 			.expect(200);
