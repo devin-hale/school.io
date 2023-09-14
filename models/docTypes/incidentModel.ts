@@ -7,14 +7,15 @@ export interface IncidentInterface {
     date_of_occurence: Date,
     staff_involved?: ObjectId[],
     students_involved?: ObjectId[],
-    parents_involved?: ObjectId[],
-    others_involved?: ObjectId[],
+    parents_involved?: string[],
+    others_involved?: string[],
     subject: string,
     description?: string,
     action_taken?: string,
     parentOrGuardian_notified: boolean,
-    notification_type: string[],
+    notification_type: string,
     escalated: boolean,
+	org: ObjectId
 
 }
 
@@ -25,17 +26,18 @@ const incidentModel : Schema = new mongoose.Schema<IncidentInterface>(
         date_of_occurence: {type: Date, required: true},
         staff_involved: [{ type: Schema.Types.ObjectId, ref: "users" }],
         students_involved: [{ type: Schema.Types.ObjectId, ref: "students" }],
-        parents_involved: { type: String },
-        others_involved: { type: String },
+        parents_involved: [{ type: String }],
+        others_involved: [{ type: String }],
         subject: { type: String, required: true },
         description: { type: String },
         action_taken: String,
         parentOrGuardian_notified: Boolean,
         notification_type: {
             Type: String,
-            enum: ["Email", "Phone Call", "Text", "Remind", "Social Media", "Other"],
+            enum: ["Email", "Phone", "Text", "Remind", "SocialMedia", "Other"],
         },
         escalated: Boolean,
+		org: {type: Schema.Types.ObjectId, ref: "organizations"}
     },
     { collection: "incidents" }
 );

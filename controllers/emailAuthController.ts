@@ -3,6 +3,7 @@ import { body, validationResult } from "express-validator";
 import User from "./../models/userModel.js";
 import emailAuth from "./../models/emailAuth.js";
 import { sendVerification } from "./utils/nodeMailer.js";
+import { Request } from "express";
 
 const verify_user = [
 	body("code", "Invalid verification code.").trim().escape(),
@@ -39,7 +40,7 @@ const verify_user = [
 	}),
 ];
 
-const createAuth = async (savedUser, req) => {
+const createAuth = async (savedUser:any, req: Request) => {
 	const newAuth = new emailAuth({
 		user: savedUser._id,
 	});

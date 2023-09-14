@@ -4,7 +4,7 @@ import verifyToken from "../authentication/verifyToken.js";
 
 const router: IRouter = express.Router();
 
-router.get("/:incidentId", verifyToken, incidentController.get_incident_record);
+router.get("/:incidentId", verifyToken, incidentController.get_incident);
 
 //router.get("/:studentId", verifyToken, incidentController.get_student_incidents);
 

@@ -3,6 +3,7 @@ import orgRouter from '../../routes/orgRouter.js';
 import userRouter from '../../routes/userRouter.js';
 import classRouter from '../../routes/classRouter.js';
 import studentRouter from '../../routes/studentRouter.js';
+import docRouter from '../../routes/docRouters/docRouter.js';
 import express, { Express, response } from 'express';
 import cors from 'cors';
 
@@ -25,6 +26,7 @@ app.use("/organizations", orgRouter)
 app.use("/users", userRouter)
 app.use("/classes", classRouter);
 app.use("/students", studentRouter);
+app.use("/docs", docRouter);
 
 app.use((req:any, res: any, next:any, err: any) : void => {
 	res.status(500).send({ error: err });
