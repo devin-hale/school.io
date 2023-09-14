@@ -21,7 +21,7 @@ router.put('/:studentId/classAdd/:classId', verifyToken, studentController.stude
 
 router.put('/:studentId/classRemove/:classId', verifyToken, studentController.student_remove_class);
 
-//router.put('/:studentId/toggleActive', verifyToken, studentController.toggle_active);
+router.put('/:studentId/toggleActive', verifyToken, studentController.toggle_active);
 
 //router.delete('/:studentId', verifyToken, studentController.delete_student);
 

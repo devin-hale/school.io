@@ -137,7 +137,6 @@ describe("Student PUT", (): void => {
 
 		const editedStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
 
-		console.log(editedStudent)
 		expect(editedStudent).toBeTruthy;
 	})
 	it("Adds student to class (200)", async (): Promise<void> => {
@@ -169,6 +168,21 @@ describe("Student PUT", (): void => {
 		const editedStudent = await Student.findOne({ _id: targetStudent?._id, classes: targetClass?._id }).lean().exec();
 
 		expect(editedStudent).toBeFalsy;
+
+	})
+	it("Toggles student as active/inactive", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetStudent: StudentInterface | null = await Student.findOne({ first_name: "Weeroy", last_name: "Wenkins" }).exec();
+
+		await request(app)
+			.put(`/students/${targetStudent?._id}/toggleActive`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200)
+
+		const editedStudent = await Student.findOne({ _id: targetStudent?._id}).lean().exec();
+
+		expect(editedStudent?.active).toBeFalsy;
 
 	})
 })

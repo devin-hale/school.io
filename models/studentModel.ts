@@ -10,7 +10,8 @@ export interface StudentInterface {
     sped: Boolean,
     english_language_learner: Boolean,
     classes?: ObjectId[]
-	org: ObjectId
+	org: ObjectId,
+	active: Boolean
 }
 
 const studentSchema : Schema = new mongoose.Schema<StudentInterface>({
@@ -22,7 +23,8 @@ const studentSchema : Schema = new mongoose.Schema<StudentInterface>({
 	sped: Boolean,
 	english_language_learner: Boolean,
 	classes: [{ type: Schema.Types.ObjectId, ref: "classes" }],
-	org: {type: Schema.Types.ObjectId, ref: "organizations"} 
+	org: {type: Schema.Types.ObjectId, ref: "organizations"} ,
+	active: {type: Boolean, default: true}
 });
 
 studentSchema.virtual("url").get(function () : string {
