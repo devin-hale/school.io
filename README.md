@@ -33,16 +33,14 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - Orgs
     - Classes
     - Users/Teachers
+    - Students
 - CORS implemented. Won't know if it works properly until I start diving into the front end.
 - Refactored index route for user login and authentication.
 - User authentication implemented via JSON web tokens.
+- Org limiter added to queries based on account type so that users/data from different org doesn't bleed over.
 
 ### **NEXT:**
-- Refactor student route, controller, and create tests.
-- Go back and add check at each endpoint that limits results based on orgtype.
-    - Add a few tests for this for peace of mind.
-    - Don't any School1 data to even get sent to School2 front end.
-    - Still want superadmin account (me) to be able to view and access data from a staff tool.
+- Update document/incident controllers, create tests.
 
 ## Development Roadmap
 
@@ -54,7 +52,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - [X] Class
     - [X] User
     - [X] Org
-    - [] Student
+    - [X] Student
     - [] Incident
 - [] Misc Utility Files
 
@@ -68,10 +66,10 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [X] User Authentication
 
 [X] **Classroom/Student**(REFACTOR+TS)
-- [X] Classroom Model
-- [X] Classroom Controller
-- [] Student Model
-- [] Student Controller
+- [X] Class Model
+- [X] Class Controller
+- [X] Student Model
+- [X] Student Controller
 
 [] **Documentation**(PARTIAL REFACTOR + TS)
 - [] Models for each
