@@ -29,12 +29,14 @@ const search_user: RequestHandler[] = [
                     res.status(200).json({ searchResults: [] })
                 } else {
                     const searchQuery = new RegExp(`${req.query.search}`, 'i')
-                    const searchResults: UserInterface[] = await User.find({
+                    let searchResults: UserInterface[] = await User.find({
                         $or: [
                             { first_name: searchQuery },
                             { last_name: searchQuery },
                         ]
                     }).populate("org").lean().exec()
+
+					if (req.body.token.accType == "Basic" || req.body.tokenAccType == "Admin") searchResults = searchResults.filter(user => user.org == req.body.token.org)
 
                     res.status(200).json({ searchResults: searchResults });
 

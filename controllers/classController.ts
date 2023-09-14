@@ -43,6 +43,8 @@ const search_class: RequestHandler[] = [
 					})
 
 
+					if (req.body.token.accType == "Basic" || req.body.tokenAccType == "Admin") searchResults = searchResults.filter(classResult => classResult.org == req.body.token.org)
+
 					res.status(200).json({ searchResults: searchResults });
 
 				}

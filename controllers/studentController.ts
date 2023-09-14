@@ -50,11 +50,6 @@ const get_student_info: RequestHandler[] = [
 		} else {
 			try {
 				let studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId }).populate("classes").lean().exec();
-				if (req.body.token.accType == "Basic" || req.body.tokenAccType == "Admin") {
-					req.body.token.org == studentExists?.org ?
-						res.status(404).json({ message: "Student not found." })
-						: null
-				}
 
 				if (!studentExists) {
 					res.status(404).json({ message: "Student not found." })
