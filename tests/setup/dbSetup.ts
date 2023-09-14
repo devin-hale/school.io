@@ -38,7 +38,7 @@ async function initializeTestDB(): Promise<void> {
 		org: saveTestOrg._id
 	});
 
-	await testUser2.save();
+	const testUser2Save = await testUser2.save();
 
 	const testClass = new ClassModel({
 		name: "Test Class",
@@ -87,7 +87,7 @@ async function initializeTestDB(): Promise<void> {
 	await student3.save();
 
 	const incident = new incidentModel({
-		owner: savedUser._id,
+		owner: testUser2Save._id,
 		access: [],
 		date_of_occurence: '2023-09-14',
 		staff_involved: [],

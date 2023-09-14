@@ -35,7 +35,7 @@ describe("Docs/Incident GET", (): void => {
 		const targetIncident: IncidentInterface | null = await Incident.findOne({}).exec();
 
 		const getReq: Response = await request(app)
-			.get(`/docs/incidents/${targetIncident?._id}`)
+			.get(`/docs/incidents/instance/${targetIncident?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ 'authorization': testToken })
 			.expect(200);
@@ -67,5 +67,18 @@ describe("Docs/Incident GET", (): void => {
 
 		expect(getReq.body.length).toBe(1);
 
+	});
+	it("Gets all incidents by User (200)", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+
+		const getReq: Response = await request(app)
+			.get(`/docs/incidents/user`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.expect(200);
+
+		expect(getReq.body.length).toBe(1);
+
 	})
+
 })

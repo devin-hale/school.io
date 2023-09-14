@@ -29,7 +29,7 @@ const search_class: RequestHandler[] = [
 				} else {
 					const nameQuery = new RegExp(`${req.query.name}`, 'i') || ""
 					const subjectQuery = new RegExp(`${req.query.name}`, 'i') || ""
-					let searchResults: ClassInterface[] = await ClassModel.find({
+					let searchResults: any[] = await ClassModel.find({
 						$or: [
 							{ name: nameQuery },
 							{ subject: subjectQuery },
@@ -39,12 +39,15 @@ const search_class: RequestHandler[] = [
 
 
 					searchResults = searchResults.filter((classEl) => {
-						return classEl.teachers?.some((teacher: any) => `${teacher.first_name + teacher.last_name}`.match(new RegExp(`${req.query.teacher || ''}`, 'i')));
+						return classEl.teachers?.some((teacher: any) => `${teacher.first_name + teacher.last_name}`
+										.match(new RegExp(`${req.query.teacher || ''}`, 'i')));
 					})
 
 
-					if (req.body.token.accType == "Basic" || req.body.tokenAccType == "Admin") searchResults = searchResults.filter(classResult => classResult.org == req.body.token.org)
+					if (req.body.token.accType == "Basic" || req.body.token.AccType == "Admin") {
+						searchResults = searchResults.filter(classResult => classResult.org._id == req.body.token.org)
 
+					}
 					res.status(200).json({ searchResults: searchResults });
 
 				}

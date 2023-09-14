@@ -78,9 +78,25 @@ const get_org_incidents: RequestHandler[] = [
 	})
 ];
 
+const get_user_incidents: RequestHandler =
+	asyncHandler(async (req, res, next): Promise<void> => {
+		try {
+			const userIncidents: IncidentInterface[] = await Incident.find({ owner: req.body.token.userId })
+				.populate("students_involved")
+				.populate("staff_involved")
+				.populate("access")
+				.lean()
+				.exec();
+
+			res.json(userIncidents);
+		} catch (error) {
+			next(error)
+		}
+	});
+
+
 
 const create_incident_record = [
-	//Sanitize
 	body("owner").trim().escape(),
 	body("access").trim().optional({ checkFalsy: true }).escape(),
 	body("students_involved").trim().optional({ checkFalsy: true }).escape(),
@@ -181,6 +197,7 @@ export default {
 	get_incident,
 	get_student_incidents,
 	get_org_incidents,
+	get_user_incidents,
 	create_incident_record,
 	update_incident_record,
 };
