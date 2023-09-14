@@ -13,13 +13,14 @@ router.get("/org/:orgId", verifyToken, studentController.get_org_students);
 
 router.get(`/class/:classId`, verifyToken, studentController.get_class_students);
 
+router.post(`/create`, verifyToken, studentController.create_student);
+
+router.put('/:studentId/edit', verifyToken, studentController.edit_student_info);
 
 
 //TODO:
-//POST create student
 //PUT Add student to class
 //PUT Remove student from class
-//PUT Edit student info
 //PUT Toggle Active
 //DELETE Delete Student
 

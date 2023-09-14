@@ -84,11 +84,11 @@ describe("Student GET", (): void => {
 	});
 });
 
-describe("Student PUT", (): void => {
+describe("Student POST", (): void => {
 	it("Creates Student (201)", async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetOrg : OrgInterface | null = await orgModel.findOne({}).exec();
-		const targetClass : ClassInterface | null = await ClassModel.findOne({}).exec();
+		const targetOrg: OrgInterface | null = await orgModel.findOne({}).exec();
+		const targetClass: ClassInterface | null = await ClassModel.findOne({}).exec();
 		const studentInfo: object = {
 			first_name: "Leeroy",
 			last_name: "Jenkins",
@@ -98,19 +98,48 @@ describe("Student PUT", (): void => {
 			sped: true,
 			english_language_learner: false,
 			classes: [targetClass?._id],
-			org:targetOrg?._id 
+			org: targetOrg?._id
 
 		}
 
-		const getReq: Response = await request(app)
-			.put(`/students/create`)
+		await request(app)
+			.post(`/students/create`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ 'authorization': testToken })
 			.send(studentInfo)
 			.expect(201)
 
-		const addedStudent : StudentInterface | null = await Student.findOne({first_name: "Leeroy", last_name: "Jenkins"}).lean().exec();
+		const addedStudent: StudentInterface | null = await Student.findOne({ first_name: "Leeroy", last_name: "Jenkins" }).lean().exec();
 
 		expect(addedStudent).toBeTruthy;
+	})
+})
+
+describe("Student PUT", (): void => {
+	it("Edits student info.", async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetOrg: OrgInterface | null = await orgModel.findOne({}).exec();
+		const targetStudent: StudentInterface | null = await Student.findOne({first_name: "Leeroy", last_name: "Jenkins"}).exec()
+		const studentInfo: object = {
+			first_name: "Weeroy",
+			last_name: "Wenkins",
+			grade_level: 4,
+			gifted: true,
+			retained: false,
+			sped: false,
+			english_language_learner: true,
+
+		}
+
+		await request(app)
+			.put(`/students/${targetStudent?._id}/edit`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ 'authorization': testToken })
+			.send(studentInfo)
+			.expect(200)
+
+		const editedStudent: StudentInterface | null = await Student.findOne({first_name: "Weeroy", last_name: "Wenkins"}).exec();
+
+		expect(editedStudent).toBeTruthy;
 	})
 })

@@ -120,7 +120,7 @@ const get_class_students: RequestHandler[] = [
 	})
 ];
 
-const create_student: RequestHandlerp[] = [
+const create_student: RequestHandler[] = [
 	body("first_name")
 		.isString()
 		.trim()
@@ -151,10 +151,10 @@ const create_student: RequestHandlerp[] = [
 		.trim()
 		.escape(),
 
-	asyncHandler(async(req, res, next): Promise<void> => {
-		const errors : Result = validationResult(req);
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
 
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			res.status(400).json({ message: "Invalid rquest." })
 		} else {
 			try {
@@ -168,7 +168,7 @@ const create_student: RequestHandlerp[] = [
 					english_language_learner: req.body.english_language_learner,
 					classes: req.body.classes,
 					org: req.body.org
-				})	
+				})
 
 				const savedStudent = await newStudent.save();
 
@@ -178,14 +178,73 @@ const create_student: RequestHandlerp[] = [
 			}
 		}
 	})
+];
+
+const edit_student_info: RequestHandler[] = [
+	body("first_name")
+		.optional()
+		.isString()
+		.trim()
+		.escape(),
+	body("last_name")
+		.optional()
+		.isString()
+		.trim()
+		.escape(),
+	body("grade_level")
+		.optional()
+		.isNumeric()
+		.escape(),
+	body("gifted")
+		.optional()
+		.isBoolean()
+		.escape(),
+	body("retained")
+		.optional()
+		.isBoolean()
+		.escape(),
+	body("sped")
+		.optional()
+		.isBoolean()
+		.escape(),
+	body("english_language_learner")
+		.optional()
+		.isBoolean()
+		.escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: "Invalid rquest." })
+		} else {
+			try {
+				const studentExists: StudentInterface | null = await Student.findOne({ _id: req.params.studentId }).lean().exec();
+
+				if (!studentExists) {
+					res.status(404).json({message: "ERROR: Student not found."})
+				} else {
+					const editInfo: object = {
+						first_name: req.body.first_name || studentExists.first_name,
+						last_name: req.body.last_name || studentExists.last_name,
+						grade_level: req.body.grade_level || studentExists.grade_level,
+						gifted: req.body.gifted || studentExists.gifted,
+						retained: req.body.retained || studentExists.retained,
+						sped: req.body.sped || studentExists.sped,
+						english_language_learner: req.body.english_language_learner || studentExists.english_language_learner
+					}
+
+					const updatedStudent : StudentInterface | null = await Student.findOneAndUpdate({_id: req.params.studentId}, editInfo, {new: true})
+
+					res.json(updatedStudent)
+				}
+			} catch (error) {
+				next(error)
+			}
+		}
+	})
+];
 
 
-
-
-
-
-]
-
-
-export default { search_student, get_student_info, get_org_students, get_class_students, create_student };
+export default { search_student, get_student_info, get_org_students, get_class_students, create_student, edit_student_info };
 
