@@ -195,10 +195,11 @@ describe('Incident PUT', (): void => {
 			.expect(200);
 
 		const savedIncident: IncidentInterface | null = await Incident.findOne({
-			parents: "Daddy Jack"
+			parents_involved: 'Daddy Jack',
 		}).exec();
 
 		expect(savedIncident).toBeTruthy;
+		expect(savedIncident?.parents_involved!.length).toBe(2)
 	});
 
 	it('Edits incident involvement with partial info', async (): Promise<void> => {
@@ -207,7 +208,7 @@ describe('Incident PUT', (): void => {
 			subject: 'Kyle2 Accident',
 		});
 
-		const parents = ["Kyle2 Second Dad", 'Daddy Jack', 'Momma Jack'];
+		const parents = ['Kyle2 Second Dad', 'Daddy Jack', 'Momma Jack'];
 
 		const editedInvolvement = {
 			parents_involved: parents,
@@ -221,10 +222,33 @@ describe('Incident PUT', (): void => {
 			.expect(200);
 
 		const savedIncident: IncidentInterface | null = await Incident.findOne({
-			parents_involved: "Daddy Jack"
+			parents_involved: 'Daddy Jack',
 		}).exec();
 
 		expect(savedIncident).toBeTruthy;
-		expect(savedIncident?.parents_involved!.length).toBe(3)
+		expect(savedIncident?.parents_involved!.length).toBe(3);
+	});
+
+	it('Edits access to incident.', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle2 Accident',
+		})
+		const targetUser = await User.findOne({ first_name: 'Billy' });
+		const access = [targetUser?._id]
+
+		const putReq: Response = await request(app)
+			.put(`/docs/incidents/${targetIncident?._id}/access`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ authorization: testToken })
+			.send({access: access})
+			.expect(200);
+
+		const savedIncident: IncidentInterface | null = await Incident.findOne({
+			access: targetUser?._id,
+		}).populate("access").exec();
+
+		expect(savedIncident).toBeTruthy;
+		expect(savedIncident?.access!.length).toBe(1)
 	});
 });

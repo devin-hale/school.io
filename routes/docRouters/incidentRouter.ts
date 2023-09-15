@@ -32,8 +32,22 @@ router.get(
 
 router.post('/create', verifyToken, incidentController.create_incident);
 
-router.put('/:incidentId/info', verifyToken, incidentController.edit_incident_info);
+router.put(
+	'/:incidentId/info',
+	verifyToken,
+	incidentController.edit_incident_info
+);
 
-router.put(`/:incidentId/involvement`, verifyToken, incidentController.edit_incident_involvement);
+router.put(
+	`/:incidentId/involvement`,
+	verifyToken,
+	incidentController.edit_incident_involvement
+);
+
+router.put(
+	`/:incidentId/access`,
+	verifyToken,
+	incidentController.edit_incident_access
+);
 
 export default router;

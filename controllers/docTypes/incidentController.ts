@@ -292,6 +292,48 @@ const edit_incident_involvement: RequestHandler[] = [
 	}),
 ];
 
+const edit_incident_access: RequestHandler[] = [
+	param('incidentId').trim().escape(),
+	body('access').isArray().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const recordExists: IncidentInterface | null = await Incident.findById(
+					req.params.incidentId
+				).exec();
+
+				if (!recordExists) {
+					res.status(404).json({ message: 'Incident record not found.' });
+				} else {
+					const accessEdit = {
+						access: req.body.access,
+					};
+
+					const savedAccess: IncidentInterface | null =
+						await Incident.findOneAndUpdate(
+							{ _id: req.params.incidentId },
+							accessEdit,
+							{ new: true }
+						);
+
+					if (!savedAccess) {
+						res.status(500).json({ message: 'Error saving changes.' });
+					} else {
+						res.json(savedAccess);
+					}
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 export default {
 	get_incident,
 	get_student_incidents,
@@ -300,5 +342,6 @@ export default {
 	get_class_incidents,
 	create_incident,
 	edit_incident_info,
-	edit_incident_involvement
+	edit_incident_involvement,
+	edit_incident_access
 };
