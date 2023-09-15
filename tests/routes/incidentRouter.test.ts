@@ -1,4 +1,5 @@
 import ClassModel, { ClassInterface } from '../../models/classModel.js';
+import Student from '../../models/studentModel.js';
 import User, { UserInterface } from '../../models/userModel.js';
 import Org, { OrgInterface } from '../../models/orgModel.js';
 import Incident, {
@@ -155,18 +156,75 @@ describe('Incident PUT', (): void => {
 			escalated: false,
 		};
 
-		const putReq : Response = await request(app)
-			.put(`/docs/incidents/${targetIncident?._id}`)
+		const putReq: Response = await request(app)
+			.put(`/docs/incidents/${targetIncident?._id}/info`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ authorization: testToken })
 			.send(editIncident)
-			.expect(200)
+			.expect(200);
 
 		const savedIncident: IncidentInterface | null = await Incident.findOne({
 			subject: 'Kyle2 Accident',
 		}).exec();
 
-		console.log(putReq.body)
 		expect(savedIncident).toBeTruthy;
+	});
+	it('Edits incident involvement', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle2 Accident',
+		});
+
+		const targetUser = await User.findOne({ first_name: 'Billy' });
+		const targetStudent = await Student.findOne({ first_name: 'Joe' });
+		const parents = ['Daddy Jack', 'Momma Jack'];
+		const others = ['Some Guy', 'Janitor'];
+
+		const editedInvolvement = {
+			staff_involved: [targetUser?._id],
+			students_involved: [targetStudent?._id],
+			parents_involved: parents,
+			others_involved: others,
+		};
+
+		const putReq: Response = await request(app)
+			.put(`/docs/incidents/${targetIncident?._id}/involvement`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ authorization: testToken })
+			.send(editedInvolvement)
+			.expect(200);
+
+		const savedIncident: IncidentInterface | null = await Incident.findOne({
+			parents: "Daddy Jack"
+		}).exec();
+
+		expect(savedIncident).toBeTruthy;
+	});
+
+	it('Edits incident involvement with partial info', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle2 Accident',
+		});
+
+		const parents = ["Kyle2 Second Dad", 'Daddy Jack', 'Momma Jack'];
+
+		const editedInvolvement = {
+			parents_involved: parents,
+		};
+
+		const putReq: Response = await request(app)
+			.put(`/docs/incidents/${targetIncident?._id}/involvement`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ authorization: testToken })
+			.send(editedInvolvement)
+			.expect(200);
+
+		const savedIncident: IncidentInterface | null = await Incident.findOne({
+			parents_involved: "Daddy Jack"
+		}).exec();
+
+		expect(savedIncident).toBeTruthy;
+		expect(savedIncident?.parents_involved!.length).toBe(3)
 	});
 });

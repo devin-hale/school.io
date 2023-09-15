@@ -208,7 +208,9 @@ const edit_incident_info = [
 		if (!errors.isEmpty()) {
 			res.status(400).json({ message: 'Invalid request.' });
 		} else {
-			const recordExists = Incident.findById(req.params._id).exec();
+			const recordExists: IncidentInterface | null = await Incident.findById(
+				req.params.incidentId
+			).exec();
 
 			if (!recordExists) {
 				res.status(404).json({ message: 'Incident record not found.' });
@@ -224,11 +226,67 @@ const edit_incident_info = [
 				};
 
 				const savedRecord: IncidentInterface | null =
-					await Incident.findOneAndUpdate({_id: req.params.incidentId}, editRecord, {
-						new: true,
-					}).populate("owner");
+					await Incident.findOneAndUpdate(
+						{ _id: req.params.incidentId },
+						editRecord,
+						{
+							new: true,
+						}
+					).populate('owner');
 
 				res.json(savedRecord);
+			}
+		}
+	}),
+];
+
+const edit_incident_involvement: RequestHandler[] = [
+	param('incidentId').trim().escape(),
+	body('staff_involved').optional().isArray().escape(),
+	body('students_involved').optional().isArray().escape(),
+	body('parents_involved').optional().isArray().escape(),
+	body('others_involved').optional().isArray().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const recordExists: IncidentInterface | null = await Incident.findById(
+					req.params.incidentId
+				).exec();
+
+				if (!recordExists) {
+					res.status(404).json({ message: 'Incident record not found.' });
+				} else {
+					const editRecord = {
+						staff_involved:
+							req.body.staff_involved || recordExists.staff_involved,
+						students_involved:
+							req.body.students_involved || recordExists.students_involved,
+						parents_involved:
+							req.body.parents_involved || recordExists.parents_involved,
+						others_involved:
+							req.body.others_involved || recordExists.others_involved,
+					};
+
+					const savedIncident: IncidentInterface | null =
+						await Incident.findOneAndUpdate(
+							{ _id: req.params.incidentId },
+							editRecord,
+							{ new: true }
+						);
+
+					if (!savedIncident) {
+						res.status(500).json({ message: 'Error saving changes.' });
+					} else {
+						res.json(savedIncident);
+					}
+				}
+			} catch (error) {
+				next(error);
 			}
 		}
 	}),
@@ -242,4 +300,5 @@ export default {
 	get_class_incidents,
 	create_incident,
 	edit_incident_info,
+	edit_incident_involvement
 };
