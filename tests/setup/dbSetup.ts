@@ -91,6 +91,7 @@ async function initializeTestDB(): Promise<void> {
 		owner: testUser2Save._id,
 		access: [],
 		date_of_occurence: '2023-09-14',
+		class: saveTestClass._id,
 		staff_involved: [],
 		students_involved: [savedStudent._id],
 		parents_involved: [],

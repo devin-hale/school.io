@@ -6,6 +6,7 @@ import Student from './../../models/studentModel.js';
 import { body, param, validationResult, Result } from 'express-validator';
 import asyncHandler from 'express-async-handler';
 import { RequestHandler } from 'express';
+import classModel, { ClassInterface } from '../../models/classModel.js';
 
 const get_incident: RequestHandler[] = [
 	param('incidentId').trim().escape(),
@@ -20,6 +21,11 @@ const get_incident: RequestHandler[] = [
 				const incidentExists: IncidentInterface | null = await Incident.findOne(
 					{ _id: req.params.incidentId }
 				)
+					.populate('owner')
+					.populate('class')
+					.populate('students_involved')
+					.populate('staff_involved')
+					.populate('access')
 					.lean()
 					.exec();
 
@@ -48,6 +54,11 @@ const get_student_incidents: RequestHandler[] = [
 				const studentIncidents: IncidentInterface[] = await Incident.find({
 					students_involved: req.params.studentId,
 				})
+					.populate('owner')
+					.populate('class')
+					.populate('students_involved')
+					.populate('staff_involved')
+					.populate('access')
 					.lean()
 					.exec();
 
@@ -89,6 +100,8 @@ const get_user_incidents: RequestHandler = asyncHandler(
 			const userIncidents: IncidentInterface[] = await Incident.find({
 				owner: req.body.token.userId,
 			})
+				.populate('owner')
+				.populate('class')
 				.populate('students_involved')
 				.populate('staff_involved')
 				.populate('access')
@@ -101,6 +114,47 @@ const get_user_incidents: RequestHandler = asyncHandler(
 		}
 	}
 );
+
+const get_class_incidents: RequestHandler[] = [
+	param('classId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const classExists: ClassInterface | null = await classModel
+					.findOne({ _id: req.params.classId })
+					.exec();
+
+				if (!classExists) {
+					res.status(404).json({ message: 'Class not found' });
+				} else {
+					const classIncidents: IncidentInterface[] = await Incident
+						.find({
+							class: req.params.classId,
+						})
+						.populate("owner")
+						.populate('students_involved')
+						.populate('staff_involved')
+						.populate('access')
+						.lean()
+						.exec();
+
+					console.log(classIncidents);
+					console.log(classIncidents[0].students_involved)
+					console.log
+
+					res.json(classIncidents);
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
 
 const create_incident_record = [
 	body('owner').trim().escape(),
@@ -201,6 +255,7 @@ export default {
 	get_student_incidents,
 	get_org_incidents,
 	get_user_incidents,
+	get_class_incidents,
 	create_incident_record,
 	update_incident_record,
 };
