@@ -138,3 +138,35 @@ describe('Incident POST', (): void => {
 		expect(savedIncident).toBeTruthy;
 	});
 });
+describe('Incident PUT', (): void => {
+	it('Edits basic incident info', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle Accident',
+		});
+
+		const editIncident = {
+			date_of_occurence: '2021-09-14',
+			subject: 'Kyle2 Accident',
+			description: 'Kyle actually did a good thing.',
+			action_taken: 'I gave him a hug.',
+			parentOrGuardian_notified: false,
+			notification_type: 'Phone',
+			escalated: false,
+		};
+
+		const putReq : Response = await request(app)
+			.put(`/docs/incidents/${targetIncident?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ authorization: testToken })
+			.send(editIncident)
+			.expect(200)
+
+		const savedIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle2 Accident',
+		}).exec();
+
+		console.log(putReq.body)
+		expect(savedIncident).toBeTruthy;
+	});
+});

@@ -192,48 +192,43 @@ const create_incident: RequestHandler[] = [
 	}),
 ];
 
-//PUT :: Update incident.
-
-const update_incident_record = [
-	body('_id').trim().escape(),
-	body('owner').trim().escape(),
-	body('access').trim().escape(),
+const edit_incident_info = [
+	param('incidentId').trim().escape(),
 	body('date_of_occurence').trim().escape(),
-	body('staff_involved').trim().escape(),
-	body('parents_involved').trim().escape(),
+	body('subject').trim().escape(),
+	body('description').trim().escape(),
+	body('action_taken').trim().escape(),
+	body('parentOrGuardian_notified').isBoolean().escape(),
+	body('notification_type').trim().escape(),
+	body('escalated').isBoolean().escape(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			//TODO: Replace with relevant URL.
-			res.render('./../views/inded.ejs', {
-				message: 'Error creating incident record.',
-			});
+			res.status(400).json({ message: 'Invalid request.' });
 		} else {
-			const recordExists = Incident.findById(req.body._id).exec();
+			const recordExists = Incident.findById(req.params._id).exec();
 
 			if (!recordExists) {
-				res.render('./../views/inded.ejs', {
-					message: 'Error creating incident record.',
-				});
+				res.status(404).json({ message: 'Incident record not found.' });
 			} else {
 				const editRecord = {
-					owner: req.body.owner,
-					access: req.body.access,
 					date_of_occurence: req.body.date_of_occurence,
-					staff_involved: req.body.staff_involved,
-					parents_involved: req.body.parents_involved,
-					others_involved: req.body.others_involved,
 					subject: req.body.subject,
 					description: req.body.description,
 					action_taken: req.body.action_taken,
+					parentOrGuardian_notified: req.body.parentOrGuardian_notified,
+					notification_type: req.body.notification_type,
+					escalated: req.body.escalated,
 				};
 
-				await Incident.findByIdAndUpdate(req.body._id, editRecord);
+				const savedRecord: IncidentInterface | null =
+					await Incident.findOneAndUpdate({_id: req.params.incidentId}, editRecord, {
+						new: true,
+					}).populate("owner");
 
-				//TODO: Replace with relevant URL/file.
-				res.render('./../views/docTypes/incident/createIncident.ejs');
+				res.json(savedRecord);
 			}
 		}
 	}),
@@ -246,5 +241,5 @@ export default {
 	get_user_incidents,
 	get_class_incidents,
 	create_incident,
-	update_incident_record,
+	edit_incident_info,
 };
