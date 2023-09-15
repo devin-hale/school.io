@@ -24,6 +24,12 @@ router.get(
 
 router.get('/user', verifyToken, incidentController.get_user_incidents);
 
-router.get('/class/:classId', verifyToken, incidentController.get_class_incidents);
+router.get(
+	'/class/:classId',
+	verifyToken,
+	incidentController.get_class_incidents
+);
+
+router.post('/create', verifyToken, incidentController.create_incident);
 
 export default router;

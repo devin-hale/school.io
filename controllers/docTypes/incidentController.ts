@@ -132,20 +132,15 @@ const get_class_incidents: RequestHandler[] = [
 				if (!classExists) {
 					res.status(404).json({ message: 'Class not found' });
 				} else {
-					const classIncidents: IncidentInterface[] = await Incident
-						.find({
-							class: req.params.classId,
-						})
-						.populate("owner")
+					const classIncidents: IncidentInterface[] = await Incident.find({
+						class: req.params.classId,
+					})
+						.populate('owner')
 						.populate('students_involved')
 						.populate('staff_involved')
 						.populate('access')
 						.lean()
 						.exec();
-
-					console.log(classIncidents);
-					console.log(classIncidents[0].students_involved)
-					console.log
 
 					res.json(classIncidents);
 				}
@@ -156,11 +151,11 @@ const get_class_incidents: RequestHandler[] = [
 	}),
 ];
 
-const create_incident_record = [
-	body('owner').trim().escape(),
+const create_incident: RequestHandler[] = [
 	body('access').trim().optional({ checkFalsy: true }).escape(),
 	body('students_involved').trim().optional({ checkFalsy: true }).escape(),
 	body('date_of_occurence').trim().escape(),
+	body('class').optional().trim().escape(),
 	body('staff_involved').trim().optional({ checkFalsy: true }).escape(),
 	body('parents_involved').trim().optional({ checkFalsy: true }).escape(),
 	body('others_involved').trim().optional({ checkFalsy: true }).escape(),
@@ -172,16 +167,13 @@ const create_incident_record = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			//TODO: Replace with relevant URL.
-			res.render('./../views/docTypes/incident/incidentResult.ejs', {
-				user: req.user,
-				message: 'Error creating incident record.',
-			});
+			res.status(400).json({ message: 'Invalid request.' });
 		} else {
 			const newRecord = new Incident({
-				owner: req.body.owner,
+				owner: req.body.token.userId,
 				access: req.body.access,
 				date_of_occurence: req.body.date_of_occurence,
+				class: req.body.class,
 				students_involved: req.body.students_involved,
 				staff_involved: req.body.staff_involved,
 				parents_involved: req.body.parents_involved,
@@ -193,12 +185,9 @@ const create_incident_record = [
 				escalated: req.body.escalated,
 			});
 
-			await newRecord.save();
+			const savedRecord: IncidentInterface = await newRecord.save();
 
-			res.render('./../views/docTypes/incident/incidentResult.ejs', {
-				user: req.user,
-				message: 'Incident record created successfully.',
-			});
+			res.status(201).json(savedRecord);
 		}
 	}),
 ];
@@ -256,6 +245,6 @@ export default {
 	get_org_incidents,
 	get_user_incidents,
 	get_class_incidents,
-	create_incident_record,
+	create_incident,
 	update_incident_record,
 };
