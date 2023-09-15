@@ -1,0 +1,16 @@
+{
+	"trailingComma": "es5",
+
+	"useTabs": true,
+
+	"semi": true,
+
+	"singleQuote": true,
+	"jsxSingleQuote": true,
+
+	"bracketSpacking": true,
+
+	"proseWrap": "always",
+
+	"singleAttributePerLine": true
+}

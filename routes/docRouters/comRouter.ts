@@ -1,8 +1,8 @@
-import express from "express";
-import comController from "../../controllers/docTypes/comController.js";
+import express from 'express';
+import comController from '../../controllers/docTypes/comController.js';
 
 const router = express.Router();
 
-router.get("/:comId", comController.get_communication_page);
+router.get('/:comId', comController.get_communication_page);
 
 export default router;

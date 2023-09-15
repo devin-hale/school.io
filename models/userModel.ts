@@ -1,35 +1,39 @@
-import mongoose, { ObjectId } from "mongoose";
-import { Schema } from "mongoose";
+import mongoose, { ObjectId } from 'mongoose';
+import { Schema } from 'mongoose';
 
 export interface UserInterface {
-	_id: ObjectId,
-    first_name: string,
-    last_name: string,
-    email: string,
-    password: string,
-    gender: "M" | "F" | "Nonspecified",
-    verified: Boolean,
-    accType?: "Basic" | "Admin" | "sioStaff",
-    org: ObjectId
+	_id: ObjectId;
+	first_name: string;
+	last_name: string;
+	email: string;
+	password: string;
+	gender: 'M' | 'F' | 'Nonspecified';
+	verified: Boolean;
+	accType?: 'Basic' | 'Admin' | 'sioStaff';
+	org: ObjectId;
 }
 
-const userSchema : Schema = new mongoose.Schema<UserInterface>({
+const userSchema: Schema = new mongoose.Schema<UserInterface>({
 	first_name: { type: String, required: true },
 	last_name: { type: String, required: true },
 	email: { type: String, required: true },
 	password: { type: String, required: true },
-	gender: { type: String, required: true, enum: ["M", "F", "Nonspecified"] },
+	gender: { type: String, required: true, enum: ['M', 'F', 'Nonspecified'] },
 	verified: { type: Boolean, default: false },
-	accType: { type: String, enum: ["Basic", "Admin", "sioStaff"], default: "Basic" },
-	org: { type: Schema.Types.ObjectId, ref: "organizations" },
+	accType: {
+		type: String,
+		enum: ['Basic', 'Admin', 'sioStaff'],
+		default: 'Basic',
+	},
+	org: { type: Schema.Types.ObjectId, ref: 'organizations' },
 });
 
-userSchema.virtual("url").get(function () : string {
+userSchema.virtual('url').get(function(): string {
 	return `/users/${this._id}`;
 });
 
-userSchema.virtual("fullName").get(function () : string {
+userSchema.virtual('fullName').get(function(): string {
 	return `${this.first_name} ${this.last_name}`;
 });
 
-export default mongoose.model<UserInterface>("users", userSchema);
+export default mongoose.model<UserInterface>('users', userSchema);
