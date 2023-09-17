@@ -2,7 +2,7 @@
 
 ## Description
 
-### Version 0.2.10
+### Version 0.2.11
 
 This is the beginning stages of a project intended to act as a simple website
 for teachers to create, update, and store important documentation. The idea came
@@ -70,6 +70,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [x] Org
   - [x] Student
   - [x] Incident
+  - [] Communication
 - [x] Misc Utility Files
 
 [X] **Login/User Authentication**(REFACTOR+TS)
