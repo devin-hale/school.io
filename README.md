@@ -45,6 +45,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - Classes
   - Users/Teachers
   - Students
+  - Incidents
 - CORS implemented. Won't know if it works properly until I start diving into
   the front end.
 - Refactored index route for user login and authentication.
@@ -53,8 +54,8 @@ Essentially, I want this application to cut that down to an absolute minimum.
   different org doesn't bleed over.
 
 ### **NEXT:**
+- Update/Finish communication documentation.
 
-- Update document/incident controllers, create tests.
 
 ## Development Roadmap
 
@@ -63,15 +64,15 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [x] App.js
 - [x] Models
 - [x] Authentication
-- [] Routes/Controllers
+- [x] Routes/Controllers
   - [x] Class
   - [x] User
   - [x] Org
   - [x] Student
-  - [] Incident
-- [] Misc Utility Files
+  - [x] Incident
+- [x] Misc Utility Files
 
-[] **Login/User Authentication**(REFACTOR+TS)
+[X] **Login/User Authentication**(REFACTOR+TS)
 
 - [x] Organization/School Model
 - [x] Org Controller

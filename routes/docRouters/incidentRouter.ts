@@ -50,4 +50,10 @@ router.put(
 	incidentController.edit_incident_access
 );
 
+router.delete(
+	`/:incidentId/delete`,
+	verifyToken,
+	incidentController.delete_incident
+);
+
 export default router;

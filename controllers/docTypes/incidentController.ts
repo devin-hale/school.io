@@ -5,7 +5,7 @@ import User from './../../models/userModel.js';
 import Student from './../../models/studentModel.js';
 import { body, param, validationResult, Result } from 'express-validator';
 import asyncHandler from 'express-async-handler';
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import classModel, { ClassInterface } from '../../models/classModel.js';
 
 const get_incident: RequestHandler[] = [
@@ -334,6 +334,34 @@ const edit_incident_access: RequestHandler[] = [
 	}),
 ];
 
+const delete_incident: RequestHandler[] = [
+	param('incidentId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const incidentExists: IncidentInterface | null = await Incident.findOne(
+					{ _id: req.params.incidentId }
+				);
+
+				if (!incidentExists) {
+					res.status(404).json({ message: 'ERROR: Incident not found.' });
+				} else {
+					await Incident.findOneAndDelete({_id: req.params.incidentId});
+					
+					res.json({message: "Sucess"});
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 export default {
 	get_incident,
 	get_student_incidents,
@@ -343,5 +371,6 @@ export default {
 	create_incident,
 	edit_incident_info,
 	edit_incident_involvement,
-	edit_incident_access
+	edit_incident_access,
+	delete_incident
 };

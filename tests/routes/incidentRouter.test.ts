@@ -199,7 +199,7 @@ describe('Incident PUT', (): void => {
 		}).exec();
 
 		expect(savedIncident).toBeTruthy;
-		expect(savedIncident?.parents_involved!.length).toBe(2)
+		expect(savedIncident?.parents_involved!.length).toBe(2);
 	});
 
 	it('Edits incident involvement with partial info', async (): Promise<void> => {
@@ -233,22 +233,44 @@ describe('Incident PUT', (): void => {
 		const testToken = await testJWT(app);
 		const targetIncident: IncidentInterface | null = await Incident.findOne({
 			subject: 'Kyle2 Accident',
-		})
+		});
 		const targetUser = await User.findOne({ first_name: 'Billy' });
-		const access = [targetUser?._id]
+		const access = [targetUser?._id];
 
 		const putReq: Response = await request(app)
 			.put(`/docs/incidents/${targetIncident?._id}/access`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ authorization: testToken })
-			.send({access: access})
+			.send({ access: access })
 			.expect(200);
 
 		const savedIncident: IncidentInterface | null = await Incident.findOne({
 			access: targetUser?._id,
-		}).populate("access").exec();
+		})
+			.populate('access')
+			.exec();
 
 		expect(savedIncident).toBeTruthy;
-		expect(savedIncident?.access!.length).toBe(1)
+		expect(savedIncident?.access!.length).toBe(1);
+	});
+});
+describe('Incident DELETE', (): void => {
+	it('Deletes incident', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetIncident: IncidentInterface | null = await Incident.findOne({
+			subject: 'Kyle2 Accident',
+		});
+
+		const deleteReq: Response = await request(app)
+			.delete(`/docs/incidents/${targetIncident?._id}/delete`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({'authorization': testToken})
+			.expect(200);
+
+		const deletedIncident: IncidentInterface | null = await Incident.findOne({
+			_id: targetIncident?._id
+		});
+
+		expect(deletedIncident).toBeNull;
 	});
 });
