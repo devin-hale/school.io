@@ -3,7 +3,10 @@ import orgRouter from '../../routes/orgRouter.js';
 import userRouter from '../../routes/userRouter.js';
 import classRouter from '../../routes/classRouter.js';
 import studentRouter from '../../routes/studentRouter.js';
+
 import docRouter from '../../routes/docRouters/docRouter.js';
+import comRouter from '../../routes/docRouters/comRouter.js';
+
 import express, { Express, response } from 'express';
 import cors from 'cors';
 

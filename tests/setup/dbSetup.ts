@@ -2,11 +2,12 @@ import ClassModel from '../../models/classModel';
 import UserModel from '../../models/userModel';
 import StudentModel from '../../models/studentModel';
 import OrgModel from '../../models/orgModel';
+import incidentModel from '../../models/docTypes/incidentModel';
+import Comm from '../../models/docTypes/comModel';
 
 import util from 'util';
 import bcrypt from 'bcryptjs';
 import studentModel from '../../models/studentModel';
-import incidentModel from '../../models/docTypes/incidentModel';
 
 const asyncHash: (arg1: string, arg2: string | number) => Promise<string> =
 	util.promisify(bcrypt.hash);
@@ -105,6 +106,32 @@ async function initializeTestDB(): Promise<void> {
 		org: saveTestOrg._id,
 	});
 	await incident.save();
+
+	const comm1 = new Comm({
+		owner: testUser2Save._id,
+		communication_type: 'Staff to Staff',
+		date_of_occurence: '2022-09-14',
+		staff_involved: [testUser2Save._id],
+		subject: 'Talked to myself',
+		description: 'Had a nice conversation',
+		followUp: true,
+		org: saveTestOrg._id,
+	});
+
+	await comm1.save();
+
+	const comm2 = new Comm({
+		owner: testUser2Save._id,
+		communication_type: 'Staff to Staff',
+		date_of_occurence: '2022-09-16',
+		staff_involved: [testUser2Save._id],
+		subject: 'Talked to myself again',
+		description: 'Had a nice conversation, again',
+		followUp: false,
+		org: saveTestOrg._id,
+	});
+
+	await comm2.save();
 }
 
 export default initializeTestDB;

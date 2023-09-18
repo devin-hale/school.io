@@ -4,9 +4,8 @@ import comRouter from './comRouter.js';
 
 const router: IRouter = express.Router();
 
-//incidents
 router.use('/incidents', incidentRouter);
 
-//communications
-router.use('/communication', comRouter);
+router.use('/communications', comRouter);
+
 export default router;

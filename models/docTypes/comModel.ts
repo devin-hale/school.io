@@ -17,7 +17,7 @@ export interface CommInterface {
 	subject: string;
 	description?: string;
 	followUp: boolean;
-	followUp_date?: Date;
+	org: ObjectId;
 }
 
 const comModel: Schema = new mongoose.Schema<CommInterface>(
@@ -37,12 +37,12 @@ const comModel: Schema = new mongoose.Schema<CommInterface>(
 		date_of_occurence: Date,
 		staff_involved: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 		students_involved: [{ type: Schema.Types.ObjectId, ref: 'students' }],
-		parents_involved: { type: String },
-		others_involved: { type: String },
+		parents_involved: [{ type: String }],
+		others_involved: [{ type: String }],
 		subject: { type: String, required: true },
 		description: { type: String },
 		followUp: { type: Boolean, required: true },
-		followUp_date: Date,
+		org: {type: Schema.Types.ObjectId, ref: 'organizations'}
 	},
 	{ collection: 'communications' }
 );
