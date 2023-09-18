@@ -151,6 +151,31 @@ describe('PST POST', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		console.log(postReq.body);
+	});
+});
+describe('PST PUT', (): void => {
+	it('Edits PST Header', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Reading',
+		});
+
+		const headerEdit = {
+			schoolYear: '2020-2021',
+			intervention_type: 'Math',
+			west_virginia_phonics: 'idk',
+			progress_monitoring_goal: 'idk',
+
+		}
+
+		const putReq: Response = await request(app)
+			.put(`/docs/pst/${targetPST?._id}/header`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(headerEdit)
+			.expect(200)
+
+		expect(putReq.body.header.schoolYear).toBe('2020-2021');
+		expect(putReq.body.header.intervention_type).toBe('Math')
 	});
 });

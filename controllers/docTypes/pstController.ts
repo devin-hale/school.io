@@ -209,7 +209,7 @@ const create_pst: RequestHandler[] = [
 ];
 
 const add_student: RequestHandler[] = [
-	body('pstId').trim().escape(),
+	param('pstId').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -244,7 +244,7 @@ const add_student: RequestHandler[] = [
 ];
 
 const add_week: RequestHandler[] = [
-	body('pstId').trim().escape(),
+	param('pstId').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -278,11 +278,56 @@ const add_week: RequestHandler[] = [
 						parentComm: [],
 						progressMonitor: [],
 					};
-					console.log('huh');
 
 					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
 						{ _id: req.params.pstId },
 						{ $push: { weeks: weekData } },
+						{ new: true }
+					);
+
+					res.json(updatedPST);
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
+const edit_header: RequestHandler[] = [
+	param('pstId').trim().escape(),
+	body("interventtion_type").trim().escape(),
+	body("schoolYear").trim().escape(),
+	body("west_virginia_phonics").trim().escape(),
+	body("progress_monitoring_goal").trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
+
+				if (!pstExists) {
+					res.status(404).json({ message: 'PST Document not found.' });
+				} else {
+					const headerEdit = {
+						student: pstExists.header.student,
+						schoolYear: req.body.schoolYear || pstExists.header.schoolYear,
+						intervention_type: req.body.intervention_type || pstExists.header.intervention_type,
+						west_virginia_phonics: req.body.west_virginia_phonics || pstExists.header.west_virginia_phonics,
+						progress_monitoring_goal: req.body.progress_monitoring_goal || pstExists.header.progress_monitoring_goal
+					}
+					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+						{ _id: req.params.pstId },
+						{header: headerEdit},
 						{ new: true }
 					);
 
@@ -304,4 +349,5 @@ export default {
 	create_pst,
 	add_student,
 	add_week,
+	edit_header,
 };

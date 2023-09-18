@@ -20,6 +20,8 @@ router.post('/:pstId/addStudent', verifyToken, pstController.add_student);
 
 router.post('/:pstId/addWeek', verifyToken, pstController.add_week);
 
+router.put('/:pstId/header', verifyToken, pstController.edit_header);
+
 //TODO:
 //put edit pst header
 //put edit pst week
