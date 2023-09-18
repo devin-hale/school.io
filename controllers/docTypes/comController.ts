@@ -108,48 +108,49 @@ const create_communication: RequestHandler[] = [
 	}),
 ];
 
-const edit_communication_record = [
-	body('access').optional().escape(),
-	body('communication_type').escape(),
-	body('date_of_occurence').escape(),
-	body('staff_involved').optional().escape(),
-	body('students_involved').optional().escape(),
-	body('parents_involved').optional().escape(),
-	body('other_involved').optional().escape(),
-	body('subject').trim().escape(),
-	body('description').trim().escape(),
-	body('followUp').escape(),
+const edit_communication_info: RequestHandler[] = [
+	body('communication_type').optional().escape(),
+	body('date_of_occurence').optional().escape(),
+	body('subject').trim().optional().escape(),
+	body('description').optional().trim().escape(),
+	body('followUp').optional().escape(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.render('./../views/index.js', {
-				message: 'Error creating communication record.',
-			});
+			res.status(400).json({ message: 'Invalid request.' });
 		} else {
-			const recordExists = Communication.findById(req.body.commId).exec();
-
-			if (!recordExists) {
-			} else {
-				const editRecord = new Communication({
-					access: req.body.access || [],
-					communication_type: req.body.communication_type,
-					date_of_occurence: req.body.communication_type,
-					staff_involved: req.body.staff_involved || [],
-					students_involved: req.body.students_involved || [],
-					parents_involved: req.body.parents_involved || [],
-					other_involved: req.body.other_involved || [],
-					subject: req.body.subject,
-					description: req.body.description,
-					followUp: req.body.followUp,
+			try {
+				const commExists: CommInterface | null = await Communication.findOne({
+					_id: req.params.commId,
 				});
 
-				await Communication.findByIdAndUpdate(req.body.commId, editRecord);
+				if (!commExists) {
+					res
+						.status(404)
+						.json({ message: 'Communication document not found.' });
+				} else {
+					const editInfo = {
+						communication_type:
+							req.body.communication_type || commExists.communication_type,
+						date_of_occurence:
+							req.body.date_of_occurence || commExists.date_of_occurence,
+						subject: req.body.subject || commExists.subject,
+						descriptuion: req.body.description || commExists.description,
+						followUp: req.body.followup || commExists.followUp,
+					};
 
-				//TODO: Create success page or some place to re-render.
-				res.redirect('/classes');
-			}
+					const editedComm: CommInterface | null =
+						await Communication.findOneAndUpdate(
+							{ _id: req.params.commId },
+							editInfo,
+							{ new: true }
+						);
+
+					res.json(editedComm);
+				}
+			} catch (error) {}
 		}
 	}),
 ];
@@ -158,4 +159,5 @@ export default {
 	get_communication_instance,
 	get_user_comms,
 	create_communication,
+	edit_communication_info
 };

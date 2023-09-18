@@ -75,8 +75,28 @@ describe('Comm POST', (): void => {
 			.send(comm2)
 			.expect(201);
 
-		console.log(postReq.body)
-
 		expect(postReq.body.communication_type).toBe('Staff to Staff');
+	});
+});
+describe('Comm PUT', (): void => {
+	it('Edits comm info', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetComm: CommInterface | null = await Comm.findOne({});
+
+		const editInfo: object = {
+			communication_type: 'Staff to Student',
+			date_of_occurence: '2022-09-30',
+			subject: 'Talked to myself, student saw.',
+			description: 'Convinced Billy that I was not hallucinating.',
+		};
+
+		const putReq: Response = await request(app)
+			.put(`/docs/communications/${targetComm?._id}/editInf`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(editInfo)
+			.expect(200);
+
+		expect(putReq.body.communication_type).toBe('Staff to Student');
 	});
 });
