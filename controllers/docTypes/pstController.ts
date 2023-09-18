@@ -133,9 +133,39 @@ const get_class_pst: RequestHandler[] = [
 	}),
 ];
 
+const get_student_pst: RequestHandler[] = [
+	param('studentId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const studentPSTs: PSTInterface[] = await PST.find({
+					'header.student': req.params.studentId
+				})
+					.populate('owner')
+					.populate('class')
+					.populate('access')
+					.populate('header.student');
+
+				res.json(studentPSTs);
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 export default {
 	get_pst_instance,
 	get_user_pst,
 	get_org_pst,
 	get_class_pst,
+	get_student_pst
 };

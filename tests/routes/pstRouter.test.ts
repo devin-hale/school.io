@@ -38,12 +38,15 @@ describe('PST GET', (): void => {
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.expect(200);
+		console.log(getReq.body)
 
 		expect(getReq.body.header).toBeTruthy;
 	});
 	it('Get user PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetUser: UserInterface | null = await User.findOne({first_name: 'Zane'});
+		const targetUser: UserInterface | null = await User.findOne({
+			first_name: 'Zane',
+		});
 
 		const getReq: Response = await request(app)
 			.get(`/docs/pst/user/${targetUser?._id}`)
@@ -56,7 +59,9 @@ describe('PST GET', (): void => {
 
 	it('Get org PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetOrg: OrgInterface | null = await Org.findOne({name: 'Test Org'});
+		const targetOrg: OrgInterface | null = await Org.findOne({
+			name: 'Test Org',
+		});
 
 		const getReq: Response = await request(app)
 			.get(`/docs/pst/org/${targetOrg?._id}`)
@@ -68,10 +73,23 @@ describe('PST GET', (): void => {
 	});
 	it('Get class PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetClass : ClassInterface | null = await classModel.findOne({});
+		const targetClass: ClassInterface | null = await classModel.findOne({});
 
 		const getReq: Response = await request(app)
 			.get(`/docs/pst/class/${targetClass?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
+
+		expect(getReq.body.header).toBeTruthy;
+	});
+	it('Get student PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetStudent: StudentInterface | null = await studentModel.findOne({});
+
+		const getReq: Response = await request(app)
+			.get(`/docs/pst/student/${targetStudent?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.expect(200);
