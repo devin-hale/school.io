@@ -137,6 +137,7 @@ async function initializeTestDB(): Promise<void> {
 	const pst1 = new PST({
 		owner: testUser2Save._id,
 		org: saveTestOrg._id,
+		class: saveTestClass._id,
 		header: {
 			student: savedStudent._id,
 			schoolYear: '2022-2023',

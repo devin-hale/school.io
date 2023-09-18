@@ -29,6 +29,7 @@ export interface PSTInterface {
 	_id: ObjectId;
 	owner: ObjectId;
 	org: ObjectId;
+	class: ObjectId;
 	access?: ObjectId[];
 	header: PSTHeaderInterface;
 	weeks: PSTWeekInterface[];
@@ -38,6 +39,7 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 		org: { type: Schema.Types.ObjectId, ref: 'organizations', required: true },
+		class: {type: Schema.Types.ObjectId, ref: 'classes', required: true},
 		access: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 		header: {
 			student: { type: Schema.Types.ObjectId, ref: 'students' },

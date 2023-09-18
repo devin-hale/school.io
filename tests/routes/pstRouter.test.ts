@@ -13,6 +13,7 @@ import testJWT from './../setup/testJWT.js';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
+import classModel from '../../models/classModel.js';
 
 let mongod: MongoMemoryServer;
 
@@ -59,6 +60,18 @@ describe('PST GET', (): void => {
 
 		const getReq: Response = await request(app)
 			.get(`/docs/pst/org/${targetOrg?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
+		expect(getReq.body.header).toBeTruthy;
+	});
+	it('Get class PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetClass : ClassInterface | null = await classModel.findOne({});
+
+		const getReq: Response = await request(app)
+			.get(`/docs/pst/class/${targetClass?._id}`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.expect(200);
