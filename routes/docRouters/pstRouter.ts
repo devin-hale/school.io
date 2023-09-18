@@ -14,6 +14,10 @@ router.get('/class/:classId', verifyToken, pstController.get_class_pst);
 
 router.get('/student/:studentId', verifyToken, pstController.get_student_pst);
 
+router.post('/create', verifyToken, pstController.create_pst);
+
+router.post('/:pstId/addStudent', verifyToken, pstController.add_student);
+
 //TODO:
 //post create pst
 //post add week

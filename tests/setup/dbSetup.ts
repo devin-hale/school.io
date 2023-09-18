@@ -141,7 +141,7 @@ async function initializeTestDB(): Promise<void> {
 		header: {
 			student: savedStudent._id,
 			schoolYear: '2022-2023',
-			intervention_type: 'Reading',
+			intervention_type: 'Math',
 			west_virginia_phonics: 'Dunno',
 			readingIXL: 'Dunno',
 			progress_monitoring_goal: 'Dunno',

@@ -43,14 +43,15 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 		access: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 		header: {
 			student: { type: Schema.Types.ObjectId, ref: 'students' },
-			schoolYear: String,
+			schoolYear:{type: String, default: ''} ,
 			intervention_type: {
 				type: String,
 				enum: ['Reading', 'Math', 'Behavior'],
+				default: 'Reading',
 			},
-			west_virginia_phonics: String,
-			readingIXL: String,
-			progress_monitoring_goal: String,
+			west_virginia_phonics: {type: String, default: ''},
+			readingIXL: {type: String, default: ''},
+			progress_monitoring_goal: {type: String, default: ''},
 		},
 		weeks: [
 			{

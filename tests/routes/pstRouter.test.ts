@@ -38,7 +38,6 @@ describe('PST GET', (): void => {
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.expect(200);
-		console.log(getReq.body)
 
 		expect(getReq.body.header).toBeTruthy;
 	});
@@ -81,12 +80,13 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-
 		expect(getReq.body.header).toBeTruthy;
 	});
 	it('Get student PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
-		const targetStudent: StudentInterface | null = await studentModel.findOne({});
+		const targetStudent: StudentInterface | null = await studentModel.findOne(
+			{}
+		);
 
 		const getReq: Response = await request(app)
 			.get(`/docs/pst/student/${targetStudent?._id}`)
@@ -95,5 +95,49 @@ describe('PST GET', (): void => {
 			.expect(200);
 
 		expect(getReq.body.header).toBeTruthy;
+	});
+});
+describe('PST POST', (): void => {
+	it('Create PST (201)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+
+		const targetClass: ClassInterface | null = await classModel.findOne({});
+		const targetStudent: StudentInterface | null = await studentModel.findOne(
+			{}
+		);
+
+		const pstDoc = {
+			classId: targetClass?._id,
+		};
+
+		const postReq: Response = await request(app)
+			.post(`/docs/pst/create`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(pstDoc)
+			.expect(201);
+
+		console.log(postReq.body);
+	});
+	it('Assign student to PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+
+		const targetPST: PSTInterface | null = await PST.findOne({'header.intervention_type': 'Reading'})
+		const targetStudent: StudentInterface | null = await studentModel.findOne(
+			{}
+		);
+
+		const pstDoc = {
+			studentId: targetStudent?._id
+		};
+
+		const postReq: Response = await request(app)
+			.post(`/docs/pst/${targetPST?._id}/addStudent`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(pstDoc)
+			.expect(200);
+
+		console.log(postReq.body);
 	});
 });
