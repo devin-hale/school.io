@@ -179,6 +179,23 @@ const create_pst: RequestHandler[] = [
 					owner: req.body.token.userId,
 					org: req.body.token.org,
 					class: req.body.classId,
+					weeks: [
+						{
+							weekNo: 1,
+							dates: '',
+							attendance: {
+								monday: '',
+								tuesday: '',
+								wednesday: '',
+								thursday: '',
+								friday: '',
+							},
+							tier1: [],
+							tier2: [],
+							parentComm: [],
+							progressMonitor: [],
+						},
+					],
 				};
 
 				const savedPST: PSTInterface | null = await PST.create(newPST);
@@ -204,16 +221,70 @@ const add_student: RequestHandler[] = [
 			});
 		} else {
 			try {
-				const pstExists : PSTInterface | null = await PST.findOne({_id: req.params.pstId});
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
 
-				if(!pstExists) {
-					res.status(404).json({message: "PST Document not found."})
+				if (!pstExists) {
+					res.status(404).json({ message: 'PST Document not found.' });
 				} else {
-					const updatedPST : PSTInterface | null = await PST.findOneAndUpdate(
-						{_id: req.params.pstId},
-						{'header.student': req.body.studentId},
-						{new: true}
-					)
+					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+						{ _id: req.params.pstId },
+						{ 'header.student': req.body.studentId },
+						{ new: true }
+					);
+
+					res.json(updatedPST);
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
+const add_week: RequestHandler[] = [
+	body('pstId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
+
+				if (!pstExists) {
+					res.status(404).json({ message: 'PST Document not found.' });
+				} else {
+					const weekData = {
+						weekNo: pstExists.weeks[pstExists.weeks.length - 1].weekNo + 1 || 1,
+						dates: '',
+						attendance: {
+							monday: '',
+							tuesday: '',
+							wednesday: '',
+							thursday: '',
+							friday: '',
+						},
+						tier1: [],
+						tier2: [],
+						parentComm: [],
+						progressMonitor: [],
+					};
+					console.log('huh');
+
+					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+						{ _id: req.params.pstId },
+						{ $push: { weeks: weekData } },
+						{ new: true }
+					);
 
 					res.json(updatedPST);
 				}
@@ -232,4 +303,5 @@ export default {
 	get_student_pst,
 	create_pst,
 	add_student,
+	add_week,
 };

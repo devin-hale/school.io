@@ -18,9 +18,9 @@ router.post('/create', verifyToken, pstController.create_pst);
 
 router.post('/:pstId/addStudent', verifyToken, pstController.add_student);
 
+router.post('/:pstId/addWeek', verifyToken, pstController.add_week);
+
 //TODO:
-//post create pst
-//post add week
 //put edit pst header
 //put edit pst week
 //put edit pst access
