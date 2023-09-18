@@ -144,3 +144,20 @@ describe('Comm PUT', (): void => {
 		expect(putReq.body.access[0]).toBe(targetUser?._id.toString())
 	});
 });
+describe("Comm DELETE", (): void => {
+	it("Deletes communication (200)", async(): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetComm: CommInterface | null = await Comm.findOne({});
+
+		const delReq : Response = await request(app)
+			.delete(`/docs/communications/${targetComm?._id}/delete`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({Authorization: testToken})
+			.expect(200)
+
+
+		const deletedComm : CommInterface | null = await Comm.findOne({_id: targetComm?._id});
+
+		expect(deletedComm).toBeNull
+	})
+})

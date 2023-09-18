@@ -33,7 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-8-2023:**
+### **UPDATE: 9-18-2023:**
 
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
@@ -46,6 +46,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - Users/Teachers
   - Students
   - Incidents
+  - Communications
 - CORS implemented. Won't know if it works properly until I start diving into
   the front end.
 - Refactored index route for user login and authentication.
@@ -54,7 +55,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
   different org doesn't bleed over.
 
 ### **NEXT:**
-- Update/Finish communication documentation.
+- Begin development on PST documentation data model.
 
 
 ## Development Roadmap
@@ -70,7 +71,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [x] Org
   - [x] Student
   - [x] Incident
-  - [] Communication
+  - [x] Communication
 - [x] Misc Utility Files
 
 [X] **Login/User Authentication**(REFACTOR+TS)
@@ -98,8 +99,8 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [] PST
   - [] More?
 - [] Controllers for each documentation type
-  - [] Incident (fight, worrisome comments, etc)
-  - [] Commmunication (student, staff, parent, other)
+  - [x] Incident (fight, worrisome comments, etc)
+  - [x] Commmunication (student, staff, parent, other)
   - [] PST
   - [] More?
 - [] Serverside image storage.
@@ -121,4 +122,3 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [] Create Org Admin Account
   - [] "Promote" Users to Org Admin
   - [] Data Utilities
-- [] Teacher to Teacher messaging within the same Org

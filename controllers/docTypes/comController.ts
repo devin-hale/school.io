@@ -245,11 +245,42 @@ const edit_communication_access: RequestHandler[] = [
 	}),
 ];
 
+const delete_communication: RequestHandler[] = [
+	param("commId").trim().escape(),
+
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const commExists: CommInterface | null = await Communication.findOne({
+					_id: req.params.commId,
+				});
+
+				if (!commExists) {
+					res
+						.status(404)
+						.json({ message: 'Communication document not found.' });
+				} else {
+					await Communication.findOneAndDelete({_id: req.params.commId});
+
+					res.json({message: 'Communication deleted.'});
+				}
+			} catch (error) {
+				next(error)
+			}
+		}
+	}),
+];
+
 export default {
 	get_communication_instance,
 	get_user_comms,
 	create_communication,
 	edit_communication_info,
 	edit_communication_involvement,
-	edit_communication_access
+	edit_communication_access,
+	delete_communication,
 };

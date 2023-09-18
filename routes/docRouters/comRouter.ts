@@ -16,4 +16,6 @@ router.put('/:commId/editInv', verifyToken, comController.edit_communication_inv
 
 router.put('/:commId/editAccess', verifyToken, comController.edit_communication_access);
 
+router.delete('/:commId/delete', verifyToken, comController.delete_communication);
+
 export default router;
