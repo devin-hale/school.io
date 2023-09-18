@@ -1,4 +1,4 @@
-# school.io (API REFACTOR)
+# school.io (API)
 
 ## Description
 
@@ -53,29 +53,15 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - User authentication implemented via JSON web tokens.
 - Org limiter added to queries based on account type so that users/data from
   different org doesn't bleed over.
+- Initial data model completed for PST documentation
 
 ### **NEXT:**
-- Begin development on PST documentation data model.
+- Complete tests/routes/controllers for PST Doc functionality 
 
 
 ## Development Roadmap
 
-[X]**Refactor Phase**(Write test, To Typescript, then to API)
-
-- [x] App.js
-- [x] Models
-- [x] Authentication
-- [x] Routes/Controllers
-  - [x] Class
-  - [x] User
-  - [x] Org
-  - [x] Student
-  - [x] Incident
-  - [x] Communication
-- [x] Misc Utility Files
-
-[X] **Login/User Authentication**(REFACTOR+TS)
-
+[X] **Login/User Authentication**
 - [x] Organization/School Model
 - [x] Org Controller
 - [x] User Model
@@ -84,31 +70,28 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [x] Account Email Verification
 - [x] User Authentication
 
-[X] **Classroom/Student**(REFACTOR+TS)
-
+[X] **Classroom/Student**
 - [x] Class Model
-- [x] Class Controller
+- [x] Class Tests
+- [x] Class Controller/Router
 - [x] Student Model
-- [x] Student Controller
+- [x] Student Tests
+- [x] Student Controller/Router
 
-[] **Documentation**(PARTIAL REFACTOR + TS)
-
-- [] Models for each
+[] **Documentation**
+- [x] Models for each type:
+  - [x] Incident (fight, worrisome comments, etc)
+  - [x] Commmunication (student, staff, parent, other)
+  - [x] PST
+- [] Controllers/Routers/Tests for each type:
   - [x] Incident (fight, worrisome comments, etc)
   - [x] Commmunication (student, staff, parent, other)
   - [] PST
-  - [] More?
-- [] Controllers for each documentation type
-  - [x] Incident (fight, worrisome comments, etc)
-  - [x] Commmunication (student, staff, parent, other)
-  - [] PST
-  - [] More?
 - [] Serverside image storage.
 - [] Download as PDF
 - [] Clean up serverside sanitization
 
 [] **Utilities**
-
 - [] Verify Org Admin Methods
   - [] Create classes
     - [] Assign a teacher or teachers to classes
