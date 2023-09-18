@@ -12,4 +12,8 @@ router.post('/create', verifyToken, comController.create_communication);
 
 router.put('/:commId/editInf', verifyToken, comController.edit_communication_info);
 
+router.put('/:commId/editInv', verifyToken, comController.edit_communication_involvement);
+
+router.put('/:commId/editAccess', verifyToken, comController.edit_communication_access);
+
 export default router;

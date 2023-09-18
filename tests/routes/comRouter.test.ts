@@ -99,4 +99,48 @@ describe('Comm PUT', (): void => {
 
 		expect(putReq.body.communication_type).toBe('Staff to Student');
 	});
+	it('Edits comm involvement', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetComm: CommInterface | null = await Comm.findOne({});
+		const targetUser: UserInterface | null = await User.findOne({});
+		const targetStudent: StudentInterface | null = await studentModel.findOne(
+			{}
+		);
+
+		const editInfo: object = {
+			staff_involved: [targetUser?._id],
+			student_involved: [targetStudent?._id],
+			others_involved: ['Some Guy'],
+		};
+
+		const putReq: Response = await request(app)
+			.put(`/docs/communications/${targetComm?._id}/editInv`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(editInfo)
+			.expect(200);
+
+		expect(putReq.body.staff_involved.length).toBe(1);
+		expect(putReq.body.parents_involved.length).toBe(0);
+		expect(putReq.body.others_involved[0]).toBe('Some Guy');
+	});
+	it('Edits comm involvement', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetComm: CommInterface | null = await Comm.findOne({});
+		const targetUser: UserInterface | null = await User.findOne({});
+
+		const editInfo: object = {
+			access: [targetUser?._id]
+		};
+
+		const putReq: Response = await request(app)
+			.put(`/docs/communications/${targetComm?._id}/editAccess`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(editInfo)
+			.expect(200);
+
+		expect(putReq.body.access.length).toBe(1);
+		expect(putReq.body.access[0]).toBe(targetUser?._id.toString())
+	});
 });

@@ -109,6 +109,7 @@ const create_communication: RequestHandler[] = [
 ];
 
 const edit_communication_info: RequestHandler[] = [
+	param("commId").trim().escape(),
 	body('communication_type').optional().escape(),
 	body('date_of_occurence').optional().escape(),
 	body('subject').trim().optional().escape(),
@@ -150,7 +151,96 @@ const edit_communication_info: RequestHandler[] = [
 
 					res.json(editedComm);
 				}
-			} catch (error) {}
+			} catch (error) {
+				next(error)
+			}
+		}
+	}),
+];
+
+const edit_communication_involvement: RequestHandler[] = [
+	param("commId").trim().escape(),
+	body("staff_involved").optional().isArray().escape(),
+	body("students_involved").optional().isArray().escape(),
+	body("parents_involved").optional().isArray().escape(),
+	body("others_involved").optional().isArray().escape(),
+
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const commExists: CommInterface | null = await Communication.findOne({
+					_id: req.params.commId,
+				});
+
+				if (!commExists) {
+					res
+						.status(404)
+						.json({ message: 'Communication document not found.' });
+				} else {
+					const editInfo = {
+						staff_involved: req.body.staff_involved || commExists.staff_involved,
+						students_involved: req.body.students_involved || commExists.students_involved,
+						parents_involved: req.body.parents_involved || commExists.parents_involved,
+						others_involved: req.body.others_involved || commExists.others_involved,
+					};
+
+					const editedComm: CommInterface | null =
+						await Communication.findOneAndUpdate(
+							{ _id: req.params.commId },
+							editInfo,
+							{ new: true }
+						);
+
+					res.json(editedComm);
+				}
+			} catch (error) {
+				next(error)
+			}
+		}
+	}),
+];
+
+
+const edit_communication_access: RequestHandler[] = [
+	param("commId").trim().escape(),
+	body("access").isArray().escape(),
+
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const commExists: CommInterface | null = await Communication.findOne({
+					_id: req.params.commId,
+				});
+
+				if (!commExists) {
+					res
+						.status(404)
+						.json({ message: 'Communication document not found.' });
+				} else {
+					const editInfo = {
+						access: req.body.access
+					};
+
+					const editedComm: CommInterface | null =
+						await Communication.findOneAndUpdate(
+							{ _id: req.params.commId },
+							editInfo,
+							{ new: true }
+						);
+
+					res.json(editedComm);
+				}
+			} catch (error) {
+				next(error)
+			}
 		}
 	}),
 ];
@@ -159,5 +249,7 @@ export default {
 	get_communication_instance,
 	get_user_comms,
 	create_communication,
-	edit_communication_info
+	edit_communication_info,
+	edit_communication_involvement,
+	edit_communication_access
 };
