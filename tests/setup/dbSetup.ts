@@ -4,6 +4,7 @@ import StudentModel from '../../models/studentModel';
 import OrgModel from '../../models/orgModel';
 import incidentModel from '../../models/docTypes/incidentModel';
 import Comm from '../../models/docTypes/comModel';
+import PST from '../../models/docTypes/pstModel';
 
 import util from 'util';
 import bcrypt from 'bcryptjs';
@@ -132,6 +133,22 @@ async function initializeTestDB(): Promise<void> {
 	});
 
 	await comm2.save();
+
+	const pst1 = new PST({
+		owner: testUser2Save._id,
+		org: saveTestOrg._id,
+		header: {
+			student: savedStudent._id,
+			schoolYear: '2022-2023',
+			intervention_type: 'Reading',
+			west_virginia_phonics: 'Dunno',
+			readingIXL: 'Dunno',
+			progress_monitoring_goal: 'Dunno',
+		}
+
+	})
+
+	await pst1.save();
 }
 
 export default initializeTestDB;
