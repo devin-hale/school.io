@@ -2,7 +2,7 @@
 
 ## Description
 
-### Version 0.2.11
+### Version 0.3.0
 
 This is the beginning stages of a project intended to act as a simple website
 for teachers to create, update, and store important documentation. The idea came
