@@ -32,12 +32,24 @@ describe('PST GET', (): void => {
 		const testToken = await testJWT(app);
 		const targetPST: PSTInterface | null = await PST.findOne({});
 
-		const getReq : Response = await request(app)
+		const getReq: Response = await request(app)
 			.get(`/docs/pst/${targetPST?._id}`)
-			.set('Content-Type','application/json;charset=utf-8')
-			.set({Authorization: testToken})
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
 			.expect(200);
-		
+
+		expect(getReq.body.header).toBeTruthy;
+	});
+	it('Get user PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetUser: UserInterface | null = await User.findOne({first_name: 'Zane'});
+
+		const getReq: Response = await request(app)
+			.get(`/docs/pst/user/${targetUser?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
 		expect(getReq.body.header).toBeTruthy;
 	});
 });
