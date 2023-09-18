@@ -6,11 +6,11 @@ const router = express.Router();
 
 router.get('/:pstId', verifyToken, pstController.get_pst_instance);
 
+router.get('/org/:orgId', verifyToken, pstController.get_org_pst);
+
 router.get('/user/:userId', verifyToken, pstController.get_user_pst);
 
 //TODO:
-//get by user
-//get by org
 //get by class
 //post create pst
 //post add week

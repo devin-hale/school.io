@@ -52,4 +52,17 @@ describe('PST GET', (): void => {
 
 		expect(getReq.body.header).toBeTruthy;
 	});
+
+	it('Get org PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetOrg: OrgInterface | null = await Org.findOne({name: 'Test Org'});
+
+		const getReq: Response = await request(app)
+			.get(`/docs/pst/org/${targetOrg?._id}`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
+		expect(getReq.body.header).toBeTruthy;
+	});
 });

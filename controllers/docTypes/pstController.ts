@@ -73,7 +73,36 @@ const get_user_pst: RequestHandler[] = [
 	}),
 ];
 
+const get_org_pst: RequestHandler[] = [
+	param('orgId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const orgPSTs: PSTInterface[] = await PST.find({
+					org: req.params.orgId,
+				})
+					.populate('owner')
+					.populate('access')
+					.populate('header.student');
+
+				res.json(orgPSTs);
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 export default {
 	get_pst_instance,
 	get_user_pst,
+	get_org_pst
 };
