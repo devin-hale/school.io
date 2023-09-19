@@ -433,26 +433,117 @@ const edit_access: RequestHandler[] = [
 			});
 		} else {
 			try {
-				const pstExists : PSTInterface | null = await PST.findOne({_id: req.params.pstId});
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
 
-				if(!pstExists) {
-					res.status(404).json({message: "Error: PST Documentation not found."})
+				if (!pstExists) {
+					res
+						.status(404)
+						.json({ message: 'Error: PST Documentation not found.' });
 				} else {
-					const pstAccess : ObjectId[] = req.body.access
+					const pstAccess: ObjectId[] = req.body.access;
 
-					const updatedPST : PSTInterface | null = await PST.findOneAndUpdate(
-						{_id: req.params.pstId},
-						{access: pstAccess},
-						{new:true}
-					)
+					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+						{ _id: req.params.pstId },
+						{ access: pstAccess },
+						{ new: true }
+					);
 
-					if(!updatedPST) {
-						res.status(500)
-					}
-					else {
+					if (!updatedPST) {
+						res.status(500);
+					} else {
 						res.json(updatedPST);
 					}
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
 
+const delete_week: RequestHandler[] = [
+	param('pstId').trim().escape(),
+	param('weekNo').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+					'weeks.weekNo': Number(req.params.weekNo),
+				});
+
+				if (!pstExists) {
+					res
+						.status(404)
+						.json({ message: 'Error: PST Documentation not found.' });
+				} else {
+					const pstWeeks: PSTWeekInterface[] = pstExists.weeks.sort((a, b) =>
+						a.weekNo < b.weekNo ? -1 : 1
+					);
+
+					if (
+						pstWeeks[pstWeeks.length - 1].weekNo !== Number(req.params.weekNo)
+					) {
+						res
+							.status(400)
+							.json({ message: 'Error: Can only delete last week.' });
+					} else {
+						const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+							{ _id: req.params.pstId },
+							{ $pull: { weeks: { weekNo: Number(req.params.weekNo) } } },
+							{ new: true }
+						);
+						if (!updatedPST) {
+							res.status(500);
+						} else {
+							res.json(updatedPST);
+						}
+					}
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
+const delete_pst: RequestHandler[] = [
+	param('pstId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
+
+				if (!pstExists) {
+					res
+						.status(404)
+						.json({ message: 'Error: PST Documentation not found.' });
+				} else {
+					const deletedPST: PSTInterface | null = await PST.findOneAndDelete({
+						_id: req.params.pstId,
+					}).exec();
+
+					res.status(200).json({message: "PST Document deleted."})
 				}
 			} catch (error) {
 				next(error);
@@ -472,5 +563,7 @@ export default {
 	add_week,
 	edit_header,
 	edit_week,
-	edit_access
+	edit_access,
+	delete_week,
+	delete_pst,
 };

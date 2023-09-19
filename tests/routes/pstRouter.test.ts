@@ -230,18 +230,56 @@ describe('PST PUT', (): void => {
 		const targetUser: UserInterface | null = await PST.findOne({});
 
 		const accessEdit = {
-			access: [targetUser?._id]
-		}
+			access: [targetUser?._id],
+		};
 
-		const putReq : Response = await request(app)
+		const putReq: Response = await request(app)
 			.put(`/docs/pst/${targetPST?._id}/editAccess`)
 			.set('Content-Type', 'application/json;charset=utf-8')
-			.set({Authorization: testToken})
+			.set({ Authorization: testToken })
 			.send(accessEdit)
 			.expect(200);
 
 		expect(putReq.body.access[0]).toBe(targetUser?._id.toString());
+	});
+});
+describe('PST DELETE', (): void => {
+	it('Deletes PST Week', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Math',
+			'header.progress_monitoring_goal': 'idk',
+		});
+		const weekNo: number = 2;
 
-	
+		const deleteReq: Response = await request(app)
+			.delete(`/docs/pst/${targetPST?._id}/week/${weekNo}/`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
+		const updatedPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Math',
+			'header.progress_monitoring_goal': 'idk',
+		});
+
+		expect(updatedPST?.weeks.length).toBe(1);
+	});
+	it('Deletes PST', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Math',
+			'header.progress_monitoring_goal': 'idk',
+		});
+
+		const deleteReq: Response = await request(app)
+			.delete(`/docs/pst/${targetPST?._id}/delete`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.expect(200);
+
+		const updatedPST: PSTInterface[] = await PST.find({_id: targetPST?._id}).lean();
+
+		expect(updatedPST.length).toBe(0);
 	});
 });
