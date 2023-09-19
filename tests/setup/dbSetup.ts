@@ -142,7 +142,7 @@ async function initializeTestDB(): Promise<void> {
 			student: savedStudent._id,
 			schoolYear: '2022-2023',
 			intervention_type: 'Math',
-			west_virginia_phonics: 'Dunno',
+			west_virginia_phonics: false,
 			readingIXL: 'Dunno',
 			progress_monitoring_goal: 'Dunno',
 		}

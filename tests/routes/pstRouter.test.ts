@@ -151,6 +151,7 @@ describe('PST POST', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
+		expect(postReq.body.weeks.length).toBe(2);
 	});
 });
 describe('PST PUT', (): void => {
@@ -163,19 +164,65 @@ describe('PST PUT', (): void => {
 		const headerEdit = {
 			schoolYear: '2020-2021',
 			intervention_type: 'Math',
-			west_virginia_phonics: 'idk',
+			west_virginia_phonics: false,
 			progress_monitoring_goal: 'idk',
-
-		}
+		};
 
 		const putReq: Response = await request(app)
 			.put(`/docs/pst/${targetPST?._id}/header`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.send(headerEdit)
-			.expect(200)
+			.expect(200);
 
 		expect(putReq.body.header.schoolYear).toBe('2020-2021');
-		expect(putReq.body.header.intervention_type).toBe('Math')
+		expect(putReq.body.header.intervention_type).toBe('Math');
+	});
+	it('Edits PST Week', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Math',
+			'header.progress_monitoring_goal': 'idk',
+		});
+		const weekNo: number = 1;
+
+		const weekEdit = {
+			dates: '9/17-9/21',
+			attendance: {
+				monday: 'NA',
+				tuesday: 'School Holiday',
+				wednesday: 'Teacher Absent',
+				thursday: 'Met',
+				friday: 'Absent',
+			},
+			tier1: {
+				documentation: [
+					'Require verbal responses to Indicate comprehension',
+					'Use peer helper',
+					'Collaborative learning environment',
+				],
+				standards: ['4.2', '4.4', '4.6'],
+			},
+			tier2: [
+				'Online skill practice',
+				'Reading fluency',
+				'Standards/skill-based Intervention',
+			],
+			parentComm: ['Daily behavior calendar'],
+			progressMonitor: ['Other stuff goes here'],
+		};
+
+
+		const putReq: Response = await request(app)
+			.put(`/docs/pst/${targetPST?._id}/week/${weekNo}/`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({ Authorization: testToken })
+			.send(weekEdit)
+			.expect(200);
+
+		const updatedPST: PSTInterface | null = await PST.findOne({
+			'header.intervention_type': 'Math',
+			'header.progress_monitoring_goal': 'idk',
+		});
 	});
 });

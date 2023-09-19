@@ -4,9 +4,14 @@ export interface PSTHeaderInterface {
 	student: ObjectId;
 	schoolYear: string;
 	intervention_type: 'Reading' | 'Math' | 'Behavior';
-	west_virginia_phonics: string;
+	west_virginia_phonics: boolean;
 	readingIXL: string;
 	progress_monitoring_goal: string;
+}
+
+export interface PSTTier1Interface {
+	documentation: string[];
+	standards: string[];
 }
 
 export interface PSTWeekInterface {
@@ -19,7 +24,7 @@ export interface PSTWeekInterface {
 		thursday: string;
 		friday: string;
 	};
-	tier1: string[];
+	tier1: PSTTier1Interface;
 	tier2: string[];
 	parentComm: string[];
 	progressMonitor: string[];
@@ -49,7 +54,7 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 				enum: ['Reading', 'Math', 'Behavior'],
 				default: 'Reading',
 			},
-			west_virginia_phonics: {type: String, default: ''},
+			west_virginia_phonics: {type: Boolean, default: false},
 			readingIXL: {type: String, default: ''},
 			progress_monitoring_goal: {type: String, default: ''},
 		},
@@ -64,7 +69,10 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 					thursday: String,
 					friday: String,
 				},
-				tier1: [String],
+				tier1: {
+					documentation: [String],
+					standards: [String],
+				} ,
 				tier2: [String],
 				parentComm: [String],
 				progressMonitor: [String],

@@ -22,8 +22,9 @@ router.post('/:pstId/addWeek', verifyToken, pstController.add_week);
 
 router.put('/:pstId/header', verifyToken, pstController.edit_header);
 
+router.put('/:pstId/week/:weekNo', verifyToken, pstController.edit_week);
+
 //TODO:
-//put edit pst header
 //put edit pst week
 //put edit pst access
 //put remove pst week

@@ -2,6 +2,7 @@ import PST, {
 	PSTInterface,
 	PSTHeaderInterface,
 	PSTWeekInterface,
+	PSTTier1Interface,
 } from './../../models/docTypes/pstModel';
 import asyncHandler from 'express-async-handler';
 import { RequestHandler } from 'express';
@@ -296,10 +297,10 @@ const add_week: RequestHandler[] = [
 
 const edit_header: RequestHandler[] = [
 	param('pstId').trim().escape(),
-	body("interventtion_type").trim().escape(),
-	body("schoolYear").trim().escape(),
-	body("west_virginia_phonics").trim().escape(),
-	body("progress_monitoring_goal").trim().escape(),
+	body('interventtion_type').trim().escape(),
+	body('schoolYear').trim().escape(),
+	body('west_virginia_phonics').trim().escape(),
+	body('progress_monitoring_goal').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -321,17 +322,95 @@ const edit_header: RequestHandler[] = [
 					const headerEdit = {
 						student: pstExists.header.student,
 						schoolYear: req.body.schoolYear || pstExists.header.schoolYear,
-						intervention_type: req.body.intervention_type || pstExists.header.intervention_type,
-						west_virginia_phonics: req.body.west_virginia_phonics || pstExists.header.west_virginia_phonics,
-						progress_monitoring_goal: req.body.progress_monitoring_goal || pstExists.header.progress_monitoring_goal
-					}
+						intervention_type:
+							req.body.intervention_type || pstExists.header.intervention_type,
+						west_virginia_phonics:
+							req.body.west_virginia_phonics ||
+							pstExists.header.west_virginia_phonics,
+						progress_monitoring_goal:
+							req.body.progress_monitoring_goal ||
+							pstExists.header.progress_monitoring_goal,
+					};
 					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
 						{ _id: req.params.pstId },
-						{header: headerEdit},
+						{ header: headerEdit },
 						{ new: true }
 					);
 
 					res.json(updatedPST);
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
+const edit_week: RequestHandler[] = [
+	param('pstId').trim().escape(),
+	param('weekNo').trim().escape(),
+	body('dates').optional().trim().escape(),
+	body('attendance').optional().isObject(),
+	body('tier1').optional().isObject(),
+	body('tier2').optional().trim().escape(),
+	body('parentComm').optional().trim().escape(),
+	body('progressMonitor').optional().trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+					'weeks.weekNo': req.params.weekNo,
+				}).lean();
+
+				if (!pstExists) {
+					res.status(404).json({ message: 'PST Document not found.' });
+				} else {
+					const targetWeek: PSTWeekInterface = pstExists.weeks.filter(
+						(week) => week.weekNo == Number(req.params.weekNo)
+					)[0];
+
+					const updatedWeek: PSTWeekInterface = {
+						weekNo: Number(req.params.weekNo),
+						dates: req.body.dates || targetWeek.dates,
+						attendance: req.body.attendance ?? targetWeek.attendance,
+						tier1: req.body.tier1 ?? targetWeek.tier1,
+						tier2: req.body.tier2 || targetWeek.tier2,
+						parentComm: req.body.parentComm || targetWeek.parentComm,
+						progressMonitor:
+							req.body.progressMonitor || targetWeek.progressMonitor,
+					};
+
+					const prevWeeks: PSTWeekInterface[] = pstExists.weeks.filter(
+						(week) => week.weekNo !== Number(req.params.weekNo)
+					);
+
+					const newWeeks: PSTWeekInterface[] = [...prevWeeks, updatedWeek];
+
+					const DBWeekUpdate: PSTInterface | null = await PST.findOneAndUpdate(
+						{
+							_id: req.params.pstId,
+							'weeks.weekNo': req.params.weekNo,
+						},
+						{
+							weeks: newWeeks,
+						},
+						{ new: true }
+					);
+
+					if (!DBWeekUpdate) {
+						res.status(500).json({ message: 'Error updating week.' });
+					} else {
+						res.json(DBWeekUpdate);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -350,4 +429,5 @@ export default {
 	add_student,
 	add_week,
 	edit_header,
+	edit_week,
 };
