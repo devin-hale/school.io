@@ -14,6 +14,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Document, ObjectId } from 'mongoose';
 import initializeTestDB from '../setup/dbSetup.js';
 import classModel from '../../models/classModel.js';
+import { access } from 'fs';
 
 let mongod: MongoMemoryServer;
 
@@ -212,17 +213,35 @@ describe('PST PUT', (): void => {
 			progressMonitor: ['Other stuff goes here'],
 		};
 
-
 		const putReq: Response = await request(app)
 			.put(`/docs/pst/${targetPST?._id}/week/${weekNo}/`)
 			.set('Content-Type', 'application/json;charset=utf-8')
 			.set({ Authorization: testToken })
 			.send(weekEdit)
 			.expect(200);
-
-		const updatedPST: PSTInterface | null = await PST.findOne({
+	});
+	it('Edits access to PST (200)', async (): Promise<void> => {
+		const testToken = await testJWT(app);
+		const targetPST: PSTInterface | null = await PST.findOne({
 			'header.intervention_type': 'Math',
 			'header.progress_monitoring_goal': 'idk',
 		});
+
+		const targetUser: UserInterface | null = await PST.findOne({});
+
+		const accessEdit = {
+			access: [targetUser?._id]
+		}
+
+		const putReq : Response = await request(app)
+			.put(`/docs/pst/${targetPST?._id}/editAccess`)
+			.set('Content-Type', 'application/json;charset=utf-8')
+			.set({Authorization: testToken})
+			.send(accessEdit)
+			.expect(200);
+
+		expect(putReq.body.access[0]).toBe(targetUser?._id.toString());
+
+	
 	});
 });

@@ -24,8 +24,9 @@ router.put('/:pstId/header', verifyToken, pstController.edit_header);
 
 router.put('/:pstId/week/:weekNo', verifyToken, pstController.edit_week);
 
+router.put('/:pstId/editAccess', verifyToken, pstController.edit_access);
+
 //TODO:
-//put edit pst week
 //put edit pst access
 //put remove pst week
 //delete pst

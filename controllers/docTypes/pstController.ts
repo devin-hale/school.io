@@ -13,6 +13,7 @@ import {
 	Result,
 	ValidationError,
 } from 'express-validator';
+import { ObjectId } from 'mongoose';
 
 const get_pst_instance: RequestHandler[] = [
 	param('pstId').trim().escape(),
@@ -419,6 +420,47 @@ const edit_week: RequestHandler[] = [
 	}),
 ];
 
+const edit_access: RequestHandler[] = [
+	param('pstId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({
+				message: 'Invalid request.',
+				errors: errors.array().map((e: ValidationError) => e.msg),
+			});
+		} else {
+			try {
+				const pstExists : PSTInterface | null = await PST.findOne({_id: req.params.pstId});
+
+				if(!pstExists) {
+					res.status(404).json({message: "Error: PST Documentation not found."})
+				} else {
+					const pstAccess : ObjectId[] = req.body.access
+
+					const updatedPST : PSTInterface | null = await PST.findOneAndUpdate(
+						{_id: req.params.pstId},
+						{access: pstAccess},
+						{new:true}
+					)
+
+					if(!updatedPST) {
+						res.status(500)
+					}
+					else {
+						res.json(updatedPST);
+					}
+
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 export default {
 	get_pst_instance,
 	get_user_pst,
@@ -430,4 +472,5 @@ export default {
 	add_week,
 	edit_header,
 	edit_week,
+	edit_access
 };
