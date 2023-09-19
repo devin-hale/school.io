@@ -33,7 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-18-2023:**
+### **UPDATE: 9-19-2023:**
 
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
@@ -53,10 +53,10 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - User authentication implemented via JSON web tokens.
 - Org limiter added to queries based on account type so that users/data from
   different org doesn't bleed over.
-- Initial data model completed for PST documentation
+- Preliminary PST documentation completed.
 
 ### **NEXT:**
-- Complete tests/routes/controllers for PST Doc functionality 
+- Implement method for downloading documentation as PDF direct from server. 
 
 
 ## Development Roadmap
