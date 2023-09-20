@@ -2,7 +2,7 @@
 
 ## Description
 
-### Version 0.3.1
+### Version 0.4.0
 
 This is the beginning stages of a project intended to act as a simple website
 for teachers to create, update, and store important documentation. The idea came
@@ -33,7 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-19-2023:**
+### **UPDATE: 9-20-2023:**
 
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
@@ -54,10 +54,10 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Org limiter added to queries based on account type so that users/data from
   different org doesn't bleed over.
 - Preliminary PST documentation completed.
+- File upload associated with user and documents.
 
 ### **NEXT:**
-- Implement method for downloading documentation as PDF direct from server. 
-
+- Clean up serverside sanitization.
 
 ## Development Roadmap
 
