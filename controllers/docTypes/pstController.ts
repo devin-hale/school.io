@@ -3,7 +3,7 @@ import PST, {
 	PSTHeaderInterface,
 	PSTWeekInterface,
 	PSTTier1Interface,
-} from './../../models/docTypes/pstModel';
+} from './../../models/docTypes/pstModel.js';
 import asyncHandler from 'express-async-handler';
 import { RequestHandler } from 'express';
 import {

@@ -1,6 +1,6 @@
 import express from 'express';
-import pstController from '../../controllers/docTypes/pstController';
-import verifyToken from '../authentication/verifyToken';
+import pstController from '../../controllers/docTypes/pstController.js';
+import verifyToken from '../authentication/verifyToken.js';
 
 const router = express.Router();
 

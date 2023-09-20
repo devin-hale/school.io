@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import orgController from '../controllers/orgController';
-import verifyToken from './authentication/verifyToken';
+import orgController from '../controllers/orgController.js';
+import verifyToken from './authentication/verifyToken.js';
 
 const router: Router = express.Router();
 

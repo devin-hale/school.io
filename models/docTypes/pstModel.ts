@@ -44,19 +44,19 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 	{
 		owner: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 		org: { type: Schema.Types.ObjectId, ref: 'organizations', required: true },
-		class: {type: Schema.Types.ObjectId, ref: 'classes', required: true},
+		class: { type: Schema.Types.ObjectId, ref: 'classes', required: true },
 		access: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 		header: {
 			student: { type: Schema.Types.ObjectId, ref: 'students' },
-			schoolYear:{type: String, default: ''} ,
+			schoolYear: { type: String, default: '' },
 			intervention_type: {
 				type: String,
 				enum: ['Reading', 'Math', 'Behavior'],
 				default: 'Reading',
 			},
-			west_virginia_phonics: {type: Boolean, default: false},
-			readingIXL: {type: String, default: ''},
-			progress_monitoring_goal: {type: String, default: ''},
+			west_virginia_phonics: { type: Boolean, default: false },
+			readingIXL: { type: String, default: '' },
+			progress_monitoring_goal: { type: String, default: '' },
 		},
 		weeks: [
 			{
@@ -72,7 +72,7 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 				tier1: {
 					documentation: [String],
 					standards: [String],
-				} ,
+				},
 				tier2: [String],
 				parentComm: [String],
 				progressMonitor: [String],

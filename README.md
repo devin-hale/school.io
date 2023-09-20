@@ -83,12 +83,11 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [x] Incident (fight, worrisome comments, etc)
   - [x] Commmunication (student, staff, parent, other)
   - [x] PST
-- [] Controllers/Routers/Tests for each type:
+- [x] Controllers/Routers/Tests for each type:
   - [x] Incident (fight, worrisome comments, etc)
   - [x] Commmunication (student, staff, parent, other)
-  - [] PST
-- [] Serverside image storage.
-- [] Download as PDF
+  - [x] PST
+- [x] Serverside image storage.
 - [] Clean up serverside sanitization
 
 [] **Utilities**
