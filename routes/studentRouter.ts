@@ -37,6 +37,8 @@ router.put(
 	studentController.student_remove_class
 );
 
+router.put('/:studentId/classTransfer/from/:classId/to/:newClassId', verifyToken, studentController.transfer_student);
+
 router.put(
 	'/:studentId/toggleActive',
 	verifyToken,

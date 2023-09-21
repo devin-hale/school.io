@@ -184,6 +184,8 @@ const edit_user_info: RequestHandler[] = [
 	body('last_name', 'Last name must contain at least 1 character.')
 		.trim()
 		.isLength({ min: 1 }),
+	body("gender").isString().trim().escape(),
+	body("accType").optional().isString().trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -206,9 +208,16 @@ const edit_user_info: RequestHandler[] = [
 				if (!userExists) {
 					res.status(404).json({ message: 'User not found.' });
 				} else {
+					const editInfo = {
+						first_name: req.body.first_name,
+						last_name: req.body.last_name,
+						gender: req.body.gender,
+						accType: req.body.accType ?? userExists.accType
+					}
+
 					const editedUser: Document | null = await User.findOneAndUpdate(
 						{ _id: targetUser },
-						req.body,
+						editInfo,
 						{ new: true }
 					);
 

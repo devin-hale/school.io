@@ -2,7 +2,7 @@
 
 ## Description
 
-### Version 0.4.1
+### Version 0.4.2
 
 This is the beginning stages of a project intended to act as a simple website
 for teachers to create, update, and store important documentation. The idea came
@@ -33,7 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-20-2023:**
+### **UPDATE: 9-21-2023:**
 
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
@@ -58,7 +58,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Cleaned up validation.
 
 ### **NEXT:**
-Clean up, verify admin/super admin methods.  Add if they don't exist.
+Begin front end.
 
 ## Development Roadmap
 
@@ -91,16 +91,14 @@ Clean up, verify admin/super admin methods.  Add if they don't exist.
 - [x] Serverside image storage.
 
 *Utilities**
-- [] Verify Org Admin Methods
-  - [] Create classes
-    - [] Assign a teacher or teachers to classes
-    - [] Assign students to class (easier for Elementary)
-  - [] Create students
-    - [] Assign a class to students (easier for Middle/HS)
-  - [] Transfer students between classes
-  - [] Cross Org Student Transfer Requests
-- [] Verify Super Admin Methods
-  - [] Create Orgs
-  - [] Create Org Admin Account
-  - [] "Promote" Users to Org Admin
-  - [] Data Utilities
+- [x] Verify Org Admin Methods
+  - [x] Create classes
+    - [x] Assign a teacher or teachers to classes
+    - [x] Assign students to class (easier for Elementary)
+  - [x] Create students
+    - [x] Assign a class to students (easier for Middle/HS)
+  - [x] Transfer students between classes
+- [x] Verify Super Admin Methods
+  - [x] Create Orgs
+  - [x] Create Org Admin Account
+  - [x] "Promote" Users to Org Admin

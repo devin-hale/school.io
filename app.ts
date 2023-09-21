@@ -1,5 +1,6 @@
 import express, { Request, Response, Express } from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import initializeMongoServer from './config/mongoConfig.js';
 import 'dotenv/config.js';
 
@@ -25,6 +26,7 @@ const __dirname: string = path.dirname(__filename);
 const PORT: number = parseInt(process.env.PORT!) || 3000;
 
 initializeMongoServer();
+export const conn = mongoose.connection;
 
 const app: Express = express();
 

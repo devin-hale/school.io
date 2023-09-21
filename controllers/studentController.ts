@@ -11,6 +11,7 @@ import {
 	validationResult,
 } from 'express-validator';
 import ClassModel, { ClassInterface } from '../models/classModel.js';
+import pstModel from '../models/docTypes/pstModel.js';
 
 const search_student: RequestHandler[] = [
 	query('name').optional().toLowerCase().escape(),
@@ -237,6 +238,72 @@ const edit_student_info: RequestHandler[] = [
 	}),
 ];
 
+const transfer_student: RequestHandler[] = [
+	param('studentId').trim().escape(),
+	param('classId').trim().escape(),
+	param('newClassId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ message: 'Invalid request.' });
+		} else {
+			try {
+				const studentExists: StudentInterface | null = await Student.findOne({
+					_id: req.params.studentId,
+				}).exec();
+				const classExists: ClassInterface | null = await ClassModel.findOne({
+					_id: req.params.classId,
+				});
+				const newClassExists: ClassInterface | null = await ClassModel.findOne({
+					_id: req.params.newClassId,
+				});
+
+				if (!studentExists || !classExists || !newClassExists) {
+					res.status(404).json({ message: 'Cannot find information.' });
+				} else {
+					const session = await mongoose.connection.startSession();
+
+					try {
+						session.startTransaction();
+
+						await Student.findOneAndUpdate(
+							{ _id: req.params.studentId },
+							{
+								$pull: { classes: req.params.classId },
+								$push: { classes: req.params.classId },
+							},
+							{ session }
+						);
+
+						await pstModel.updateMany(
+							{
+								'header.student': req.params.studentId,
+								class: req.params.classId,
+							},
+							{
+								class: req.params.newClassId,
+							},
+							{ session }
+						);
+
+						await session.commitTransaction();
+
+						res.json({ message: 'Success.' });
+					} catch (error) {
+						await session.abortTransaction();
+						res.status(500).json({ message: 'Error transferring student.' });
+					}
+					session.endSession();
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 const student_add_class: RequestHandler[] = [
 	param('studentId').trim().escape(),
 	param('classId').trim().escape(),
@@ -263,11 +330,13 @@ const student_add_class: RequestHandler[] = [
 					const updatedStudent: StudentInterface | null =
 						await Student.findOneAndUpdate(
 							{ _id: req.params.studentId },
-							{ $push: { classes: req.params.classId } },
+							{
+								$push: { classes: req.params.classId },
+							},
 							{ new: true }
 						);
 
-					res.json({ message: 'Success.' });
+					res.json(updatedStudent);
 				}
 			} catch (error) {
 				next(error);
@@ -386,4 +455,5 @@ export default {
 	student_remove_class,
 	toggle_active,
 	delete_student,
+	transfer_student,
 };
