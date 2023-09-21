@@ -152,16 +152,16 @@ const get_class_incidents: RequestHandler[] = [
 ];
 
 const create_incident: RequestHandler[] = [
-	body('access').trim().optional({ checkFalsy: true }).escape(),
-	body('students_involved').trim().optional({ checkFalsy: true }).escape(),
-	body('date_of_occurence').trim().escape(),
-	body('class').optional().trim().escape(),
-	body('staff_involved').trim().optional({ checkFalsy: true }).escape(),
-	body('parents_involved').trim().optional({ checkFalsy: true }).escape(),
-	body('others_involved').trim().optional({ checkFalsy: true }).escape(),
-	body('subject').trim().escape(),
-	body('description').trim().escape(),
-	body('action_taken').trim().escape(),
+	body('access').optional({ checkFalsy: true }),
+	body('students_involved').optional({ checkFalsy: true }),
+	body('date_of_occurence'),
+	body('class').optional(),
+	body('staff_involved').optional({ checkFalsy: true }),
+	body('parents_involved').optional({ checkFalsy: true }),
+	body('others_involved').optional({ checkFalsy: true }),
+	body('subject').isString().trim(),
+	body('description').isString().trim(),
+	body('action_taken').trim(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
@@ -194,13 +194,13 @@ const create_incident: RequestHandler[] = [
 
 const edit_incident_info = [
 	param('incidentId').trim().escape(),
-	body('date_of_occurence').trim().escape(),
-	body('subject').trim().escape(),
-	body('description').trim().escape(),
-	body('action_taken').trim().escape(),
-	body('parentOrGuardian_notified').isBoolean().escape(),
-	body('notification_type').trim().escape(),
-	body('escalated').isBoolean().escape(),
+	body('date_of_occurence').trim(),
+	body('subject').trim(),
+	body('description').trim(),
+	body('action_taken').trim(),
+	body('parentOrGuardian_notified').isBoolean(),
+	body('notification_type').trim(),
+	body('escalated').isBoolean(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
@@ -242,10 +242,10 @@ const edit_incident_info = [
 
 const edit_incident_involvement: RequestHandler[] = [
 	param('incidentId').trim().escape(),
-	body('staff_involved').optional().isArray().escape(),
-	body('students_involved').optional().isArray().escape(),
-	body('parents_involved').optional().isArray().escape(),
-	body('others_involved').optional().isArray().escape(),
+	body('staff_involved').optional().isArray(),
+	body('students_involved').optional().isArray(),
+	body('parents_involved').optional().isArray(),
+	body('others_involved').optional().isArray(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -294,7 +294,7 @@ const edit_incident_involvement: RequestHandler[] = [
 
 const edit_incident_access: RequestHandler[] = [
 	param('incidentId').trim().escape(),
-	body('access').isArray().escape(),
+	body('access').isArray(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);

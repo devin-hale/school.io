@@ -69,16 +69,16 @@ const get_user_comms: RequestHandler[] = [
 ];
 
 const create_communication: RequestHandler[] = [
-	body('access').optional().escape(),
-	body('communication_type').escape(),
-	body('date_of_occurence').escape(),
-	body('staff_involved').optional().escape(),
-	body('students_involved').optional().escape(),
-	body('parents_involved').optional().escape(),
-	body('other_involved').optional().escape(),
-	body('subject').trim().escape(),
-	body('description').trim().escape(),
-	body('followUp').escape(),
+	body('access').optional(),
+	body('communication_type').isString(),
+	body('date_of_occurence'),
+	body('staff_involved').optional(),
+	body('students_involved').optional(),
+	body('parents_involved').optional(),
+	body('others_involved').optional(),
+	body('subject').isString().trim(),
+	body('description').isString().trim(),
+	body('followUp').isBoolean(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
@@ -110,11 +110,11 @@ const create_communication: RequestHandler[] = [
 
 const edit_communication_info: RequestHandler[] = [
 	param("commId").trim().escape(),
-	body('communication_type').optional().escape(),
-	body('date_of_occurence').optional().escape(),
-	body('subject').trim().optional().escape(),
-	body('description').optional().trim().escape(),
-	body('followUp').optional().escape(),
+	body('communication_type').optional(),
+	body('date_of_occurence').optional(),
+	body('subject').trim().optional(),
+	body('description').optional().trim(),
+	body('followUp').optional(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
@@ -160,10 +160,10 @@ const edit_communication_info: RequestHandler[] = [
 
 const edit_communication_involvement: RequestHandler[] = [
 	param("commId").trim().escape(),
-	body("staff_involved").optional().isArray().escape(),
-	body("students_involved").optional().isArray().escape(),
-	body("parents_involved").optional().isArray().escape(),
-	body("others_involved").optional().isArray().escape(),
+	body("staff_involved").optional().isArray(),
+	body("students_involved").optional().isArray(),
+	body("parents_involved").optional().isArray(),
+	body("others_involved").optional().isArray(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
@@ -207,7 +207,7 @@ const edit_communication_involvement: RequestHandler[] = [
 
 const edit_communication_access: RequestHandler[] = [
 	param("commId").trim().escape(),
-	body("access").isArray().escape(),
+	body("access").isArray(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);

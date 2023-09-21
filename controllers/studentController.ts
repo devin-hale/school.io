@@ -146,14 +146,14 @@ const get_class_students: RequestHandler[] = [
 ];
 
 const create_student: RequestHandler[] = [
-	body('first_name').isString().trim().escape(),
-	body('last_name').isString().trim().escape(),
-	body('grade_level').isNumeric().escape(),
-	body('gifted').isBoolean().escape(),
-	body('retained').isBoolean().escape(),
-	body('sped').isBoolean().escape(),
-	body('english_language_learner').isBoolean().escape(),
-	body('org').trim().escape(),
+	body('first_name').isString().trim(),
+	body('last_name').isString().trim(),
+	body('grade_level').isNumeric(),
+	body('gifted').isBoolean(),
+	body('retained').isBoolean(),
+	body('sped').isBoolean(),
+	body('english_language_learner').isBoolean(),
+	body('org').trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -185,13 +185,13 @@ const create_student: RequestHandler[] = [
 ];
 
 const edit_student_info: RequestHandler[] = [
-	body('first_name').optional().isString().trim().escape(),
-	body('last_name').optional().isString().trim().escape(),
-	body('grade_level').optional().isNumeric().escape(),
-	body('gifted').optional().isBoolean().escape(),
-	body('retained').optional().isBoolean().escape(),
-	body('sped').optional().isBoolean().escape(),
-	body('english_language_learner').optional().isBoolean().escape(),
+	body('first_name').optional().isString().trim(),
+	body('last_name').optional().isString().trim(),
+	body('grade_level').optional().isNumeric(),
+	body('gifted').optional().isBoolean(),
+	body('retained').optional().isBoolean(),
+	body('sped').optional().isBoolean(),
+	body('english_language_learner').optional().isBoolean(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);

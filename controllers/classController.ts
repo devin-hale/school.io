@@ -12,9 +12,9 @@ import asyncHandler from 'express-async-handler';
 import studentModel from '../models/studentModel.js';
 
 const search_class: RequestHandler[] = [
-	query('name').trim().escape(),
-	query('subject').trim().escape(),
-	query('teacher').trim().escape(),
+	query('name').trim(),
+	query('subject').trim(),
+	query('teacher').trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);
@@ -113,17 +113,12 @@ const get_org_classes: RequestHandler[] = [
 	}),
 ];
 const create_class: RequestHandler[] = [
-	body('name').trim().isString().isLength({ min: 1, max: 20 }).escape(),
-	body('grade_level').trim().isString().isLength({ min: 1, max: 10 }).escape(),
-	body('subject')
-		.optional()
-		.trim()
-		.isString()
-		.isLength({ min: 1, max: 20 })
-		.escape(),
-	body('teachers').isArray().escape(),
-	body('teachers.*').optional().isString().trim().isLength({ min: 1 }).escape(),
-	body('org').optional().isString().trim().isLength({ min: 1 }).escape(),
+	body('name').trim().isString().isLength({ min: 1, max: 20 }),
+	body('grade_level').trim().isString().isLength({ min: 1, max: 10 }),
+	body('subject').optional().trim().isString().isLength({ min: 1, max: 20 }),
+	body('teachers').isArray(),
+	body('teachers.*').optional().isString().trim().isLength({ min: 1 }),
+	body('org').optional().isString().trim().isLength({ min: 1 }),
 
 	asyncHandler(async (req, res): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -158,21 +153,18 @@ const edit_class: RequestHandler[] = [
 		.optional()
 		.trim()
 		.isString()
-		.isLength({ min: 1, max: 20 })
-		.escape(),
+		.isLength({ min: 1, max: 20 }),
 	body('grade_level')
 		.optional()
 		.trim()
 		.isString()
-		.isLength({ min: 1, max: 10 })
-		.escape(),
+		.isLength({ min: 1, max: 10 }),
 	body('subject')
 		.optional()
 		.trim()
 		.isString()
-		.isLength({ min: 1, max: 20 })
-		.escape(),
-	param('classId').trim().isLength({ min: 1 }).escape(),
+		.isLength({ min: 1, max: 20 }),
+	param('classId').trim().isLength({ min: 1 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);

@@ -63,7 +63,7 @@ const get_org_instance: RequestHandler[] = [
 ];
 
 const create_org: RequestHandler[] = [
-	body('name', 'Invalid name.').trim().isLength({ min: 3 }).escape(),
+	body('name', 'Invalid name.').trim().isLength({ min: 3 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -118,7 +118,7 @@ const org_code_verify: RequestHandler[] = [
 ];
 
 const edit_org_info: RequestHandler[] = [
-	body('name').optional().trim().escape(),
+	body('name').optional().trim(),
 	param('orgId').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
@@ -143,7 +143,7 @@ const edit_org_info: RequestHandler[] = [
 ];
 
 const edit_org_color: RequestHandler[] = [
-	body('color').optional().trim().escape(),
+	body('color').optional().trim(),
 	param('orgId').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {

@@ -22,7 +22,7 @@ const hashAsync: (arg1: string, arg2: string | number) => Promise<string> =
 	util.promisify(bcrypt.hash);
 
 const search_user: RequestHandler[] = [
-	query('search').trim().escape(),
+	query('search').trim(),
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);
 
@@ -60,7 +60,7 @@ const search_user: RequestHandler[] = [
 
 const get_user: RequestHandler[] = [
 	param('userId').trim().escape(),
-	param('email').trim().escape(),
+	param('email').trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);
@@ -116,12 +116,10 @@ const get_user_classes: RequestHandler[] = [
 const create_account: RequestHandler[] = [
 	body('first_name', 'First name must contain at least 1 character.')
 		.trim()
-		.isLength({ min: 1 })
-		.escape(),
+		.isLength({ min: 1 }),
 	body('last_name', 'Last name must contain at least 1 character.')
 		.trim()
-		.isLength({ min: 1 })
-		.escape(),
+		.isLength({ min: 1 }),
 	body('email')
 		.trim()
 		.isLength({ min: 1 })
@@ -129,14 +127,12 @@ const create_account: RequestHandler[] = [
 		.bail()
 		.isEmail()
 		.withMessage('Email not valid.')
-		.bail()
-		.escape(),
+		.bail(),
 	body('password')
 		.trim()
 		.isLength({ min: 6 })
 		.withMessage('Password must be at least 6 characters long.')
-		.bail()
-		.escape(),
+		.bail(),
 
 	asyncHandler(async (req, res) => {
 		const errors: Result = validationResult(req);
@@ -184,12 +180,10 @@ const edit_user_info: RequestHandler[] = [
 	param('userId').trim().isLength({ min: 1 }).escape(),
 	body('first_name', 'First name must contain at least 1 character.')
 		.trim()
-		.isLength({ min: 1 })
-		.escape(),
+		.isLength({ min: 1 }),
 	body('last_name', 'Last name must contain at least 1 character.')
 		.trim()
-		.isLength({ min: 1 })
-		.escape(),
+		.isLength({ min: 1 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -242,8 +236,7 @@ const edit_email: RequestHandler[] = [
 		.bail()
 		.isEmail()
 		.withMessage('Email not valid.')
-		.bail()
-		.escape(),
+		.bail(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -297,14 +290,12 @@ const edit_password: RequestHandler[] = [
 		.trim()
 		.isLength({ min: 6 })
 		.withMessage('Password must be at least 6 characters long.')
-		.bail()
-		.escape(),
+		.bail(),
 	body('newPass')
 		.trim()
 		.isLength({ min: 6 })
 		.withMessage('Password must be at least 6 characters long.')
-		.bail()
-		.escape(),
+		.bail(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -358,8 +349,7 @@ const delete_user: RequestHandler[] = [
 		.trim()
 		.isLength({ min: 6 })
 		.withMessage('Password must be at least 6 characters long.')
-		.bail()
-		.escape(),
+		.bail(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);

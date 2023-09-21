@@ -298,10 +298,10 @@ const add_week: RequestHandler[] = [
 
 const edit_header: RequestHandler[] = [
 	param('pstId').trim().escape(),
-	body('interventtion_type').trim().escape(),
-	body('schoolYear').trim().escape(),
-	body('west_virginia_phonics').trim().escape(),
-	body('progress_monitoring_goal').trim().escape(),
+	body('interventtion_type').trim(),
+	body('schoolYear').trim(),
+	body('west_virginia_phonics').trim(),
+	body('progress_monitoring_goal').trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -350,12 +350,12 @@ const edit_header: RequestHandler[] = [
 const edit_week: RequestHandler[] = [
 	param('pstId').trim().escape(),
 	param('weekNo').trim().escape(),
-	body('dates').optional().trim().escape(),
+	body('dates').optional().trim(),
 	body('attendance').optional().isObject(),
 	body('tier1').optional().isObject(),
-	body('tier2').optional().trim().escape(),
-	body('parentComm').optional().trim().escape(),
-	body('progressMonitor').optional().trim().escape(),
+	body('tier2').optional().isArray(),
+	body('parentComm').optional().trim(),
+	body('progressMonitor').optional().trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);

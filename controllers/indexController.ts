@@ -15,9 +15,9 @@ import 'dotenv/config.js';
 const secretKey: string = process.env.SECRET_KEY!;
 
 const user_login: RequestHandler[] = [
-	body('email').trim().isLength({ min: 1 }).escape(),
-	body('password').trim().isLength({ min: 1 }).escape(),
-	query('stayLogged').optional().trim().equals('true').escape(),
+	body('email').trim().isLength({ min: 1 }),
+	body('password').trim().isLength({ min: 1 }),
+	query('stayLogged').optional().trim().equals('true'),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
