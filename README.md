@@ -2,7 +2,7 @@
 
 ## Description
 
-### Version 0.4.0
+### Version 0.4.1
 
 This is the beginning stages of a project intended to act as a simple website
 for teachers to create, update, and store important documentation. The idea came
@@ -53,15 +53,16 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - User authentication implemented via JSON web tokens.
 - Org limiter added to queries based on account type so that users/data from
   different org doesn't bleed over.
-- Preliminary PST documentation completed.
+- PST documentation completed.
 - File upload associated with user and documents.
+- Cleaned up validation.
 
 ### **NEXT:**
-- Clean up serverside sanitization.
+Clean up, verify admin/super admin methods.  Add if they don't exist.
 
 ## Development Roadmap
 
-[X] **Login/User Authentication**
+**Login/User Authentication**
 - [x] Organization/School Model
 - [x] Org Controller
 - [x] User Model
@@ -70,7 +71,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [x] Account Email Verification
 - [x] User Authentication
 
-[X] **Classroom/Student**
+**Classroom/Student**
 - [x] Class Model
 - [x] Class Tests
 - [x] Class Controller/Router
@@ -78,7 +79,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - [x] Student Tests
 - [x] Student Controller/Router
 
-[] **Documentation**
+**Documentation**
 - [x] Models for each type:
   - [x] Incident (fight, worrisome comments, etc)
   - [x] Commmunication (student, staff, parent, other)
@@ -88,9 +89,8 @@ Essentially, I want this application to cut that down to an absolute minimum.
   - [x] Commmunication (student, staff, parent, other)
   - [x] PST
 - [x] Serverside image storage.
-- [] Clean up serverside sanitization
 
-[] **Utilities**
+*Utilities**
 - [] Verify Org Admin Methods
   - [] Create classes
     - [] Assign a teacher or teachers to classes
