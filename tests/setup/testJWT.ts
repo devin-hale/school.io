@@ -10,7 +10,7 @@ async function testJWT(app: Express): Promise<string> {
 		.set('Content-Type', 'application/json; charset=utf-8')
 		.send({ email: loginEmail, password: loginPassword });
 
-	return loginPostReq.body.token;
+	return `Bearer ${loginPostReq.body}`;
 }
 
 export default testJWT;

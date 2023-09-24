@@ -8,7 +8,7 @@ import {
 	validationResult,
 	Result,
 } from 'express-validator';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import 'dotenv/config.js';
 
@@ -25,7 +25,7 @@ const user_login: RequestHandler[] = [
 		if (!errors.isEmpty()) {
 			res.status(400).json({ message: 'Invalid request.' });
 		} else {
-			const userExists: UserInterface | null = await User.findOne({
+			const userExists = await User.findOne({
 				email: req.body.email,
 			});
 
@@ -41,13 +41,16 @@ const user_login: RequestHandler[] = [
 						{
 							user: req.body.email,
 							userId: userExists._id,
+							firstName: userExists.first_name,
+							lastName: userExists.last_name,
 							org: userExists.org,
 							accType: userExists.accType,
+							verified: userExists.verified,
 						},
 						secretKey,
 						{ expiresIn: req.query.stayLogged ? '9999 years' : '30 min' },
 						(err, token) => {
-							res.json({ token: token });
+							res.json(token);
 						}
 					);
 				}
@@ -56,4 +59,28 @@ const user_login: RequestHandler[] = [
 	}),
 ];
 
-export default { user_login };
+const return_user: RequestHandler = asyncHandler(
+	async (req, res, next): Promise<void> => {
+		try {
+			const bearerHeader = req.headers['authorization'];
+
+			if (typeof bearerHeader !== 'undefined') {
+				const bearerToken = bearerHeader.split(' ');
+
+				jwt.verify(bearerToken[1], secretKey, (err, authData) => {
+					if (err) {
+						res.sendStatus(403);
+					} else {
+						res.json(authData);
+					}
+				});
+			} else {
+				res.sendStatus(403);
+			}
+		} catch (error) {
+			next(error);
+		}
+	}
+);
+
+export default { user_login, return_user };

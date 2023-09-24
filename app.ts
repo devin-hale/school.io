@@ -38,7 +38,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes
-app.options('*', cors({}));
+app.use(cors());
+app.options('*', cors());
 app.use('/', indexRouter);
 app.use('/organizations', orgRouter);
 app.use('/users', userRouter);

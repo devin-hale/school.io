@@ -16,7 +16,7 @@ const verifyToken: any = (
 	const bearerHeader = req.headers['authorization'];
 
 	if (typeof bearerHeader !== 'undefined') {
-		const bearerToken = bearerHeader.split(' ')[0];
+		const bearerToken = bearerHeader.split(' ')[1];
 
 		jwt.verify(bearerToken, secretKey, (err, authData) => {
 			if (err) {
