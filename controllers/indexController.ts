@@ -32,7 +32,7 @@ const user_login: RequestHandler[] = [
 			if (!userExists) {
 				res.status(400).json({ message: 'Username or password incorrect.' });
 			} else {
-				const match = bcrypt.compare(req.body.password, userExists.password);
+				const match = await bcrypt.compare(req.body.password, userExists.password);
 
 				if (!match) {
 					res.status(400).json({ message: 'Username or password incorrect.' });
