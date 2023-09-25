@@ -50,7 +50,7 @@ const user_login: RequestHandler[] = [
 						secretKey,
 						{ expiresIn: req.query.stayLogged ? '9999 years' : '30 min' },
 						(err, token) => {
-							res.json(token);
+							res.json({message: 'Login Successful', token: token});
 						}
 					);
 				}
