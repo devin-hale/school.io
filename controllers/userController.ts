@@ -60,7 +60,6 @@ const search_user: RequestHandler[] = [
 
 const get_user: RequestHandler[] = [
 	param('userId').trim().escape(),
-	param('email').trim(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);
@@ -77,9 +76,9 @@ const get_user: RequestHandler[] = [
 					.exec();
 
 				if (singleUser) {
-					res.json(singleUser);
+					res.json({message: `Retrieved user by ID: \"${req.params.userId}\"`, statusCode: 200, content: null});
 				} else {
-					res.status(404).json({ message: 'User could not be found.' });
+					res.status(404).json({ message: 'User could not be found.', statusCode: 404, content: null });
 				}
 			} catch (error) {
 				next(error);
@@ -105,7 +104,7 @@ const get_user_classes: RequestHandler[] = [
 					.populate('teachers')
 					.exec();
 
-				res.json({ classes: classes });
+				res.json({ message:`Retrieved classes for user ID: \"${req.params.userId}\"`, statusCode: 200, content: classes });
 			} catch (err) {
 				next(err);
 			}

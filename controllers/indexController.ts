@@ -71,7 +71,7 @@ const return_user: RequestHandler = asyncHandler(
 					if (err) {
 						res.sendStatus(403);
 					} else {
-						res.json(authData);
+						res.json({message: 'User Authenticated', statusCode: 200, content: authData});
 					}
 				});
 			} else {

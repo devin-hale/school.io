@@ -68,7 +68,7 @@ const get_class_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json({ message: 'Invalid request.', statusCode: 400, content: null });
 		} else {
 			try {
 				const classInstance: ClassInterface | null = await ClassModel.findOne({
@@ -78,9 +78,9 @@ const get_class_instance: RequestHandler[] = [
 					.lean()
 					.exec();
 				if (classInstance) {
-					res.json({ classInstance: classInstance });
+					res.json({ message:`Retrieved class with ID: \"${req.params.classId} \"`, statusCode: 200, content: classInstance});
 				} else {
-					res.status(404).json({ message: 'Class not found.' });
+					res.status(404).json({ message: 'Class not found.', statusCode: 404, content: null });
 				}
 			} catch (err) {
 				next(err);
@@ -105,7 +105,7 @@ const get_org_classes: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json({ classes: classes });
+				res.json({message:`Retrieved classes for Org ID \"${req.params.orgId} \"`, statusCode: 200, content: classes });
 			} catch (err) {
 				next(err);
 			}
@@ -139,6 +139,7 @@ const create_class: RequestHandler[] = [
 				if (savedClass) {
 					res.status(201).json({
 						message: `Organization \"${req.body.name}\" was successfully created.`,
+						statusCode: 201,
 						content: savedClass,
 					});
 				}
