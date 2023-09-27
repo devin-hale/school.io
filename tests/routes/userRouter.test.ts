@@ -281,6 +281,7 @@ describe('User DELETE', (): void => {
 		const targetUser: UserInterface | null = await User.findOne({}).exec();
 
 		const testToken: string = await testJWT(app);
+		console.log(testToken)
 
 		await request(app)
 			.delete(`/users/${targetUser?._id}/delete`)

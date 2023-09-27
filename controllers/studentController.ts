@@ -138,7 +138,7 @@ const get_class_students: RequestHandler[] = [
 						(stu) => stu.org == req.body.token.org
 					);
 
-				res.json(studentArr);
+				res.json({ message: 'Success.', students: studentArr });
 			} catch (error) {
 				next(error);
 			}
@@ -177,7 +177,11 @@ const create_student: RequestHandler[] = [
 
 				const savedStudent = await newStudent.save();
 
-				res.status(201).json(savedStudent);
+				if (savedStudent) {
+					res.status(201).json({ message: 'Success', student: savedStudent });
+				} else {
+					res.status(500).json({ message: 'ERROR: Saving student failed.' });
+				}
 			} catch (error) {
 				next(error);
 			}

@@ -79,7 +79,7 @@ describe('Student GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.students.length).toBe(1);
 	});
 });
 
