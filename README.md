@@ -61,9 +61,9 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Standardize payload output format accross API routes
     - [x] User
     - [x] Incidents
-    - [] Orgs
+    - [x] Orgs
     - [x] Index
-    - [] Class
+    - [x] Class
     - [] Student
     - [] Comms
     - [] PST

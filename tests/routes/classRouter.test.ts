@@ -40,7 +40,7 @@ describe('Class GET ', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(searchReq.body.searchResults.length).toBe(1);
+		expect(searchReq.body.content.length).toBe(1);
 	});
 	it('Returns a specific Class', async (): Promise<void> => {
 		const testToken: string = await testJWT(app);
@@ -61,7 +61,7 @@ describe('Class GET ', (): void => {
 			.set({ Authorization: testToken })
 			.expect(404);
 
-		expect(getReq.body.message).toBe('Class not found.');
+		expect(getReq.body.message).toBe(`Class 64ebe2c3ad586fd7e48f93b5 not found`);
 	});
 
 	it('Returns all Classes of a given Org', async (): Promise<void> => {
@@ -131,7 +131,7 @@ describe('Class PUT', (): void => {
 			.send(editContent)
 			.expect(200);
 
-		expect(editReq.body.message).toBe('Class information edited.');
+		expect(editReq.body.message).toBe(`Changes to class ${targetClass?._id} saved successfully.`);
 		expect(editReq.body.content.name).toBe('Edited Name');
 		expect(editReq.body.content.grade_level).toBe('5');
 		expect(editReq.body.content.subject).toBe('Math');
@@ -162,7 +162,7 @@ describe('Class PUT', (): void => {
 			.set({ Authorization: testToken })
 			.send({ _id: savedTeacher?._id })
 			.expect(200);
-		expect(editReq.body.message).toBe('Teacher added to class.');
+		expect(editReq.body.message).toBe(`Changes to class ${targetClass?._id} saved successfully.`);
 
 		const editedClass: ClassInterface | null = await ClassModel.findOne({})
 			.lean()
@@ -187,7 +187,7 @@ describe('Class PUT', (): void => {
 			.set({ Authorization: testToken })
 			.send({ _id: teacherId })
 			.expect(200);
-		expect(editReq.body.message).toBe('Teacher removed from class.');
+		expect(editReq.body.message).toBe(`Changes to class ${targetClass?._id} saved successfully.`);
 
 		const editedClass: ClassInterface | null = await ClassModel.findOne({})
 			.lean()

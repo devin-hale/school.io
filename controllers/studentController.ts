@@ -295,6 +295,7 @@ const transfer_student: RequestHandler[] = [
 						await session.commitTransaction();
 
 						res.json({ message: 'Success.' });
+						console.log('YEAH')
 					} catch (error) {
 						await session.abortTransaction();
 						res.status(500).json({ message: 'Error transferring student.' });

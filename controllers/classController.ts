@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, UpdateWriteOpResult } from 'mongoose';
 import ClassModel, { ClassInterface } from './../models/classModel.js';
 import {
 	Result,
@@ -9,7 +9,7 @@ import {
 	validationResult,
 } from 'express-validator';
 import asyncHandler from 'express-async-handler';
-import studentModel from '../models/studentModel.js';
+import studentModel, { StudentInterface } from '../models/studentModel.js';
 import { Payload } from './utils/payload.js';
 
 const search_class: RequestHandler[] = [
@@ -21,7 +21,7 @@ const search_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload("Invalid request.",200,null));
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				if (!req.query) {
@@ -53,7 +53,9 @@ const search_class: RequestHandler[] = [
 							(classResult) => classResult.org._id == req.body.token.org
 						);
 					}
-					res.status(200).json({ searchResults: searchResults });
+					res
+						.status(200)
+						.json(new Payload(`Search complete.`, 200, searchResults));
 				}
 			} catch (error) {
 				next(error);
@@ -69,9 +71,7 @@ const get_class_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 400, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				const classInstance: ClassInterface | null = await ClassModel.findOne({
@@ -81,17 +81,19 @@ const get_class_instance: RequestHandler[] = [
 					.lean()
 					.exec();
 				if (classInstance) {
-					res.json({
-						message: `Retrieved class with ID: \"${req.params.classId} \"`,
-						statusCode: 200,
-						content: classInstance,
-					});
+					res.json(
+						new Payload(
+							`Retrieved class ${req.params.classId}`,
+							200,
+							classInstance
+						)
+					);
 				} else {
-					res.status(404).json({
-						message: 'Class not found.',
-						statusCode: 404,
-						content: null,
-					});
+					res
+						.status(404)
+						.json(
+							new Payload(`Class ${req.params.classId} not found`, 404, null)
+						);
 				}
 			} catch (err) {
 				next(err);
@@ -107,9 +109,7 @@ const get_org_classes: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				const classes: ClassInterface[] | undefined[] = await ClassModel.find({
@@ -118,11 +118,13 @@ const get_org_classes: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json({
-					message: `Retrieved classes for Org ID \"${req.params.orgId} \"`,
-					statusCode: 200,
-					content: classes,
-				});
+				res.json(
+					new Payload(
+						`Retrieved classes for org ${req.params.orgId}`,
+						200,
+						classes
+					)
+				);
 			} catch (err) {
 				next(err);
 			}
@@ -137,13 +139,11 @@ const create_class: RequestHandler[] = [
 	body('teachers.*').optional().isString().trim().isLength({ min: 1 }),
 	body('org').optional().isString().trim().isLength({ min: 1 }),
 
-	asyncHandler(async (req, res): Promise<void> => {
+	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				const newClass: Document = new ClassModel({
@@ -156,14 +156,14 @@ const create_class: RequestHandler[] = [
 
 				const savedClass: Document | null = await newClass.save();
 				if (savedClass) {
-					res.status(201).json({
-						message: `Organization \"${req.body.name}\" was successfully created.`,
-						statusCode: 201,
-						content: savedClass,
-					});
+					res
+						.status(201)
+						.json(new Payload(`Class created successfully.`, 201, savedClass));
+				} else {
+					res.status(500).json(new Payload(`Error creating class.`, 500, null));
 				}
 			} catch (error) {
-				res.status(400).json({ message: 'Invalid parameters.' });
+				next(error);
 			}
 		}
 	}),
@@ -182,9 +182,7 @@ const edit_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -193,11 +191,26 @@ const edit_class: RequestHandler[] = [
 						req.body,
 						{ new: true }
 					);
-				res.status(200).json({
-					message: 'Class information edited.',
-					statusCode: 200,
-					content: editedClass,
-				});
+
+				if (!editedClass) {
+					res
+						.status(500)
+						.json(
+							new Payload(
+								`Error saving changes to class ${req.params.classId}`,
+								500,
+								null
+							)
+						);
+				} else {
+					res.json(
+						new Payload(
+							`Changes to class ${req.params.classId} saved successfully.`,
+							200,
+							editedClass
+						)
+					);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -212,9 +225,7 @@ const add_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -223,11 +234,26 @@ const add_teacher: RequestHandler[] = [
 						{ $push: { teachers: req.body._id } },
 						{ new: true }
 					);
-				res.status(200).json({
-					message: 'Teacher added to class.',
-					statusCode: 200,
-					content: editedClass,
-				});
+
+				if (!editedClass) {
+					res
+						.status(500)
+						.json(
+							new Payload(
+								`Error saving changes to class ${req.params.classId}`,
+								500,
+								null
+							)
+						);
+				} else {
+					res.json(
+						new Payload(
+							`Changes to class ${req.params.classId} saved successfully.`,
+							200,
+							editedClass
+						)
+					);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -242,9 +268,7 @@ const remove_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			const targetId = new mongoose.Types.ObjectId(`${req.body._id}`);
 			try {
@@ -254,11 +278,25 @@ const remove_teacher: RequestHandler[] = [
 						{ $pull: { teachers: targetId } },
 						{ safe: true, new: true }
 					);
-				res.status(200).json({
-					message: 'Teacher removed from class.',
-					statusCode: 200,
-					content: editedClass,
-				});
+				if (!editedClass) {
+					res
+						.status(500)
+						.json(
+							new Payload(
+								`Error saving changes to class ${req.params.classId}`,
+								500,
+								null
+							)
+						);
+				} else {
+					res.json(
+						new Payload(
+							`Changes to class ${req.params.classId} saved successfully.`,
+							200,
+							editedClass
+						)
+					);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -272,9 +310,7 @@ const delete_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res
-				.status(400)
-				.json({ message: 'Invalid request.', statusCode: 200, content: null });
+			res.status(400).json(new Payload('Invalid request.', 200, null));
 		} else {
 			const targetId = req.params.classId;
 			try {
@@ -286,15 +322,15 @@ const delete_class: RequestHandler[] = [
 					const deletedClass: Document | null =
 						await ClassModel.findOneAndDelete({ _id: targetId }).exec();
 
-					await studentModel
-						.updateMany({ classes: targetId }, { $pull: { classes: targetId } })
-						.exec();
+					const editedStudents : UpdateWriteOpResult =  await studentModel
+						.updateMany({ classes: targetId }, { $pull: { classes: targetId } }).exec()
+					
+					if (!deletedClass) {
+						res.status(500).json(new Payload(`Error deleting class ${req.params.classId}`, 500, null))
+					} else {
+						res.json(new Payload(`Class ${req.params.id} deleted.`, 200, deletedClass))
+					}
 
-					res.status(200).json({
-						message: 'Class deleted from database.',
-						statusCode: 200,
-						content: deletedClass,
-					});
 				} else {
 					res.status(404).json({
 						message: 'Class not found.',
