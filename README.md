@@ -58,7 +58,15 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - Cleaned up validation.
 
 ### **NEXT:**
-Begin front end.
+- Standardize payload output format accross API routes
+    - [x] User
+    - [x] Incidents
+    - [] Orgs
+    - [x] Index
+    - [] Class
+    - [] Student
+    - [] Comms
+    - [] PST
 
 ## Development Roadmap
 
