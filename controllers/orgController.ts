@@ -29,7 +29,7 @@ const search_orgs: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.status(200).json({ searchResults: searchResults });
+				res.json(new Payload(`Search complete.`, 200, searchResults));
 			} catch (error) {
 				next(error);
 			}
@@ -53,9 +53,25 @@ const get_org_instance: RequestHandler[] = [
 					.exec();
 
 				if (!findOrg) {
-					res.status(404).json({ message: 'Organization not found.' });
+					res
+						.status(404)
+						.json(
+							new Payload(
+								`Organization ${req.params.orgId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
-					res.status(200).json({ org: findOrg });
+					res
+						.status(200)
+						.json(
+							new Payload(
+								`Retrieved organization ${req.params.orgId},`,
+								200,
+								findOrg
+							)
+						);
 				}
 			} catch (errors) {
 				next(errors);
@@ -80,9 +96,15 @@ const create_org: RequestHandler[] = [
 
 				const savedOrg: OrgInterface | null = await newOrg.save();
 
-				res
-					.status(201)
-					.json({ message: 'Org created successfully.', org: savedOrg });
+				if (!savedOrg) {
+					res
+						.status(500)
+						.json(new Payload(`Error creating organization.`, 500, null));
+				} else {
+					res.status(201).json(
+						new Payload(`Organization created succesfully.`, 201, savedOrg)
+					);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -136,7 +158,25 @@ const edit_org_info: RequestHandler[] = [
 					{ new: true }
 				);
 
-				res.status(200).json({ updatedOrg: editedOrg });
+				if (!editedOrg) {
+					res
+						.status(500)
+						.json(
+							new Payload(
+								`Error saving changes to org ${req.params.orgId}`,
+								500,
+								null
+							)
+						);
+				} else {
+					res.json(
+						new Payload(
+							`Org ${req.params.orgId} updated succesfully`,
+							200,
+							editedOrg
+						)
+					);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -161,7 +201,11 @@ const edit_org_color: RequestHandler[] = [
 					{ new: true }
 				);
 
-				res.status(200).json({ updatedOrg: editedOrg });
+				if (!editedOrg) {
+					res.status(500).json(new Payload(`Error saving changes.`, 500, null));
+				} else {
+					res.json(new Payload(`Changes saved.`, 200, editedOrg));
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -179,9 +223,13 @@ const delete_org: RequestHandler[] = [
 			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
-				await Org.findOneAndDelete({ _id: req.params.orgId }).exec();
+				const deletedOrg : OrgInterface | null = await Org.findOneAndDelete({ _id: req.params.orgId }).exec();
 
-				res.json({ message: 'Organization deleted successfully.' });
+				if(!deletedOrg) {
+					res.status(500).json(new Payload(`Error deleting organization ${req.params.orgId}`, 500, null))
+				} else {
+					res.json(new Payload(`Organization ${req.params.orgId} deleted.`, 200, deletedOrg))
+				}
 			} catch (error) {
 				next(error);
 			}

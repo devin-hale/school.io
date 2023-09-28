@@ -37,7 +37,7 @@ describe('Org GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(searchReq.body.searchResults.length).toBe(1);
+		expect(searchReq.body.content.length).toBe(1);
 	});
 	it('Gets org instance (201)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -49,7 +49,7 @@ describe('Org GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.org._id).toEqual(targetOrg?._id.toString());
+		expect(getReq.body.content._id).toEqual(targetOrg?._id.toString());
 	});
 	it('Fails when Org not found (404)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -73,7 +73,7 @@ describe('Org GET', (): void => {
 	});
 });
 describe('Org POST', (): void => {
-	it('Creates Org (200)', async (): Promise<void> => {
+	it('Creates Org (201)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
 		const newOrg = {
 			name: 'Test High School',
@@ -88,7 +88,7 @@ describe('Org POST', (): void => {
 			.expect(201);
 
 		const orgExists: OrgInterface | null = await Org.findOne({
-			_id: postReq.body.org._id,
+			_id: postReq.body.content._id,
 		});
 
 		expect(orgExists).toBeTruthy;
