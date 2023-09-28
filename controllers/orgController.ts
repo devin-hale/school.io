@@ -9,6 +9,8 @@ import {
 	Result,
 } from 'express-validator';
 
+import { Payload } from './utils/payload.js';
+
 const search_orgs: RequestHandler[] = [
 	query('orgName').trim().toLowerCase().escape(),
 
@@ -16,7 +18,7 @@ const search_orgs: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const searchReg: RegExp = new RegExp(`${req.query.orgName}`, 'i');
@@ -41,7 +43,7 @@ const get_org_instance: RequestHandler[] = [
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const findOrg: OrgInterface | null = await Org.findOne({
@@ -69,7 +71,7 @@ const create_org: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const newOrg = new Org({
@@ -98,7 +100,7 @@ const org_code_verify: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const findOrg = await Org.findOne({ orgCode: req.params.orgCode })
@@ -125,7 +127,7 @@ const edit_org_info: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const editedOrg: OrgInterface | null = await Org.findOneAndUpdate(
@@ -150,7 +152,7 @@ const edit_org_color: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const editedOrg: OrgInterface | null = await Org.findOneAndUpdate(
@@ -174,7 +176,7 @@ const delete_org: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				await Org.findOneAndDelete({ _id: req.params.orgId }).exec();

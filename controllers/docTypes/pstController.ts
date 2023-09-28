@@ -14,6 +14,7 @@ import {
 	ValidationError,
 } from 'express-validator';
 import { ObjectId } from 'mongoose';
+import { Payload } from '../utils/payload.js';
 
 const get_pst_instance: RequestHandler[] = [
 	param('pstId').trim().escape(),
@@ -22,10 +23,7 @@ const get_pst_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstInstance: PSTInterface | null = await PST.findOne({
@@ -55,10 +53,7 @@ const get_user_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userPSTs: PSTInterface[] = await PST.find({
@@ -84,10 +79,7 @@ const get_org_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const orgPSTs: PSTInterface[] = await PST.find({
@@ -113,10 +105,7 @@ const get_class_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classPSTs: PSTInterface[] = await PST.find({
@@ -142,10 +131,7 @@ const get_student_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentPSTs: PSTInterface[] = await PST.find({
@@ -171,10 +157,7 @@ const create_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const newPST = {
@@ -217,10 +200,7 @@ const add_student: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -252,10 +232,7 @@ const add_week: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -307,10 +284,7 @@ const edit_header: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -361,10 +335,7 @@ const edit_week: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -427,10 +398,7 @@ const edit_access: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -471,10 +439,7 @@ const delete_week: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -524,10 +489,7 @@ const delete_pst: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const pstExists: PSTInterface | null = await PST.findOne({
@@ -543,7 +505,7 @@ const delete_pst: RequestHandler[] = [
 						_id: req.params.pstId,
 					}).exec();
 
-					res.status(200).json({message: "PST Document deleted."})
+					res.status(200).json({ message: 'PST Document deleted.' });
 				}
 			} catch (error) {
 				next(error);

@@ -4,6 +4,7 @@ import Communication, {
 import asyncHandler from 'express-async-handler';
 import { RequestHandler } from 'express';
 import { body, param, validationResult, Result } from 'express-validator';
+import { Payload } from '../utils/payload.js';
 
 const get_communication_instance: RequestHandler[] = [
 	param('commId').trim().escape(),
@@ -12,7 +13,7 @@ const get_communication_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const commExists: CommInterface | null = await Communication.findOne({
@@ -45,7 +46,7 @@ const get_user_comms: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userComms: CommInterface[] = await Communication.find({
@@ -84,7 +85,7 @@ const create_communication: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const newRecord = new Communication({
 				owner: req.body.token.userId,
@@ -109,7 +110,7 @@ const create_communication: RequestHandler[] = [
 ];
 
 const edit_communication_info: RequestHandler[] = [
-	param("commId").trim().escape(),
+	param('commId').trim().escape(),
 	body('communication_type').optional(),
 	body('date_of_occurence').optional(),
 	body('subject').trim().optional(),
@@ -120,7 +121,7 @@ const edit_communication_info: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const commExists: CommInterface | null = await Communication.findOne({
@@ -152,24 +153,24 @@ const edit_communication_info: RequestHandler[] = [
 					res.json(editedComm);
 				}
 			} catch (error) {
-				next(error)
+				next(error);
 			}
 		}
 	}),
 ];
 
 const edit_communication_involvement: RequestHandler[] = [
-	param("commId").trim().escape(),
-	body("staff_involved").optional().isArray(),
-	body("students_involved").optional().isArray(),
-	body("parents_involved").optional().isArray(),
-	body("others_involved").optional().isArray(),
+	param('commId').trim().escape(),
+	body('staff_involved').optional().isArray(),
+	body('students_involved').optional().isArray(),
+	body('parents_involved').optional().isArray(),
+	body('others_involved').optional().isArray(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const commExists: CommInterface | null = await Communication.findOne({
@@ -182,10 +183,14 @@ const edit_communication_involvement: RequestHandler[] = [
 						.json({ message: 'Communication document not found.' });
 				} else {
 					const editInfo = {
-						staff_involved: req.body.staff_involved || commExists.staff_involved,
-						students_involved: req.body.students_involved || commExists.students_involved,
-						parents_involved: req.body.parents_involved || commExists.parents_involved,
-						others_involved: req.body.others_involved || commExists.others_involved,
+						staff_involved:
+							req.body.staff_involved || commExists.staff_involved,
+						students_involved:
+							req.body.students_involved || commExists.students_involved,
+						parents_involved:
+							req.body.parents_involved || commExists.parents_involved,
+						others_involved:
+							req.body.others_involved || commExists.others_involved,
 					};
 
 					const editedComm: CommInterface | null =
@@ -198,22 +203,21 @@ const edit_communication_involvement: RequestHandler[] = [
 					res.json(editedComm);
 				}
 			} catch (error) {
-				next(error)
+				next(error);
 			}
 		}
 	}),
 ];
 
-
 const edit_communication_access: RequestHandler[] = [
-	param("commId").trim().escape(),
-	body("access").isArray(),
+	param('commId').trim().escape(),
+	body('access').isArray(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const commExists: CommInterface | null = await Communication.findOne({
@@ -226,7 +230,7 @@ const edit_communication_access: RequestHandler[] = [
 						.json({ message: 'Communication document not found.' });
 				} else {
 					const editInfo = {
-						access: req.body.access
+						access: req.body.access,
 					};
 
 					const editedComm: CommInterface | null =
@@ -239,20 +243,20 @@ const edit_communication_access: RequestHandler[] = [
 					res.json(editedComm);
 				}
 			} catch (error) {
-				next(error)
+				next(error);
 			}
 		}
 	}),
 ];
 
 const delete_communication: RequestHandler[] = [
-	param("commId").trim().escape(),
+	param('commId').trim().escape(),
 
 	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const commExists: CommInterface | null = await Communication.findOne({
@@ -264,12 +268,12 @@ const delete_communication: RequestHandler[] = [
 						.status(404)
 						.json({ message: 'Communication document not found.' });
 				} else {
-					await Communication.findOneAndDelete({_id: req.params.commId});
+					await Communication.findOneAndDelete({ _id: req.params.commId });
 
-					res.json({message: 'Communication deleted.'});
+					res.json({ message: 'Communication deleted.' });
 				}
 			} catch (error) {
-				next(error)
+				next(error);
 			}
 		}
 	}),

@@ -51,7 +51,7 @@ describe('Class GET ', (): void => {
 			.set({ Authorization: testToken })
 			.expect('Content-Type', 'application/json; charset=utf-8')
 			.expect(200);
-		expect(response.body.classInstance._id).toBe(`${classInstance?._id}`);
+		expect(response.body.content._id).toBe(`${classInstance?._id}`);
 	});
 
 	it('404 when class not found', async (): Promise<void> => {
@@ -73,7 +73,7 @@ describe('Class GET ', (): void => {
 			.set({ Authorization: testToken })
 			.expect('Content-Type', 'application/json; charset=utf-8')
 			.expect(200);
-		expect(reqTest.body.classes[0].org).toBe(`${org?._id}`);
+		expect(reqTest.body.content[0].org).toBe(`${org?._id}`);
 	});
 });
 
@@ -108,7 +108,7 @@ describe('Class POST', (): void => {
 			.set({ Authorization: testToken })
 			.send(newClass)
 			.expect(400);
-		expect(testReq.body.message).toBe('Invalid parameters.');
+		expect(testReq.body.message).toBe('Invalid request.');
 	});
 });
 

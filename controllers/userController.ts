@@ -18,6 +18,8 @@ import util from 'util';
 import authController from './emailAuthController.js';
 import { Document } from 'mongoose';
 
+import { Payload } from './utils/payload.js';
+
 const hashAsync: (arg1: string, arg2: string | number) => Promise<string> =
 	util.promisify(bcrypt.hash);
 
@@ -27,7 +29,7 @@ const search_user: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request', 400, null));
 		} else {
 			try {
 				if (!req.query.search) {
@@ -49,7 +51,12 @@ const search_user: RequestHandler[] = [
 							(user) => user.org._id == req.body.token.org
 						);
 					}
-					res.status(200).json({ searchResults: searchResults });
+					const resPayLoad: Payload = new Payload(
+						'Search complete.',
+						200,
+						searchResults
+					);
+					res.status(200).json(resPayLoad);
 				}
 			} catch (error) {
 				next(error);
@@ -65,7 +72,7 @@ const get_user: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request', 400, null));
 		} else {
 			try {
 				const singleUser: UserInterface | null = await User.findById(
@@ -76,9 +83,19 @@ const get_user: RequestHandler[] = [
 					.exec();
 
 				if (singleUser) {
-					res.json({message: `Retrieved user by ID: \"${req.params.userId}\"`, statusCode: 200, content: null});
+					res.json(
+						new Payload(
+							`Retrieved user by ID: ${req.params.userId}`,
+							200,
+							singleUser
+						)
+					);
 				} else {
-					res.status(404).json({ message: 'User could not be found.', statusCode: 404, content: null });
+					res
+						.status(404)
+						.json(
+							new Payload(`User ${req.params.userId} not found.`, 404, null)
+						);
 				}
 			} catch (error) {
 				next(error);
@@ -94,7 +111,7 @@ const get_user_classes: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classes: ClassInterface[] | undefined[] = await ClassModel.find({
@@ -104,7 +121,13 @@ const get_user_classes: RequestHandler[] = [
 					.populate('teachers')
 					.exec();
 
-				res.json({ message:`Retrieved classes for user ID: \"${req.params.userId}\"`, statusCode: 200, content: classes });
+				res.json(
+					new Payload(
+						`Retrieved classes for user ID: ${req.params.userId}`,
+						200,
+						classes
+					)
+				);
 			} catch (err) {
 				next(err);
 			}
@@ -137,10 +160,7 @@ const create_account: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const emailExists: UserInterface | null = await User.findOne({
 				email: req.body.email,
@@ -161,15 +181,21 @@ const create_account: RequestHandler[] = [
 					org: organization?._id,
 				});
 
-				const savedUser = await newUser.save();
+				const savedUser: UserInterface | null = await newUser.save();
 
 				await authController.createAuth(savedUser, req);
 
-				res
-					.status(201)
-					.json({ message: 'Account created.', _id: savedUser._id });
+				if (!savedUser) {
+					res
+						.status(500)
+						.json(new Payload(`Error creating account.`, 500, null));
+				} else {
+					res
+						.status(201)
+						.json(new Payload(`Account created successfully.`, 201, savedUser));
+				}
 			} else {
-				res.status(400).json({ message: 'Email already in use.' });
+				res.status(400).json(new Payload('Email already in use.', 400, null));
 			}
 		}
 	}),
@@ -183,17 +209,14 @@ const edit_user_info: RequestHandler[] = [
 	body('last_name', 'Last name must contain at least 1 character.')
 		.trim()
 		.isLength({ min: 1 }),
-	body("gender").isString().trim().escape(),
-	body("accType").optional().isString().trim().escape(),
+	body('gender').isString().trim().escape(),
+	body('accType').optional().isString().trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const targetUser: string = req.params.userId;
@@ -205,14 +228,14 @@ const edit_user_info: RequestHandler[] = [
 					.exec();
 
 				if (!userExists) {
-					res.status(404).json({ message: 'User not found.' });
+					res.status(404).json(new Payload('User not found.', 404, null));
 				} else {
 					const editInfo = {
 						first_name: req.body.first_name,
 						last_name: req.body.last_name,
 						gender: req.body.gender,
-						accType: req.body.accType ?? userExists.accType
-					}
+						accType: req.body.accType ?? userExists.accType,
+					};
 
 					const editedUser: Document | null = await User.findOneAndUpdate(
 						{ _id: targetUser },
@@ -221,11 +244,25 @@ const edit_user_info: RequestHandler[] = [
 					);
 
 					if (!editedUser) {
-						res.status(400).json({ message: 'Error saving edits.' });
+						res
+							.status(400)
+							.json(
+								new Payload(
+									`Error saving incident ${req.params.userId}`,
+									400,
+									null
+								)
+							);
 					} else {
 						res
 							.status(200)
-							.json({ message: 'User info saved.', content: editedUser });
+							.json(
+								new Payload(
+									`User ${editedUser._id} saved successfully`,
+									200,
+									editedUser
+								)
+							);
 					}
 				}
 			} catch (error) {
@@ -250,10 +287,7 @@ const edit_email: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userExists: UserInterface | null = await User.findOne({
@@ -268,21 +302,41 @@ const edit_email: RequestHandler[] = [
 					.exec();
 
 				if (!userExists) {
-					res.status(404).json({ message: 'User not found.' });
+					res
+						.status(404)
+						.json(
+							new Payload(`User ${req.params.userId} not found.`, 404, null)
+						);
 				} else if (emailInUse) {
-					res.status(400).json({ message: 'Email already in use.' });
+					res
+						.status(400)
+						.json(
+							new Payload(`Email ${req.body.email} already in use.`, 400, null)
+						);
 				} else {
 					const editedUser: Document | null = await User.findOneAndUpdate(
 						{ _id: req.params.userId },
 						{ email: req.body.email },
 						{ new: true }
 					);
-
-					if (editedUser) {
-						res.status(200).json({
-							message: 'Email successfully changed.',
-							content: editedUser,
-						});
+					if (!editedUser) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error changing email for user ${req.params.userId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Email changed for user ${req.params.userId}`,
+								200,
+								editedUser
+							)
+						);
 					}
 				}
 			} catch (error) {
@@ -309,10 +363,7 @@ const edit_password: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userExists: UserInterface | null = await User.findOne({
@@ -321,7 +372,11 @@ const edit_password: RequestHandler[] = [
 					.lean()
 					.exec();
 				if (!userExists) {
-					res.status(404).json({ message: 'User not found.' });
+					res
+						.status(404)
+						.json(
+							new Payload(`User ${req.params.userId} not found`, 400, null)
+						);
 				} else {
 					const match = await bcrypt.compare(
 						req.body.currentPass,
@@ -329,7 +384,9 @@ const edit_password: RequestHandler[] = [
 					);
 
 					if (!match) {
-						res.status(400).json({ message: 'Current password is incorrect.' });
+						res
+							.status(400)
+							.json(new Payload(`Current password incorrect`, 400, null));
 					} else {
 						const newPass: string = await hashAsync(req.body.newPass, 10);
 						const editedUser: Document | null = await User.findOneAndUpdate(
@@ -337,11 +394,25 @@ const edit_password: RequestHandler[] = [
 							{ password: newPass },
 							{ new: true }
 						);
-
-						if (editedUser)
+						if (!editedUser) {
 							res
-								.status(200)
-								.json({ message: 'Password successfully changed.' });
+								.status(500)
+								.json(
+									new Payload(
+										`Error changing password for user ${req.params.userId}`,
+										500,
+										null
+									)
+								);
+						} else {
+							res.json(
+								new Payload(
+									`Password changed for user ${req.params.userId}`,
+									200,
+									editedUser
+								)
+							);
+						}
 					}
 				}
 			} catch (error) {
@@ -363,10 +434,7 @@ const delete_user: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userExists: UserInterface | null = await User.findOne({
@@ -389,7 +457,15 @@ const delete_user: RequestHandler[] = [
 							{ $pull: { teachers: req.params.userId } }
 						);
 
-						res.status(200).json({ message: 'User deleted.' });
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`User ${req.params.userId} deleted`,
+									200,
+									req.params.userId
+								)
+							);
 					}
 				}
 			} catch (error) {
@@ -406,10 +482,7 @@ const find_all_by_org: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const orgExists: OrgInterface | null = await Org.findOne({
 				_id: req.params.orgId,
@@ -426,7 +499,15 @@ const find_all_by_org: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.status(200).json({ users: orgUsers });
+				res
+					.status(200)
+					.json(
+						new Payload(
+							`Retrieved users for org ${req.params.orgId}`,
+							200,
+							orgUsers
+						)
+					);
 			}
 		}
 	}),
@@ -439,10 +520,7 @@ const verify_user: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({
-				message: 'Invalid request.',
-				errors: errors.array().map((e: ValidationError) => e.msg),
-			});
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const userExists: UserInterface | null = await User.findOne({
@@ -459,7 +537,7 @@ const verify_user: RequestHandler[] = [
 						{ verified: true }
 					).exec();
 
-					res.status(200).json({ message: 'User verified.' });
+					res.status(200).json(new Payload(`User verified`, 200, verifiedUser));
 				}
 			} catch (error) {
 				next(error);

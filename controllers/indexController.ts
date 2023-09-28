@@ -11,6 +11,7 @@ import {
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import 'dotenv/config.js';
+import { Payload } from './utils/payload.js';
 
 const secretKey: string = process.env.SECRET_KEY!;
 
@@ -23,7 +24,7 @@ const user_login: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const userExists = await User.findOne({
 				email: req.body.email,
@@ -32,7 +33,10 @@ const user_login: RequestHandler[] = [
 			if (!userExists) {
 				res.status(400).json({ message: 'Username or password incorrect.' });
 			} else {
-				const match = await bcrypt.compare(req.body.password, userExists.password);
+				const match = await bcrypt.compare(
+					req.body.password,
+					userExists.password
+				);
 
 				if (!match) {
 					res.status(400).json({ message: 'Username or password incorrect.' });
@@ -50,7 +54,7 @@ const user_login: RequestHandler[] = [
 						secretKey,
 						{ expiresIn: req.query.stayLogged ? '9999 years' : '30 min' },
 						(err, token) => {
-							res.json({message: 'Login Successful', token: token});
+							res.json({ message: 'Login Successful', token: token });
 						}
 					);
 				}
@@ -69,9 +73,13 @@ const return_user: RequestHandler = asyncHandler(
 
 				jwt.verify(bearerToken[1], secretKey, (err, authData) => {
 					if (err) {
-						res.sendStatus(403);
+						res.status(403).json(new Payload('Forbidden', 403, null));
 					} else {
-						res.json({message: 'User Authenticated', statusCode: 200, content: authData});
+						res.json({
+							message: 'User Authenticated',
+							statusCode: 200,
+							content: authData,
+						});
 					}
 				});
 			} else {

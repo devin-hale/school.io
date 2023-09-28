@@ -43,7 +43,7 @@ describe('Docs/Incident GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body._id).toBe(targetIncident?._id.toString());
+		expect(getReq.body.content._id).toBe(targetIncident?._id.toString());
 	});
 	it('Gets all incidents by Student (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -57,7 +57,7 @@ describe('Docs/Incident GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 	it('Gets all incidents by Org (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -71,7 +71,7 @@ describe('Docs/Incident GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 	it('Gets all incidents by User (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -82,7 +82,7 @@ describe('Docs/Incident GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 	it('Gets all incidents by Class (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -96,7 +96,7 @@ describe('Docs/Incident GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 });
 describe('Incident POST', (): void => {

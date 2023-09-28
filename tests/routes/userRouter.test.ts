@@ -37,7 +37,7 @@ describe('User GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(searchReq.body.searchResults.length).toBe(1);
+		expect(searchReq.body.content.length).toBe(1);
 	});
 	it('Gets user info by ID (200)', async (): Promise<void> => {
 		const testToken: string = await testJWT(app);
@@ -48,7 +48,7 @@ describe('User GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body._id.toString()).toBe(targetUser?._id.toString());
+		expect(getReq.body.content._id.toString()).toBe(targetUser?._id.toString());
 	});
 	it('User not found (404)', async (): Promise<void> => {
 		const testToken: string = await testJWT(app);
@@ -58,7 +58,7 @@ describe('User GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(404);
 
-		expect(getReq.body.message).toBe('User could not be found.');
+		expect(getReq.body.statusCode).toBe(404);
 	});
 	it('Returns all Classes of a given User', async (): Promise<void> => {
 		const testToken: string = await testJWT(app);
@@ -69,7 +69,7 @@ describe('User GET', (): void => {
 			.expect('Content-Type', 'application/json; charset=utf-8')
 			.set({ Authorization: testToken })
 			.expect(200);
-		expect(reqTest.body.classes[0].teachers[0]._id).toEqual(`${user?._id}`);
+		expect(reqTest.body.content[0].teachers[0]._id).toEqual(`${user?._id}`);
 	});
 });
 describe('User POST', (): void => {
@@ -117,7 +117,7 @@ describe('User POST', (): void => {
 			.send(newUser)
 			.expect(400);
 
-		expect(postReq.body.errors.length).toBe(4);
+		expect(postReq.body.statusCode).toBe(400);
 	});
 });
 
@@ -197,13 +197,13 @@ describe('User PUT', (): void => {
 			.send({ email: newEmail })
 			.expect(400);
 
-		expect(putReq.body.errors[0]).toBe('Email not valid.');
+		expect(putReq.body.statusCode).toBe(400);
 	});
 	it('Edits user password (200)', async (): Promise<void> => {
 		const testToken: string = await testJWT(app);
 		const targetUser: UserInterface | null = await User.findOne({
-			first_name: 'Zane',
-			last_name: 'Zaneson',
+			first_name: 'Bill',
+			last_name: 'Nye',
 		}).exec();
 
 		const currentPass: string = '123456';
@@ -281,7 +281,6 @@ describe('User DELETE', (): void => {
 		const targetUser: UserInterface | null = await User.findOne({}).exec();
 
 		const testToken: string = await testJWT(app);
-		console.log(testToken)
 
 		await request(app)
 			.delete(`/users/${targetUser?._id}/delete`)

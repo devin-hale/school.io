@@ -1,5 +1,4 @@
 import Student, { StudentInterface } from './../models/studentModel.js';
-import Incident from './../models/docTypes/incidentModel.js';
 import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
 import { RequestHandler } from 'express';
@@ -12,6 +11,7 @@ import {
 } from 'express-validator';
 import ClassModel, { ClassInterface } from '../models/classModel.js';
 import pstModel from '../models/docTypes/pstModel.js';
+import { Payload } from './utils/payload.js';
 
 const search_student: RequestHandler[] = [
 	query('name').optional().toLowerCase().escape(),
@@ -20,7 +20,7 @@ const search_student: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const splitName: string[] = req.query.name!.toString().split(' ');
@@ -58,7 +58,7 @@ const get_student_info: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				let studentExists: StudentInterface | null = await Student.findOne({
@@ -87,7 +87,7 @@ const get_org_students: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				let studentArr: StudentInterface[] = await Student.find({
@@ -251,7 +251,7 @@ const transfer_student: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentExists: StudentInterface | null = await Student.findOne({
@@ -316,7 +316,7 @@ const student_add_class: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentExists: StudentInterface | null = await Student.findOne({
@@ -356,7 +356,7 @@ const student_remove_class: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classExists: ClassInterface | null = await ClassModel.findOne({
@@ -395,7 +395,7 @@ const toggle_active: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentExists: StudentInterface | null = await Student.findOne({
@@ -427,7 +427,7 @@ const delete_student: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentExists: StudentInterface | null = await Student.findOne({

@@ -10,6 +10,7 @@ import {
 } from 'express-validator';
 import asyncHandler from 'express-async-handler';
 import studentModel from '../models/studentModel.js';
+import { Payload } from './utils/payload.js';
 
 const search_class: RequestHandler[] = [
 	query('name').trim(),
@@ -20,7 +21,7 @@ const search_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload("Invalid request.",200,null));
 		} else {
 			try {
 				if (!req.query) {
@@ -68,7 +69,9 @@ const get_class_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.', statusCode: 400, content: null });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 400, content: null });
 		} else {
 			try {
 				const classInstance: ClassInterface | null = await ClassModel.findOne({
@@ -78,9 +81,17 @@ const get_class_instance: RequestHandler[] = [
 					.lean()
 					.exec();
 				if (classInstance) {
-					res.json({ message:`Retrieved class with ID: \"${req.params.classId} \"`, statusCode: 200, content: classInstance});
+					res.json({
+						message: `Retrieved class with ID: \"${req.params.classId} \"`,
+						statusCode: 200,
+						content: classInstance,
+					});
 				} else {
-					res.status(404).json({ message: 'Class not found.', statusCode: 404, content: null });
+					res.status(404).json({
+						message: 'Class not found.',
+						statusCode: 404,
+						content: null,
+					});
 				}
 			} catch (err) {
 				next(err);
@@ -96,7 +107,9 @@ const get_org_classes: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			try {
 				const classes: ClassInterface[] | undefined[] = await ClassModel.find({
@@ -105,7 +118,11 @@ const get_org_classes: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json({message:`Retrieved classes for Org ID \"${req.params.orgId} \"`, statusCode: 200, content: classes });
+				res.json({
+					message: `Retrieved classes for Org ID \"${req.params.orgId} \"`,
+					statusCode: 200,
+					content: classes,
+				});
 			} catch (err) {
 				next(err);
 			}
@@ -124,7 +141,9 @@ const create_class: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid parameters.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			try {
 				const newClass: Document = new ClassModel({
@@ -150,28 +169,22 @@ const create_class: RequestHandler[] = [
 	}),
 ];
 const edit_class: RequestHandler[] = [
-	body('name')
-		.optional()
-		.trim()
-		.isString()
-		.isLength({ min: 1, max: 20 }),
+	body('name').optional().trim().isString().isLength({ min: 1, max: 20 }),
 	body('grade_level')
 		.optional()
 		.trim()
 		.isString()
 		.isLength({ min: 1, max: 10 }),
-	body('subject')
-		.optional()
-		.trim()
-		.isString()
-		.isLength({ min: 1, max: 20 }),
+	body('subject').optional().trim().isString().isLength({ min: 1, max: 20 }),
 	param('classId').trim().isLength({ min: 1 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -180,9 +193,11 @@ const edit_class: RequestHandler[] = [
 						req.body,
 						{ new: true }
 					);
-				res
-					.status(200)
-					.json({ message: 'Class information edited.', content: editedClass });
+				res.status(200).json({
+					message: 'Class information edited.',
+					statusCode: 200,
+					content: editedClass,
+				});
 			} catch (error) {
 				next(error);
 			}
@@ -197,7 +212,9 @@ const add_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -206,9 +223,11 @@ const add_teacher: RequestHandler[] = [
 						{ $push: { teachers: req.body._id } },
 						{ new: true }
 					);
-				res
-					.status(200)
-					.json({ message: 'Teacher added to class.', content: editedClass });
+				res.status(200).json({
+					message: 'Teacher added to class.',
+					statusCode: 200,
+					content: editedClass,
+				});
 			} catch (error) {
 				next(error);
 			}
@@ -223,7 +242,9 @@ const remove_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			const targetId = new mongoose.Types.ObjectId(`${req.body._id}`);
 			try {
@@ -235,6 +256,7 @@ const remove_teacher: RequestHandler[] = [
 					);
 				res.status(200).json({
 					message: 'Teacher removed from class.',
+					statusCode: 200,
 					content: editedClass,
 				});
 			} catch (error) {
@@ -250,7 +272,9 @@ const delete_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res
+				.status(400)
+				.json({ message: 'Invalid request.', statusCode: 200, content: null });
 		} else {
 			const targetId = req.params.classId;
 			try {
@@ -268,10 +292,15 @@ const delete_class: RequestHandler[] = [
 
 					res.status(200).json({
 						message: 'Class deleted from database.',
+						statusCode: 200,
 						content: deletedClass,
 					});
 				} else {
-					res.status(404).json({ message: 'Class not found.' });
+					res.status(404).json({
+						message: 'Class not found.',
+						statusCode: 404,
+						content: null,
+					});
 				}
 			} catch (error) {
 				next(error);

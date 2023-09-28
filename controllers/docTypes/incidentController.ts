@@ -7,6 +7,7 @@ import { body, param, validationResult, Result } from 'express-validator';
 import asyncHandler from 'express-async-handler';
 import { Request, RequestHandler } from 'express';
 import classModel, { ClassInterface } from '../../models/classModel.js';
+import { Payload } from '../utils/payload.js';
 
 const get_incident: RequestHandler[] = [
 	param('incidentId').trim().escape(),
@@ -15,7 +16,7 @@ const get_incident: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const incidentExists: IncidentInterface | null = await Incident.findOne(
@@ -30,9 +31,15 @@ const get_incident: RequestHandler[] = [
 					.exec();
 
 				if (!incidentExists) {
-					res.status(400).json({ message: 'Invalid request.' });
+					res.status(400).json(new Payload('Incident not found.', 400, null));
 				} else {
-					res.json(incidentExists);
+					res.json(
+						new Payload(
+							`Retrieved incident ${incidentExists?._id}`,
+							200,
+							incidentExists
+						)
+					);
 				}
 			} catch (error) {
 				next(error);
@@ -48,7 +55,7 @@ const get_student_incidents: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const studentIncidents: IncidentInterface[] = await Incident.find({
@@ -62,7 +69,13 @@ const get_student_incidents: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json(studentIncidents);
+				res.json(
+					new Payload(
+						`Retrieved incidents for student ${req.params.studentId}`,
+						200,
+						studentIncidents
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -77,7 +90,7 @@ const get_org_incidents: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const orgIncidents: IncidentInterface[] = await Incident.find({
@@ -86,7 +99,13 @@ const get_org_incidents: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json(orgIncidents);
+				res.json(
+					new Payload(
+						`Retrieved incidents for organization ${req.params.orgId}`,
+						200,
+						orgIncidents
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -108,7 +127,13 @@ const get_user_incidents: RequestHandler = asyncHandler(
 				.lean()
 				.exec();
 
-			res.json(userIncidents);
+			res.json(
+				new Payload(
+					`Retrieved incidents for user ${req.body.token.userId}`,
+					200,
+					userIncidents
+				)
+			);
 		} catch (error) {
 			next(error);
 		}
@@ -122,7 +147,7 @@ const get_class_incidents: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classExists: ClassInterface | null = await classModel
@@ -142,7 +167,13 @@ const get_class_incidents: RequestHandler[] = [
 						.lean()
 						.exec();
 
-					res.json(classIncidents);
+					res.json(
+						new Payload(
+							`Retrieved incidents for class ${req.params.classId}`,
+							200,
+							classIncidents
+						)
+					);
 				}
 			} catch (error) {
 				next(error);
@@ -167,7 +198,7 @@ const create_incident: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const newRecord = new Incident({
 				owner: req.body.token.userId,
@@ -185,9 +216,16 @@ const create_incident: RequestHandler[] = [
 				escalated: req.body.escalated,
 			});
 
-			const savedRecord: IncidentInterface = await newRecord.save();
-
-			res.status(201).json(savedRecord);
+			const savedRecord: IncidentInterface | null = await newRecord.save();
+			if (!savedRecord) {
+				res.status(500).json(new Payload('Error saving incident.', 500, null));
+			} else {
+				res
+					.status(201)
+					.json(
+						new Payload(`Incident ${savedRecord._id} created`, 201, savedRecord)
+					);
+			}
 		}
 	}),
 ];
@@ -206,7 +244,7 @@ const edit_incident_info = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const recordExists: IncidentInterface | null = await Incident.findById(
 				req.params.incidentId
@@ -234,7 +272,19 @@ const edit_incident_info = [
 						}
 					).populate('owner');
 
-				res.json(savedRecord);
+				if (!savedRecord) {
+					res
+						.status(500)
+						.json(new Payload('Error saving incident.', 500, null));
+				} else {
+					res.json(
+						new Payload(
+							`Incident ${req.params.incidentId} saved successfully.`,
+							200,
+							savedRecord
+						)
+					);
+				}
 			}
 		}
 	}),
@@ -251,7 +301,7 @@ const edit_incident_involvement: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const recordExists: IncidentInterface | null = await Incident.findById(
@@ -280,9 +330,17 @@ const edit_incident_involvement: RequestHandler[] = [
 						);
 
 					if (!savedIncident) {
-						res.status(500).json({ message: 'Error saving changes.' });
+						res
+							.status(500)
+							.json(new Payload('Error saving incident.', 500, null));
 					} else {
-						res.json(savedIncident);
+						res.json(
+							new Payload(
+								`Incident ${req.params.incidentId} saved successfully.`,
+								200,
+								savedIncident
+							)
+						);
 					}
 				}
 			} catch (error) {
@@ -300,7 +358,7 @@ const edit_incident_access: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const recordExists: IncidentInterface | null = await Incident.findById(
@@ -322,9 +380,17 @@ const edit_incident_access: RequestHandler[] = [
 						);
 
 					if (!savedAccess) {
-						res.status(500).json({ message: 'Error saving changes.' });
+						res
+							.status(500)
+							.json(new Payload('Error saving incident.', 500, null));
 					} else {
-						res.json(savedAccess);
+						res.json(
+							new Payload(
+								`Incident ${req.params.incidentId} saved successfully.`,
+								200,
+								savedAccess
+							)
+						);
 					}
 				}
 			} catch (error) {
@@ -341,7 +407,7 @@ const delete_incident: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ message: 'Invalid request.' });
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const incidentExists: IncidentInterface | null = await Incident.findOne(
@@ -351,9 +417,24 @@ const delete_incident: RequestHandler[] = [
 				if (!incidentExists) {
 					res.status(404).json({ message: 'ERROR: Incident not found.' });
 				} else {
-					await Incident.findOneAndDelete({_id: req.params.incidentId});
-					
-					res.json({message: "Sucess"});
+					const deletedIncident: IncidentInterface | null =
+						await Incident.findOneAndDelete({
+							_id: req.params.incidentId,
+						});
+
+					if (!deletedIncident) {
+						res
+							.status(500)
+							.json(new Payload('Error saving incident.', 500, null));
+					} else {
+						res.json(
+							new Payload(
+								`Incident ${req.params.incidentId} deleted.`,
+								200,
+								deletedIncident
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -372,5 +453,5 @@ export default {
 	edit_incident_info,
 	edit_incident_involvement,
 	edit_incident_access,
-	delete_incident
+	delete_incident,
 };
