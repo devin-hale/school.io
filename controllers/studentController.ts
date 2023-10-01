@@ -43,7 +43,7 @@ const search_student: RequestHandler[] = [
 						(stu) => stu.org == req.body.token.org
 					);
 
-				res.status(200).json(searchStudentResults);
+				res.json(new Payload('Search complete.', 200, searchStudentResults));
 			} catch (error) {
 				next(error);
 			}
@@ -69,9 +69,17 @@ const get_student_info: RequestHandler[] = [
 					.exec();
 
 				if (!studentExists) {
-					res.status(404).json({ message: 'Student not found.' });
+					res.status(404).json(new Payload('Student not found.', 404, null));
 				} else {
-					res.status(200).json({ student: studentExists });
+					res
+						.status(200)
+						.json(
+							new Payload(
+								`Retrieved info for student ${req.params.studentId}`,
+								200,
+								studentExists
+							)
+						);
 				}
 			} catch (error) {
 				next(error);
@@ -104,8 +112,13 @@ const get_org_students: RequestHandler[] = [
 					studentArr = studentArr.filter(
 						(stu) => stu.org == req.body.token.org
 					);
-
-				res.status(200).json(studentArr);
+				res.json(
+					new Payload(
+						`Retrieved students for organization ${req.params.orgId}`,
+						200,
+						studentArr
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -138,7 +151,7 @@ const get_class_students: RequestHandler[] = [
 						(stu) => stu.org == req.body.token.org
 					);
 
-				res.json({ message: 'Success.', students: studentArr });
+				res.json(new Payload(`Retrieved students for class ${req.params.classId}`, 200, studentArr));
 			} catch (error) {
 				next(error);
 			}
@@ -178,9 +191,9 @@ const create_student: RequestHandler[] = [
 				const savedStudent = await newStudent.save();
 
 				if (savedStudent) {
-					res.status(201).json({ message: 'Success', student: savedStudent });
+					res.status(201).json(new Payload("Student saved successfully.", 201, savedStudent))
 				} else {
-					res.status(500).json({ message: 'ERROR: Saving student failed.' });
+					res.status(500).json(new Payload("ERROR: Saving student failed.", 500, null))
 				}
 			} catch (error) {
 				next(error);
@@ -295,7 +308,7 @@ const transfer_student: RequestHandler[] = [
 						await session.commitTransaction();
 
 						res.json({ message: 'Success.' });
-						console.log('YEAH')
+						console.log('YEAH');
 					} catch (error) {
 						await session.abortTransaction();
 						res.status(500).json({ message: 'Error transferring student.' });
