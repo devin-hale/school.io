@@ -64,7 +64,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
     - [x] Orgs
     - [x] Index
     - [x] Class
-    - [] Student
+    - [x] Student
     - [] Comms
     - [] PST
 

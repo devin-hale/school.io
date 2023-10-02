@@ -69,7 +69,7 @@ const get_student_info: RequestHandler[] = [
 					.exec();
 
 				if (!studentExists) {
-					res.status(404).json(new Payload('Student not found.', 404, null));
+					res.status(404).json(new Payload(`Student ${req.params.studentId} not found.`, 404, null))
 				} else {
 					res
 						.status(200)
@@ -151,7 +151,13 @@ const get_class_students: RequestHandler[] = [
 						(stu) => stu.org == req.body.token.org
 					);
 
-				res.json(new Payload(`Retrieved students for class ${req.params.classId}`, 200, studentArr));
+				res.json(
+					new Payload(
+						`Retrieved students for class ${req.params.classId}`,
+						200,
+						studentArr
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -191,9 +197,15 @@ const create_student: RequestHandler[] = [
 				const savedStudent = await newStudent.save();
 
 				if (savedStudent) {
-					res.status(201).json(new Payload("Student saved successfully.", 201, savedStudent))
+					res
+						.status(201)
+						.json(
+							new Payload('Student saved successfully.', 201, savedStudent)
+						);
 				} else {
-					res.status(500).json(new Payload("ERROR: Saving student failed.", 500, null))
+					res
+						.status(500)
+						.json(new Payload('ERROR: Saving student failed.', 500, null));
 				}
 			} catch (error) {
 				next(error);
@@ -225,7 +237,7 @@ const edit_student_info: RequestHandler[] = [
 					.exec();
 
 				if (!studentExists) {
-					res.status(404).json({ message: 'ERROR: Student not found.' });
+					res.status(404).json(new Payload(`Student ${req.params.studentId} not found.`, 404, null))
 				} else {
 					const editInfo: object = {
 						first_name: req.body.first_name || studentExists.first_name,
@@ -246,7 +258,25 @@ const edit_student_info: RequestHandler[] = [
 							{ new: true }
 						);
 
-					res.json(updatedStudent);
+					if (!updatedStudent) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error saving student ${req.params.studentId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Updated student ${req.params.studentId} successfully`,
+								200,
+								updatedStudent
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -307,11 +337,14 @@ const transfer_student: RequestHandler[] = [
 
 						await session.commitTransaction();
 
-						res.json({ message: 'Success.' });
-						console.log('YEAH');
+						res.json(
+							new Payload(`Student transferred successfully`, 200, null)
+						);
 					} catch (error) {
 						await session.abortTransaction();
-						res.status(500).json({ message: 'Error transferring student.' });
+						res
+							.status(500)
+							.json(new Payload(`Error transferring student`, 500, null));
 					}
 					session.endSession();
 				}
@@ -353,8 +386,25 @@ const student_add_class: RequestHandler[] = [
 							},
 							{ new: true }
 						);
-
-					res.json(updatedStudent);
+					if (!updatedStudent) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error adding student ${req.params.studentId} to class ${req.params.classId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Student ${req.params.studentId} added to class ${req.params.classId}`,
+								200,
+								updatedStudent
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -388,12 +438,31 @@ const student_remove_class: RequestHandler[] = [
 						.status(404)
 						.json({ message: 'Cannot student in specificed class.' });
 				} else {
-					await Student.findOneAndUpdate(
-						{ _id: req.params.sudentId },
-						{ $pull: { classes: req.params.classId } }
-					);
+					const updatedStudent: StudentInterface | null =
+						await Student.findOneAndUpdate(
+							{ _id: req.params.studentId },
+							{ $pull: { classes: req.params.classId } }
+						);
 
-					res.json({ message: 'Success.' });
+					if (!updatedStudent) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error removing student ${req.params.studentId} from class ${req.params.classId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Student ${req.params.studentId} removed from class ${req.params.classId}`,
+								200,
+								updatedStudent
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -417,15 +486,34 @@ const toggle_active: RequestHandler[] = [
 				}).exec();
 
 				if (!studentExists) {
-					res.status(404).json({ message: 'Student not found.' });
+					res.status(404).json(new Payload(`Student ${req.params.studentId} not found.`, 404, null))
 				} else {
 					const updateValue: boolean = !studentExists.active;
-					await Student.findOneAndUpdate(
-						{ _id: req.params.sudentId },
-						{ active: updateValue }
-					);
+					const updatedStudent: StudentInterface | null =
+						await Student.findOneAndUpdate(
+							{ _id: req.params.studentId },
+							{ active: updateValue }
+						);
 
-					res.json({ message: 'Success.' });
+					if (!updatedStudent) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error toggling active status for student ${req.params.studentId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Student ${req.params.studentId} set to ACTIVE:${updatedStudent.active}`,
+								200,
+								updatedStudent
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -447,13 +535,11 @@ const delete_student: RequestHandler[] = [
 				const studentExists: StudentInterface | null = await Student.findOne({
 					_id: req.params.studentId,
 				}).exec();
-
 				if (!studentExists) {
-					res.status(404).json({ message: 'Student not found.' });
+					res.status(404).json(new Payload(`Student ${req.params.studentId} not found.`, 404, null))
 				} else {
-					await Student.findOneAndDelete({ _id: req.params.sudentId }).exec();
-
-					res.json({ message: 'Success.' });
+					await Student.findOneAndDelete({ _id: req.params.studentId }).exec();
+					res.json(new Payload(`Student ${req.params.studentId} deleted.`, 200, null))
 				}
 			} catch (error) {
 				next(error);
