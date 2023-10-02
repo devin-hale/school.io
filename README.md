@@ -33,7 +33,7 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Status
 
-### **UPDATE: 9-21-2023:**
+### **UPDATE: 10-2-2023:**
 
 - Moved DB related connection config to a config folder.
 - Refactored app.js to typescript.
@@ -56,17 +56,8 @@ Essentially, I want this application to cut that down to an absolute minimum.
 - PST documentation completed.
 - File upload associated with user and documents.
 - Cleaned up validation.
-
-### **NEXT:**
 - Standardize payload output format accross API routes
-    - [x] User
-    - [x] Incidents
-    - [x] Orgs
-    - [x] Index
-    - [x] Class
-    - [x] Student
-    - [] Comms
-    - [] PST
+
 
 ## Development Roadmap
 

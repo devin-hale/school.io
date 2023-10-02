@@ -35,9 +35,17 @@ const get_pst_instance: RequestHandler[] = [
 					.populate('header.student');
 
 				if (!pstInstance) {
-					res.status(404).json({ message: 'PST Document not found.' });
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
-					res.json(pstInstance);
+					res.json(
+						new Payload(
+							`Retrieved PST Documentation ${req.params.pstId}`,
+							200,
+							pstInstance
+						)
+					);
 				}
 			} catch (error) {
 				next(error);
@@ -63,8 +71,13 @@ const get_user_pst: RequestHandler[] = [
 					.populate('class')
 					.populate('access')
 					.populate('header.student');
-
-				res.json(userPSTs);
+				res.json(
+					new Payload(
+						`Retrieved PST Documentations for user ${req.params.userId}`,
+						200,
+						userPSTs
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -90,7 +103,13 @@ const get_org_pst: RequestHandler[] = [
 					.populate('access')
 					.populate('header.student');
 
-				res.json(orgPSTs);
+				res.json(
+					new Payload(
+						`Retrieved PST Documentation for organization ${req.params.orgId}`,
+						200,
+						orgPSTs
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -116,7 +135,13 @@ const get_class_pst: RequestHandler[] = [
 					.populate('access')
 					.populate('header.student');
 
-				res.json(classPSTs);
+				res.json(
+					new Payload(
+						`Retrieved PST documentation for class ${req.params.classId}`,
+						200,
+						classPSTs
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -142,7 +167,13 @@ const get_student_pst: RequestHandler[] = [
 					.populate('access')
 					.populate('header.student');
 
-				res.json(studentPSTs);
+				res.json(
+					new Payload(
+						`Retrieved PST documentation for user ${req.params.studentId}`,
+						200,
+						studentPSTs
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -185,7 +216,21 @@ const create_pst: RequestHandler[] = [
 
 				const savedPST: PSTInterface | null = await PST.create(newPST);
 
-				res.status(201).json(savedPST);
+				if (!savedPST) {
+					res
+						.status(500)
+						.json(new Payload(`Error creating PST Documentation.`, 500, null));
+				} else {
+					res
+						.status(201)
+						.json(
+							new Payload(
+								`PST Documentation created successfully.`,
+								201,
+								savedPST
+							)
+						);
+				}
 			} catch (error) {
 				next(error);
 			}
@@ -208,7 +253,9 @@ const add_student: RequestHandler[] = [
 				});
 
 				if (!pstExists) {
-					res.status(404).json({ message: 'PST Document not found.' });
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
 						{ _id: req.params.pstId },
@@ -216,7 +263,27 @@ const add_student: RequestHandler[] = [
 						{ new: true }
 					);
 
-					res.json(updatedPST);
+					if (!updatedPST) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									updatedPST
+								)
+							);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -240,7 +307,9 @@ const add_week: RequestHandler[] = [
 				});
 
 				if (!pstExists) {
-					res.status(404).json({ message: 'PST Document not found.' });
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const weekData = {
 						weekNo: pstExists.weeks[pstExists.weeks.length - 1].weekNo + 1 || 1,
@@ -264,7 +333,27 @@ const add_week: RequestHandler[] = [
 						{ new: true }
 					);
 
-					res.json(updatedPST);
+					if (!updatedPST) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									updatedPST
+								)
+							);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -292,7 +381,9 @@ const edit_header: RequestHandler[] = [
 				});
 
 				if (!pstExists) {
-					res.status(404).json({ message: 'PST Document not found.' });
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const headerEdit = {
 						student: pstExists.header.student,
@@ -312,7 +403,27 @@ const edit_header: RequestHandler[] = [
 						{ new: true }
 					);
 
-					res.json(updatedPST);
+					if (!updatedPST) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									updatedPST
+								)
+							);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -344,7 +455,9 @@ const edit_week: RequestHandler[] = [
 				}).lean();
 
 				if (!pstExists) {
-					res.status(404).json({ message: 'PST Document not found.' });
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const targetWeek: PSTWeekInterface = pstExists.weeks.filter(
 						(week) => week.weekNo == Number(req.params.weekNo)
@@ -377,11 +490,26 @@ const edit_week: RequestHandler[] = [
 						},
 						{ new: true }
 					);
-
 					if (!DBWeekUpdate) {
-						res.status(500).json({ message: 'Error updating week.' });
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
 					} else {
-						res.json(DBWeekUpdate);
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									DBWeekUpdate
+								)
+							);
 					}
 				}
 			} catch (error) {
@@ -408,7 +536,7 @@ const edit_access: RequestHandler[] = [
 				if (!pstExists) {
 					res
 						.status(404)
-						.json({ message: 'Error: PST Documentation not found.' });
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const pstAccess: ObjectId[] = req.body.access;
 
@@ -419,9 +547,25 @@ const edit_access: RequestHandler[] = [
 					);
 
 					if (!updatedPST) {
-						res.status(500);
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
 					} else {
-						res.json(updatedPST);
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									updatedPST
+								)
+							);
 					}
 				}
 			} catch (error) {
@@ -450,7 +594,7 @@ const delete_week: RequestHandler[] = [
 				if (!pstExists) {
 					res
 						.status(404)
-						.json({ message: 'Error: PST Documentation not found.' });
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const pstWeeks: PSTWeekInterface[] = pstExists.weeks.sort((a, b) =>
 						a.weekNo < b.weekNo ? -1 : 1
@@ -469,9 +613,25 @@ const delete_week: RequestHandler[] = [
 							{ new: true }
 						);
 						if (!updatedPST) {
-							res.status(500);
+							res
+								.status(500)
+								.json(
+									new Payload(
+										`Error updating PST Documentation ${req.params.pstId}`,
+										500,
+										null
+									)
+								);
 						} else {
-							res.json(updatedPST);
+							res
+								.status(200)
+								.json(
+									new Payload(
+										`PST Documentation ${req.params.pstId} updated successfully.`,
+										200,
+										updatedPST
+									)
+								);
 						}
 					}
 				}
@@ -499,13 +659,33 @@ const delete_pst: RequestHandler[] = [
 				if (!pstExists) {
 					res
 						.status(404)
-						.json({ message: 'Error: PST Documentation not found.' });
+						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const deletedPST: PSTInterface | null = await PST.findOneAndDelete({
 						_id: req.params.pstId,
 					}).exec();
 
-					res.status(200).json({ message: 'PST Document deleted.' });
+					if (!deletedPST) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error deleting PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} deleted successfully.`,
+									200,
+									deletedPST
+								)
+							);
+					}
 				}
 			} catch (error) {
 				next(error);

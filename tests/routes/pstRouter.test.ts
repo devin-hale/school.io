@@ -40,7 +40,7 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.header).toBeTruthy;
+		expect(getReq.body.content.header).toBeTruthy;
 	});
 	it('Get user PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -54,7 +54,7 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.header).toBeTruthy;
+		expect(getReq.body.content.header).toBeTruthy;
 	});
 
 	it('Get org PST (200)', async (): Promise<void> => {
@@ -69,7 +69,7 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.header).toBeTruthy;
+		expect(getReq.body.content.header).toBeTruthy;
 	});
 	it('Get class PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -81,7 +81,7 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.header).toBeTruthy;
+		expect(getReq.body.content.header).toBeTruthy;
 	});
 	it('Get student PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -95,7 +95,7 @@ describe('PST GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.header).toBeTruthy;
+		expect(getReq.body.content.header).toBeTruthy;
 	});
 });
 describe('PST POST', (): void => {
@@ -152,7 +152,7 @@ describe('PST POST', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(postReq.body.weeks.length).toBe(2);
+		expect(postReq.body.content.weeks.length).toBe(2);
 	});
 });
 describe('PST PUT', (): void => {
@@ -176,8 +176,8 @@ describe('PST PUT', (): void => {
 			.send(headerEdit)
 			.expect(200);
 
-		expect(putReq.body.header.schoolYear).toBe('2020-2021');
-		expect(putReq.body.header.intervention_type).toBe('Math');
+		expect(putReq.body.content.header.schoolYear).toBe('2020-2021');
+		expect(putReq.body.content.header.intervention_type).toBe('Math');
 	});
 	it('Edits PST Week', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -219,6 +219,11 @@ describe('PST PUT', (): void => {
 			.set({ Authorization: testToken })
 			.send(weekEdit)
 			.expect(200);
+
+		expect(putReq.body.content.weeks[1].attendance.monday).toBe('NA');
+		expect(putReq.body.content.weeks[1].tier1.documentation[0]).toBe(
+			'Require verbal responses to Indicate comprehension'
+		);
 	});
 	it('Edits access to PST (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -240,7 +245,7 @@ describe('PST PUT', (): void => {
 			.send(accessEdit)
 			.expect(200);
 
-		expect(putReq.body.access[0]).toBe(targetUser?._id.toString());
+		expect(putReq.body.content.access[0]).toBe(targetUser?._id.toString());
 	});
 });
 describe('PST DELETE', (): void => {
@@ -278,7 +283,9 @@ describe('PST DELETE', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		const updatedPST: PSTInterface[] = await PST.find({_id: targetPST?._id}).lean();
+		const updatedPST: PSTInterface[] = await PST.find({
+			_id: targetPST?._id,
+		}).lean();
 
 		expect(updatedPST.length).toBe(0);
 	});

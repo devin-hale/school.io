@@ -28,9 +28,23 @@ const get_communication_instance: RequestHandler[] = [
 					.exec();
 
 				if (!commExists) {
-					res.status(404).json({ message: 'Communication not found.' });
+					res
+						.status(404)
+						.json(
+							new Payload(
+								`Communication record ${req.params.commId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
-					res.json(commExists);
+					res.json(
+						new Payload(
+							`Retrieved communication record ${req.params.commId}`,
+							200,
+							commExists
+						)
+					);
 				}
 			} catch (error) {
 				next(error);
@@ -61,7 +75,13 @@ const get_user_comms: RequestHandler[] = [
 					.lean()
 					.exec();
 
-				res.json(userComms);
+				res.json(
+					new Payload(
+						`Retrieved communication records for user ${req.params.userId}`,
+						200,
+						userComms
+					)
+				);
 			} catch (error) {
 				next(error);
 			}
@@ -102,9 +122,17 @@ const create_communication: RequestHandler[] = [
 				org: req.body.token.org,
 			});
 
-			const savedRecord = await newRecord.save();
+			const savedRecord: CommInterface | null = await newRecord.save();
 
-			res.status(201).json(savedRecord);
+			if (!savedRecord) {
+				res
+					.status(500)
+					.json(new Payload(`Error saving communication record.`, 500, null));
+			} else {
+				res
+					.status(201)
+					.json(new Payload(`Communication record saved.`, 201, savedRecord));
+			}
 		}
 	}),
 ];
@@ -131,7 +159,13 @@ const edit_communication_info: RequestHandler[] = [
 				if (!commExists) {
 					res
 						.status(404)
-						.json({ message: 'Communication document not found.' });
+						.json(
+							new Payload(
+								`Communication record ${req.params.commId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
 					const editInfo = {
 						communication_type:
@@ -150,7 +184,25 @@ const edit_communication_info: RequestHandler[] = [
 							{ new: true }
 						);
 
-					res.json(editedComm);
+					if (!editedComm) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error editing info for communication record ${req.params.commId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Communication record ${req.params.commId} updated successfully.`,
+								200,
+								editedComm
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -180,7 +232,13 @@ const edit_communication_involvement: RequestHandler[] = [
 				if (!commExists) {
 					res
 						.status(404)
-						.json({ message: 'Communication document not found.' });
+						.json(
+							new Payload(
+								`Communication record ${req.params.commId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
 					const editInfo = {
 						staff_involved:
@@ -199,8 +257,25 @@ const edit_communication_involvement: RequestHandler[] = [
 							editInfo,
 							{ new: true }
 						);
-
-					res.json(editedComm);
+					if (!editedComm) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating communication record ${req.params.commId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Communication record ${req.params.commId} updated successfully`,
+								200,
+								editedComm
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -227,7 +302,13 @@ const edit_communication_access: RequestHandler[] = [
 				if (!commExists) {
 					res
 						.status(404)
-						.json({ message: 'Communication document not found.' });
+						.json(
+							new Payload(
+								`Communication record ${req.params.commId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
 					const editInfo = {
 						access: req.body.access,
@@ -240,7 +321,25 @@ const edit_communication_access: RequestHandler[] = [
 							{ new: true }
 						);
 
-					res.json(editedComm);
+					if (!editedComm) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating communication record ${req.params.commId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Communication record ${req.params.commId} updated successfully`,
+								200,
+								editedComm
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);
@@ -266,11 +365,36 @@ const delete_communication: RequestHandler[] = [
 				if (!commExists) {
 					res
 						.status(404)
-						.json({ message: 'Communication document not found.' });
+						.json(
+							new Payload(
+								`Communication record ${req.params.commId} not found.`,
+								404,
+								null
+							)
+						);
 				} else {
-					await Communication.findOneAndDelete({ _id: req.params.commId });
+					const deletedComm: CommInterface | null =
+						await Communication.findOneAndDelete({ _id: req.params.commId });
 
-					res.json({ message: 'Communication deleted.' });
+					if (!deletedComm) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error deleting communication record ${req.params.commId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res.json(
+							new Payload(
+								`Communication record ${req.params.commId} deleted.`,
+								200,
+								deletedComm
+							)
+						);
+					}
 				}
 			} catch (error) {
 				next(error);

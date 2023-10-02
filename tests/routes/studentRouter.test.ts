@@ -37,7 +37,7 @@ describe('Student GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 	it('Gets unique student info (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -52,7 +52,7 @@ describe('Student GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.student._id).toBe(targetStudent?._id.toString());
+		expect(getReq.body.content._id).toBe(targetStudent?._id.toString());
 	});
 	it('Gets all students by org (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -64,7 +64,7 @@ describe('Student GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(3);
+		expect(getReq.body.content.length).toBe(3);
 	});
 
 	it('Gets all students by class (200)', async (): Promise<void> => {
@@ -79,7 +79,7 @@ describe('Student GET', (): void => {
 			.set({ authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.students.length).toBe(1);
+		expect(getReq.body.content.length).toBe(1);
 	});
 });
 

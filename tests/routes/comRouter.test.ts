@@ -37,7 +37,7 @@ describe('Comm GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body._id).toBe(targetComm?._id.toString());
+		expect(getReq.body.content._id).toBe(targetComm?._id.toString());
 	});
 	it('Gets all user comms (200)', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -49,7 +49,7 @@ describe('Comm GET', (): void => {
 			.set({ Authorization: testToken })
 			.expect(200);
 
-		expect(getReq.body.length).toBe(2);
+		expect(getReq.body.content.length).toBe(2);
 	});
 });
 describe('Comm POST', (): void => {
@@ -75,7 +75,7 @@ describe('Comm POST', (): void => {
 			.send(comm2)
 			.expect(201);
 
-		expect(postReq.body.communication_type).toBe('Staff to Staff');
+		expect(postReq.body.content.communication_type).toBe('Staff to Staff');
 	});
 });
 describe('Comm PUT', (): void => {
@@ -97,7 +97,7 @@ describe('Comm PUT', (): void => {
 			.send(editInfo)
 			.expect(200);
 
-		expect(putReq.body.communication_type).toBe('Staff to Student');
+		expect(putReq.body.content.communication_type).toBe('Staff to Student');
 	});
 	it('Edits comm involvement', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -120,9 +120,9 @@ describe('Comm PUT', (): void => {
 			.send(editInfo)
 			.expect(200);
 
-		expect(putReq.body.staff_involved.length).toBe(1);
-		expect(putReq.body.parents_involved.length).toBe(0);
-		expect(putReq.body.others_involved[0]).toBe('Some Guy');
+		expect(putReq.body.content.staff_involved.length).toBe(1);
+		expect(putReq.body.content.parents_involved.length).toBe(0);
+		expect(putReq.body.content.others_involved[0]).toBe('Some Guy');
 	});
 	it('Edits comm involvement', async (): Promise<void> => {
 		const testToken = await testJWT(app);
@@ -140,8 +140,8 @@ describe('Comm PUT', (): void => {
 			.send(editInfo)
 			.expect(200);
 
-		expect(putReq.body.access.length).toBe(1);
-		expect(putReq.body.access[0]).toBe(targetUser?._id.toString())
+		expect(putReq.body.content.access.length).toBe(1);
+		expect(putReq.body.content.access[0]).toBe(targetUser?._id.toString())
 	});
 });
 describe("Comm DELETE", (): void => {
