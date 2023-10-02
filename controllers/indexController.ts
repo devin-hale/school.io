@@ -83,7 +83,7 @@ const return_user: RequestHandler = asyncHandler(
 					}
 				});
 			} else {
-				res.sendStatus(403);
+				res.status(403).json(new Payload(`Error authenticating user.`, 403, null))
 			}
 		} catch (error) {
 			next(error);
