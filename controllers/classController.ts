@@ -21,7 +21,7 @@ const search_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				if (!req.query) {
@@ -71,7 +71,7 @@ const get_class_instance: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classInstance: ClassInterface | null = await ClassModel.findOne({
@@ -109,7 +109,7 @@ const get_org_classes: RequestHandler[] = [
 		const errors: Result = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const classes: ClassInterface[] | undefined[] = await ClassModel.find({
@@ -132,18 +132,17 @@ const get_org_classes: RequestHandler[] = [
 	}),
 ];
 const create_class: RequestHandler[] = [
-	body('name').trim().isString().isLength({ min: 1, max: 20 }),
+	body('name').trim().isString().isLength({ min: 1, max: 30 }),
 	body('grade_level').trim().isString().isLength({ min: 1, max: 10 }),
 	body('subject').optional().trim().isString().isLength({ min: 1, max: 20 }),
-	body('teachers').isArray(),
-	body('teachers.*').optional().isString().trim().isLength({ min: 1 }),
 	body('org').optional().isString().trim().isLength({ min: 1 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
+		console.log(req.body)
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const newClass: Document = new ClassModel({
@@ -182,7 +181,7 @@ const edit_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -225,7 +224,7 @@ const add_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
 				const editedClass: ClassInterface | null =
@@ -268,7 +267,7 @@ const remove_teacher: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const targetId = new mongoose.Types.ObjectId(`${req.body._id}`);
 			try {
@@ -310,7 +309,7 @@ const delete_class: RequestHandler[] = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json(new Payload('Invalid request.', 200, null));
+			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			const targetId = req.params.classId;
 			try {
