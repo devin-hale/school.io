@@ -13,7 +13,6 @@ const __dirname: string = path.dirname(__filename);
 const storage: StorageEngine = multer.diskStorage({
 	destination: (req, file, cb) => {
 		const filePath  = `storage/${req.params.userId}/${req.params.docType}/${req.params.docId}/`;
-		console.log(filePath)
 
 		fs.mkdirSync(filePath, { recursive: true });
 		cb(null, filePath );

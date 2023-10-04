@@ -139,7 +139,6 @@ const create_class: RequestHandler[] = [
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
-		console.log(req.body)
 
 		if (!errors.isEmpty()) {
 			res.status(400).json(new Payload('Invalid request.', 400, null));

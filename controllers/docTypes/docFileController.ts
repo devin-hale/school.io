@@ -35,7 +35,6 @@ const get_fileList: RequestHandler = asyncHandler(
 				`storage/${req.params.userId}/${req.params.docType}/${req.params.docId}`
 			);
 
-			console.log(fileList);
 
 			res.json(fileList);
 		} catch (error) {
