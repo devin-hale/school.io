@@ -317,7 +317,7 @@ const delete_class: RequestHandler[] = [
 				});
 
 				if (classExists) {
-					const deletedClass: Document | null =
+					const deletedClass: ClassInterface | null =
 						await ClassModel.findOneAndDelete({ _id: targetId }).exec();
 
 					const editedStudents : UpdateWriteOpResult =  await studentModel
@@ -326,7 +326,7 @@ const delete_class: RequestHandler[] = [
 					if (!deletedClass) {
 						res.status(500).json(new Payload(`Error deleting class ${req.params.classId}`, 500, null))
 					} else {
-						res.json(new Payload(`Class ${req.params.id} deleted.`, 200, deletedClass))
+						res.json(new Payload(`Class \"${deletedClass.name}\" deleted.`, 200, deletedClass))
 					}
 
 				} else {
