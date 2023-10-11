@@ -103,7 +103,6 @@ const get_org_students: RequestHandler[] = [
 				})
 					.populate('classes')
 					.lean()
-					.exec();
 
 				if (
 					req.body.token.accType == 'Basic' ||
@@ -173,7 +172,7 @@ const create_student: RequestHandler[] = [
 	body('retained').isBoolean(),
 	body('sped').isBoolean(),
 	body('english_language_learner').isBoolean(),
-	body('org').trim(),
+	body('org'),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
