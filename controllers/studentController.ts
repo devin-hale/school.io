@@ -167,7 +167,7 @@ const get_class_students: RequestHandler[] = [
 const create_student: RequestHandler[] = [
 	body('first_name').isString().trim(),
 	body('last_name').isString().trim(),
-	body('grade_level').isNumeric(),
+	body('grade_level'),
 	body('gifted').isBoolean(),
 	body('retained').isBoolean(),
 	body('sped').isBoolean(),

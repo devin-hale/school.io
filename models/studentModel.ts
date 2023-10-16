@@ -4,7 +4,7 @@ export interface StudentInterface {
 	_id: ObjectId;
 	first_name: string;
 	last_name: string;
-	grade_level: number;
+	grade_level: string;
 	gifted: Boolean;
 	retained: Boolean;
 	sped: Boolean;
@@ -17,7 +17,7 @@ export interface StudentInterface {
 const studentSchema: Schema = new mongoose.Schema<StudentInterface>({
 	first_name: { type: String, required: true },
 	last_name: { type: String, required: true },
-	grade_level: { type: Number, required: true },
+	grade_level: { type: String, required: true },
 	gifted: Boolean,
 	retained: Boolean,
 	sped: Boolean,
