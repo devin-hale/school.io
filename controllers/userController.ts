@@ -168,7 +168,7 @@ const create_account: RequestHandler[] = [
 
 			if (!emailExists) {
 				const organization = await Org.findOne({
-					orgCode: req.body.orgCode,
+					_id: req.body.orgCode,
 				}).exec();
 				const hashedPass: string = await hashAsync(req.body.password, 10);
 
@@ -182,8 +182,6 @@ const create_account: RequestHandler[] = [
 				});
 
 				const savedUser: UserInterface | null = await newUser.save();
-
-				await authController.createAuth(savedUser, req);
 
 				if (!savedUser) {
 					res
