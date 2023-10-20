@@ -345,17 +345,9 @@ const edit_email: RequestHandler[] = [
 ];
 
 const edit_password: RequestHandler[] = [
-	param('userId').trim().isLength({ min: 1 }).escape(),
-	body('currentPass')
-		.trim()
-		.isLength({ min: 6 })
-		.withMessage('Password must be at least 6 characters long.')
-		.bail(),
-	body('newPass')
-		.trim()
-		.isLength({ min: 6 })
-		.withMessage('Password must be at least 6 characters long.')
-		.bail(),
+	param('userId').trim().isLength({ min: 1 }),
+	body('currentPass').trim().isLength({ min: 6 }),
+	body('newPass').trim().isLength({ min: 6 }),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -373,7 +365,7 @@ const edit_password: RequestHandler[] = [
 					res
 						.status(404)
 						.json(
-							new Payload(`User ${req.params.userId} not found`, 400, null)
+							new Payload(`User not found`, 400, null)
 						);
 				} else {
 					const match = await bcrypt.compare(
@@ -397,7 +389,7 @@ const edit_password: RequestHandler[] = [
 								.status(500)
 								.json(
 									new Payload(
-										`Error changing password for user ${req.params.userId}`,
+										`Error changing password.`,
 										500,
 										null
 									)
@@ -405,7 +397,7 @@ const edit_password: RequestHandler[] = [
 						} else {
 							res.json(
 								new Payload(
-									`Password changed for user ${req.params.userId}`,
+									`Password changed.`,
 									200,
 									editedUser
 								)
