@@ -364,7 +364,7 @@ const add_week: RequestHandler[] = [
 
 const edit_header: RequestHandler[] = [
 	param('pstId').trim().escape(),
-	body('interventtion_type').trim(),
+	body('intervention_type').trim(),
 	body('schoolYear').trim(),
 	body('west_virginia_phonics').trim(),
 	body('progress_monitoring_goal').trim(),
