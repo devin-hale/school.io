@@ -83,7 +83,7 @@ describe('User POST', (): void => {
 			email: 'testjoe@cilly.com',
 			password: '123456',
 			gender: 'M',
-			orgCode: orgCode,
+			orgCode: targetOrg?._id,
 		};
 
 		const postReq: Response = await request(app)
