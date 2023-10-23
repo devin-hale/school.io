@@ -182,7 +182,6 @@ const get_student_pst: RequestHandler[] = [
 ];
 
 const create_pst: RequestHandler[] = [
-	body('classId').trim().escape(),
 
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
@@ -237,6 +236,61 @@ const create_pst: RequestHandler[] = [
 		}
 	}),
 ];
+
+const add_class: RequestHandler[] = [
+	param('pstId').trim().escape(),
+
+	asyncHandler(async (req, res, next): Promise<void> => {
+		const errors: Result = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json(new Payload('Invalid request.', 400, null));
+		} else {
+			try {
+				const pstExists: PSTInterface | null = await PST.findOne({
+					_id: req.params.pstId,
+				});
+
+				if (!pstExists) {
+					res
+						.status(404)
+						.json(new Payload(`PST Documentation not found.`, 404, null));
+				} else {
+					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
+						{ _id: req.params.pstId },
+						{ class: req.body.classId },
+						{ new: true }
+					);
+
+					if (!updatedPST) {
+						res
+							.status(500)
+							.json(
+								new Payload(
+									`Error updating PST Documentation ${req.params.pstId}`,
+									500,
+									null
+								)
+							);
+					} else {
+						res
+							.status(200)
+							.json(
+								new Payload(
+									`PST Documentation ${req.params.pstId} updated successfully.`,
+									200,
+									updatedPST
+								)
+							);
+					}
+				}
+			} catch (error) {
+				next(error);
+			}
+		}
+	}),
+];
+
 
 const add_student: RequestHandler[] = [
 	param('pstId').trim().escape(),
@@ -702,6 +756,7 @@ export default {
 	get_student_pst,
 	create_pst,
 	add_student,
+	add_class,
 	add_week,
 	edit_header,
 	edit_week,

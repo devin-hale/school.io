@@ -242,11 +242,11 @@ const edit_student_info: RequestHandler[] = [
 						first_name: req.body.first_name || studentExists.first_name,
 						last_name: req.body.last_name || studentExists.last_name,
 						grade_level: req.body.grade_level || studentExists.grade_level,
-						gifted: req.body.gifted, 
-						retained:  req.body.retained,
-						sped: req.body.sped, 
+						gifted: req.body.gifted,
+						retained: req.body.retained,
+						sped: req.body.sped,
 						english_language_learner:
-							req.body.english_language_learner, 
+							req.body.english_language_learner,
 					};
 
 					const updatedStudent: StudentInterface | null =

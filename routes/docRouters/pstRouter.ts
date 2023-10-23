@@ -18,6 +18,8 @@ router.post('/create', verifyToken, pstController.create_pst);
 
 router.post('/:pstId/addStudent', verifyToken, pstController.add_student);
 
+router.post('/:pstId/addClass', verifyToken, pstController.add_class);
+
 router.post('/:pstId/addWeek', verifyToken, pstController.add_week);
 
 router.put('/:pstId/header', verifyToken, pstController.edit_header);
