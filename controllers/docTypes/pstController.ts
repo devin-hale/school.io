@@ -32,7 +32,7 @@ const get_pst_instance: RequestHandler[] = [
 					.populate('owner')
 					.populate('class')
 					.populate('access')
-					.populate('header.student');
+					.populate('student');
 
 				if (!pstInstance) {
 					res
@@ -70,7 +70,8 @@ const get_user_pst: RequestHandler[] = [
 					.populate('owner')
 					.populate('class')
 					.populate('access')
-					.populate('header.student');
+					.populate('student')
+					.lean();
 				res.json(
 					new Payload(
 						`Retrieved PST Documentations for user ${req.params.userId}`,
@@ -101,7 +102,7 @@ const get_org_pst: RequestHandler[] = [
 					.populate('owner')
 					.populate('class')
 					.populate('access')
-					.populate('header.student');
+					.populate('student');
 
 				res.json(
 					new Payload(
@@ -133,7 +134,7 @@ const get_class_pst: RequestHandler[] = [
 					.populate('owner')
 					.populate('class')
 					.populate('access')
-					.populate('header.student');
+					.populate('student');
 
 				res.json(
 					new Payload(
@@ -160,12 +161,12 @@ const get_student_pst: RequestHandler[] = [
 		} else {
 			try {
 				const studentPSTs: PSTInterface[] = await PST.find({
-					'header.student': req.params.studentId,
+					'student': req.params.studentId,
 				})
 					.populate('owner')
 					.populate('class')
 					.populate('access')
-					.populate('header.student');
+					.populate('student');
 
 				res.json(
 					new Payload(
@@ -313,7 +314,7 @@ const add_student: RequestHandler[] = [
 				} else {
 					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
 						{ _id: req.params.pstId },
-						{ 'header.student': req.body.studentId },
+						{ 'student': req.body.studentId },
 						{ new: true }
 					);
 
@@ -420,6 +421,7 @@ const edit_header: RequestHandler[] = [
 	param('pstId').trim().escape(),
 	body('intervention_type').trim(),
 	body('schoolYear').trim(),
+	body('gradingPeriod').trim(),
 	body('west_virginia_phonics').trim(),
 	body('progress_monitoring_goal').trim(),
 
@@ -440,8 +442,8 @@ const edit_header: RequestHandler[] = [
 						.json(new Payload(`PST Documentation not found.`, 404, null));
 				} else {
 					const headerEdit = {
-						student: pstExists.header.student,
 						schoolYear: req.body.schoolYear || pstExists.header.schoolYear,
+						gradingPeriod: req.body.gradingPeriod ?? pstExists.header.gradingPeriod,
 						intervention_type:
 							req.body.intervention_type || pstExists.header.intervention_type,
 						west_virginia_phonics:

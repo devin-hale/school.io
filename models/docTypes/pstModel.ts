@@ -3,6 +3,7 @@ import mongoose, { Schema, ObjectId } from 'mongoose';
 export interface PSTHeaderInterface {
 	student: ObjectId;
 	schoolYear: string;
+	gradingPeriod: string;
 	intervention_type: 'Reading' | 'Math' | 'Behavior';
 	west_virginia_phonics: boolean;
 	readingIXL: string;
@@ -35,6 +36,7 @@ export interface PSTInterface {
 	owner: ObjectId;
 	org: ObjectId;
 	class?: ObjectId;
+	student: ObjectId;
 	access?: ObjectId[];
 	header: PSTHeaderInterface;
 	weeks: PSTWeekInterface[];
@@ -45,10 +47,12 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 		owner: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 		org: { type: Schema.Types.ObjectId, ref: 'organizations', required: true },
 		class: { type: Schema.Types.ObjectId, ref: 'classes'},
+		student: {type: Schema.Types.ObjectId, ref: 'students'},
 		access: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 		header: {
 			student: { type: Schema.Types.ObjectId, ref: 'students' },
-			schoolYear: { type: String, default: '' },
+			schoolYear: { type: String, default: '2023 - 2024' },
+			gradingPeriod: {type: String, default: 'First Nine Weeks'},
 			intervention_type: {
 				type: String,
 				enum: ['Reading', 'Math', 'Behavior'],
