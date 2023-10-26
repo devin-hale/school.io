@@ -52,7 +52,7 @@ const pstModel: Schema = new mongoose.Schema<PSTInterface>(
 		header: {
 			student: { type: Schema.Types.ObjectId, ref: 'students' },
 			schoolYear: { type: String, default: '2023 - 2024' },
-			gradingPeriod: {type: String, default: 'First Nine Weeks'},
+			gradingPeriod: {type: String, default: '1st Nine Weeks'},
 			intervention_type: {
 				type: String,
 				enum: ['Reading', 'Math', 'Behavior'],

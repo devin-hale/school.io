@@ -443,7 +443,7 @@ const edit_header: RequestHandler[] = [
 				} else {
 					const headerEdit = {
 						schoolYear: req.body.schoolYear || pstExists.header.schoolYear,
-						gradingPeriod: req.body.gradingPeriod ?? pstExists.header.gradingPeriod,
+						gradingPeriod: req.body.gradingPeriod || pstExists.header.gradingPeriod,
 						intervention_type:
 							req.body.intervention_type || pstExists.header.intervention_type,
 						west_virginia_phonics:
