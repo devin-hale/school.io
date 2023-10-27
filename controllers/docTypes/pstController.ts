@@ -15,6 +15,9 @@ import {
 } from 'express-validator';
 import { ObjectId } from 'mongoose';
 import { Payload } from '../utils/payload.js';
+import dayjs, { Dayjs } from 'dayjs';
+import weekday from 'dayjs/plugin/weekday.js';
+dayjs.extend(weekday);
 
 const get_pst_instance: RequestHandler[] = [
 	param('pstId').trim().escape(),
@@ -161,7 +164,7 @@ const get_student_pst: RequestHandler[] = [
 		} else {
 			try {
 				const studentPSTs: PSTInterface[] = await PST.find({
-					'student': req.params.studentId,
+					student: req.params.studentId,
 				})
 					.populate('owner')
 					.populate('class')
@@ -183,7 +186,6 @@ const get_student_pst: RequestHandler[] = [
 ];
 
 const create_pst: RequestHandler[] = [
-
 	asyncHandler(async (req, res, next): Promise<void> => {
 		const errors: Result = validationResult(req);
 
@@ -191,6 +193,8 @@ const create_pst: RequestHandler[] = [
 			res.status(400).json(new Payload('Invalid request.', 400, null));
 		} else {
 			try {
+				const newDateMon = dayjs().weekday(1);
+				const newDateFri = dayjs().weekday(5);
 				const newPST = {
 					owner: req.body.token.userId,
 					org: req.body.token.org,
@@ -198,7 +202,7 @@ const create_pst: RequestHandler[] = [
 					weeks: [
 						{
 							weekNo: 1,
-							dates: '',
+							dates: `${newDateMon.format('MM-DD-YYYY')} to ${newDateFri.format('MM-DD-YYYY')}`,
 							attendance: {
 								monday: '',
 								tuesday: '',
@@ -292,7 +296,6 @@ const add_class: RequestHandler[] = [
 	}),
 ];
 
-
 const add_student: RequestHandler[] = [
 	param('pstId').trim().escape(),
 
@@ -314,7 +317,7 @@ const add_student: RequestHandler[] = [
 				} else {
 					const updatedPST: PSTInterface | null = await PST.findOneAndUpdate(
 						{ _id: req.params.pstId },
-						{ 'student': req.body.studentId },
+						{ student: req.body.studentId },
 						{ new: true }
 					);
 
@@ -443,7 +446,8 @@ const edit_header: RequestHandler[] = [
 				} else {
 					const headerEdit = {
 						schoolYear: req.body.schoolYear || pstExists.header.schoolYear,
-						gradingPeriod: req.body.gradingPeriod || pstExists.header.gradingPeriod,
+						gradingPeriod:
+							req.body.gradingPeriod || pstExists.header.gradingPeriod,
 						intervention_type:
 							req.body.intervention_type || pstExists.header.intervention_type,
 						west_virginia_phonics:
