@@ -197,6 +197,7 @@ const create_pst: RequestHandler[] = [
 				const newDateFri = dayjs().weekday(5);
 				const newPST = {
 					owner: req.body.token.userId,
+					student: req.body && req.body.student ? req.body.student : null,
 					org: req.body.token.org,
 					class: req.body.classId,
 					weeks: [
