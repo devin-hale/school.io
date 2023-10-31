@@ -1,17 +1,17 @@
-# school.io (API)
+# school.io
 
 ## Description
 
-### Version 0.5.0
+### Version 1.0.0
 
-This is the beginning stages of a project intended to act as a simple website
-for teachers to create, update, and store important documentation. The idea came
-from listening to my wife, who is a 3rd grade teacher. According to her, the
-biggest annoyance is a teacher is keeping track of documentation. This can be as
-simple as writing down "I spoke with little Billy's parents at X time on Y date.
-We spoke about this...". This documentation comes in handy when little Billy's
-mom calls the principal to complain. Keeping that documentation is a way for the
-classroom teacher to CYA, because without it, nobody else will.
+This is a project intended to act as a simple website for teachers to create, update,
+and store important documentation. The idea came from listening to my wife, who is
+a 3rd grade teacher. According to her, the biggest annoyance is a teacher is keeping 
+track of documentation. This can be as simple as writing down
+"I spoke with little Billy's parents at X time on Y date. We spoke about this...".
+This documentation comes in handy when little Billy's mom calls the principal to
+complain. Keeping that documentation is a way for the classroom teacher to CYA,
+because without it, nobody else will.
 
 It can also be as extensive as tracking specific student information over time,
 as required by a state's board of education. The best case scenario is that this
@@ -27,77 +27,19 @@ Essentially, I want this application to cut that down to an absolute minimum.
 
 ## Tech
 
-- Javascript/Typescript
-- nodeJS/Express
+The current iteration of this model is mostly to build a usable proof of concept
+using an MVC pattern where the backend is a separate app. Tech used:
+
+**Back End**
+- Typescript
+- nodeJS/Express backend
 - MongoDB with Mongoose
 
-## Status
-
-### **UPDATE: 10-2-2023:**
-
-- Moved DB related connection config to a config folder.
-- Refactored app.js to typescript.
-- Added chalk as a way to color code console logs.
-- Testing Server/DB setup/teardown created.
-- The following routes and corresponding data types have been refactored as a
-  REST API in TS, with test files
-  - Orgs
-  - Classes
-  - Users/Teachers
-  - Students
-  - Incidents
-  - Communications
-- CORS implemented. Won't know if it works properly until I start diving into
-  the front end.
-- Refactored index route for user login and authentication.
-- User authentication implemented via JSON web tokens.
-- Org limiter added to queries based on account type so that users/data from
-  different org doesn't bleed over.
-- PST documentation completed.
-- File upload associated with user and documents.
-- Cleaned up validation.
-- Standardize payload output format accross API routes
+**Front End**
+- React/NextJS
+- Redux ToolKit
+- TailwindCSS
+- MaterialUI
 
 
-## Development Roadmap
 
-**Login/User Authentication**
-- [x] Organization/School Model
-- [x] Org Controller
-- [x] User Model
-- [x] User Controller
-- [x] Password Encryption
-- [x] Account Email Verification
-- [x] User Authentication
-
-**Classroom/Student**
-- [x] Class Model
-- [x] Class Tests
-- [x] Class Controller/Router
-- [x] Student Model
-- [x] Student Tests
-- [x] Student Controller/Router
-
-**Documentation**
-- [x] Models for each type:
-  - [x] Incident (fight, worrisome comments, etc)
-  - [x] Commmunication (student, staff, parent, other)
-  - [x] PST
-- [x] Controllers/Routers/Tests for each type:
-  - [x] Incident (fight, worrisome comments, etc)
-  - [x] Commmunication (student, staff, parent, other)
-  - [x] PST
-- [x] Serverside image storage.
-
-*Utilities**
-- [x] Verify Org Admin Methods
-  - [x] Create classes
-    - [x] Assign a teacher or teachers to classes
-    - [x] Assign students to class (easier for Elementary)
-  - [x] Create students
-    - [x] Assign a class to students (easier for Middle/HS)
-  - [x] Transfer students between classes
-- [x] Verify Super Admin Methods
-  - [x] Create Orgs
-  - [x] Create Org Admin Account
-  - [x] "Promote" Users to Org Admin
